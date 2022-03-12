@@ -8,14 +8,55 @@ import com.fthlbot.discordbotfthl.Util.Exception.UnsupportedCommandException;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.json.JSONObject;
 
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class GeneralService extends DiscordBotFthlApplication {
+    /**
+     *
+     * @param key of json object
+     * @return returns if the today's date is between the noted date define in the json (not inclusive)
+     * @throws IOException
+     * @throws ParseException - will throw an error if I mess up json formatting
+     */
+    public boolean isValidDate(String key) throws IOException, ParseException {
+        String content = getFileContent("dates.json");
+
+        JSONObject jsonObject = new JSONObject(content);
+        String s = jsonObject.getJSONObject(key).getString("startDate");
+        String e = jsonObject.getJSONObject(key).getString("endDate");
+
+        DateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+
+        LocalDate startDate = convertToLocalDateViaInstant(format.parse(s));
+        LocalDate endDate = convertToLocalDateViaInstant(format.parse(e));
+
+        LocalDate date = LocalDate.now();
+        return startDate.compareTo(date) * date.compareTo(endDate) > 0;
+    }
+
+    /**
+     *
+     * @param dateToConvert takes the date to be converted
+     * @return returns the date as local date
+     */
+    private LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
+        return dateToConvert.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+    }
+
     public static void leagueSlashErrorMessage(SlashCommandCreateEvent event, LeagueException e) {
         event.getSlashCommandInteraction().respondLater().thenAccept(res -> {
             res.setContent(e.getMessage());

@@ -22,7 +22,7 @@ import static com.fthlbot.discordbotfthl.Annotation.CommandType.IGNORE;
 @Invoker(
         alias = "help",
         description = "A general help command",
-        usage = "+help",
+        usage = "/help",
         type = IGNORE
 )
 public class HelpImpl implements HelpListener {

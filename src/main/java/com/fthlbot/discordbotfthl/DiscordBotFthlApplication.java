@@ -6,6 +6,7 @@ import com.fthlbot.discordbotfthl.Commands.CommandImpl.HelpImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.PingImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.RegistrationImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdditionImpl;
+import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
 import com.fthlbot.discordbotfthl.Handlers.Command;
 import com.fthlbot.discordbotfthl.Handlers.MessageHandlers;
 import com.fthlbot.discordbotfthl.Handlers.MessageHolder;
@@ -18,6 +19,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -32,7 +34,7 @@ import java.util.List;
 import static com.fthlbot.discordbotfthl.Util.GeneralService.*;
 
 @SpringBootApplication
-public class            DiscordBotFthlApplication {
+public class DiscordBotFthlApplication {
 
     @Autowired
     private Environment env;
@@ -45,6 +47,9 @@ public class            DiscordBotFthlApplication {
 
     @Autowired
     private RosterAdditionImpl rosterAddition;
+
+    @Autowired
+    private CommandLoggerService loggerService;
 
     public static final String prefix = "+";
 
@@ -70,7 +75,8 @@ public class            DiscordBotFthlApplication {
 
         DiscordApi api = new DiscordApiBuilder()
                 .setToken(env.getProperty("TOKEN_TEST_BOT"))
-                .setAllIntentsExcept(Intent.GUILD_WEBHOOKS,
+                .setAllIntentsExcept(
+                        Intent.GUILD_WEBHOOKS,
                         Intent.GUILD_INTEGRATIONS,
                         Intent.DIRECT_MESSAGE_TYPING,
                         Intent.DIRECT_MESSAGE_REACTIONS,
@@ -97,7 +103,7 @@ public class            DiscordBotFthlApplication {
 
         MessageHolder messageHolder = messageHandlers.setCommands();
 
-        MessageListener messageListener = new MessageListener(messageHolder);
+        MessageListener messageListener = new MessageListener(messageHolder, loggerService);
 
         api.addListener(messageListener);
 
