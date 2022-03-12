@@ -63,7 +63,7 @@ public class RegistrationImpl implements RegistrationListener {
     @Autowired
     private TeamService teamService;
 
-    //@Override
+    @Deprecated(since = "2022/March/12")
     public void execute1(MessageCreateEvent event) {
         try {
 
@@ -127,7 +127,7 @@ public class RegistrationImpl implements RegistrationListener {
         SlashCommandInteraction slashCommandInteraction = event.getSlashCommandInteraction();
         //Return if channel is not the same as reg channel
             //TODO
-           /* if (!isRegChannel(event.getSlashCommandInteraction().getChannel().get().getId())){
+           /* if (!isRegChannel(event.getSlashCommandInteraction().getChannel().get().getCommandID())){
                 slashCommandInteraction.createImmediateResponder()
                         .setContent("This command can only be run the registration channel in the applicant server, please join the applicant server and run this command!")
                         .setFlags(InteractionCallbackDataFlag.EPHEMERAL)

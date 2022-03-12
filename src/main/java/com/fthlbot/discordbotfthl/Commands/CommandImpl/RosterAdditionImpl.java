@@ -67,42 +67,5 @@ public class RosterAdditionImpl implements RosterAddListener {
         }catch (LeagueException e){
             GeneralService.leagueSlashErrorMessage(event, e);
         }
-
     }
-
-    /**
-     *
-     * @param key of json object
-     * @return returns if the today's date is between the noted date define in the json (not inclusive)
-     * @throws IOException
-     * @throws ParseException - will throw an error if I mess up json formatting
-     */
-    private boolean isValidDate(String key) throws IOException, ParseException {
-        String content = getFileContent("dates.json");
-
-        JSONObject jsonObject = new JSONObject(content);
-        String s = jsonObject.getJSONObject(key).getString("startDate");
-        String e = jsonObject.getJSONObject(key).getString("endDate");
-
-        DateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-
-        LocalDate startDate = convertToLocalDateViaInstant(format.parse(s));
-        LocalDate endDate = convertToLocalDateViaInstant(format.parse(e));
-
-        LocalDate date = LocalDate.now();
-        return startDate.compareTo(date) * date.compareTo(endDate) > 0;
-    }
-
-    /**
-     *
-     * @param dateToConvert takes the date to be converted
-     * @return returns the date as local date
-     */
-    private LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
-        return dateToConvert.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-    }
-
-
 }

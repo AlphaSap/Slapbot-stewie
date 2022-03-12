@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Invoker(
         alias = "ping",
         description = "Check bots latency",
-        usage = "+ping",
+        usage = "/ping",
         type = CommandType.MISC
 )
 @Component
