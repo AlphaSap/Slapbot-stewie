@@ -1,0 +1,35 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.4'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'application'
+}
+
+group = 'com.FTHLBOT'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+application{
+    mainClass = "com.fthlbot.discordbotfthl.DiscordBotFthlApplication"
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'mysql:mysql-connector-java'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.javacord:javacord:3.4.0'
+    runtimeOnly 'org.apache.logging.log4j:log4j-core:2.17.0'
+    implementation files('C:\\Users\\sahil\\Desktop\\sahil\\JClash\\build\\libs\\JClash-1.0-SNAPSHOT.jar')
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation group: 'org.json', name: 'json', version: '20210307'
+    implementation 'com.github.S3nS3IW00:JCommands:4.2.0'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
