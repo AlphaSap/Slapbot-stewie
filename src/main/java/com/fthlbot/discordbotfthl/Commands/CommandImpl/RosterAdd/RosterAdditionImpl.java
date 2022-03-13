@@ -1,4 +1,4 @@
-package com.fthlbot.discordbotfthl.Commands.CommandImpl;
+package com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdd;
 
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.RosterAddListener;
@@ -13,20 +13,10 @@ import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.SlashCommandInteractionOption;
 import org.javacord.api.interaction.callback.InteractionCallbackDataFlag;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
-
-import static com.fthlbot.discordbotfthl.Util.GeneralService.getFileContent;
 
 @Invoker(
         alias = "roster-add",
@@ -34,7 +24,7 @@ import static com.fthlbot.discordbotfthl.Util.GeneralService.getFileContent;
         usage = "/roster-add <Division alias> <Team alias> <tags...>"
 )
 @Component
-public class RosterAdditionImpl implements RosterAddListener {
+public class RosterAdditionImpl extends RosterAddUtilClass implements RosterAddListener {
     @Autowired
     private TeamService teamService;
     @Autowired
@@ -57,8 +47,7 @@ public class RosterAdditionImpl implements RosterAddListener {
 
             Division division = divisionService.getDivisionByAlias(divisionAlias);
             Team team = teamService.getTeamByDivisionAndAlias(teamAlias, division);
-            RosterAddUtilClass utilClass = new RosterAddUtilClass();
-            utilClass.addPlayers(event, tags, team, rosterService);
+            addPlayers(event, tags, team, rosterService);
 
             event.getSlashCommandInteraction().respondLater().thenAccept(res -> {
                 res.setFlags(InteractionCallbackDataFlag.EPHEMERAL).setContent("Process complete").update();

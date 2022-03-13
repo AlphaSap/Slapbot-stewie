@@ -2,15 +2,10 @@ package com.fthlbot.discordbotfthl;
 
 import Core.JClash;
 import Core.exception.ClashAPIException;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.HelpImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.PingImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.RegistrationImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdditionImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.*;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdd.RosterAdditionImpl;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
-import com.fthlbot.discordbotfthl.Handlers.Command;
-import com.fthlbot.discordbotfthl.Handlers.MessageHandlers;
-import com.fthlbot.discordbotfthl.Handlers.MessageHolder;
-import com.fthlbot.discordbotfthl.Handlers.MessageListener;
+import com.fthlbot.discordbotfthl.Handlers.*;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
@@ -19,7 +14,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -27,7 +21,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +43,9 @@ public class DiscordBotFthlApplication {
 
     @Autowired
     private CommandLoggerService loggerService;
+
+    @Autowired
+    private RosterRemove rosterRemove;
 
     public static final String prefix = "+";
 
@@ -93,8 +89,10 @@ public class DiscordBotFthlApplication {
         List<Command> commandList = new ArrayList<>(List.of(
                 this.pingImpl,
                 this.registration,
-                this.rosterAddition
+                this.rosterAddition,
+                this.rosterRemove
         ));
+        //TODO make slash command for roster remove
 
         HelpImpl help = new HelpImpl(commandList);
         commandList.add(help);

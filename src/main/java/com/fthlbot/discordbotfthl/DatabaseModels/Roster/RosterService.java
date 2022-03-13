@@ -59,4 +59,15 @@ public class RosterService {
         teamService.decrementRC(roster.getTeam());
         return roster;
     }
+
+    public void removeFromRoster(Team team, String tag) throws EntityNotFoundException {
+        Optional<Roster> roster = repo.findRosterByTeamAndPlayerTag(team, tag);
+        if (roster.isPresent()){
+            repo.delete(roster.get());
+            return;
+        }
+        throw new EntityNotFoundException(String.format("""
+                `%s` is not present on your roster
+                """, tag));
+    }
 }
