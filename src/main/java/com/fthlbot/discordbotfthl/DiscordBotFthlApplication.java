@@ -10,6 +10,10 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
+import org.javacord.api.interaction.SlashCommand;
+import org.javacord.api.interaction.SlashCommandOption;
+import org.javacord.api.interaction.SlashCommandOptionChoice;
+import org.javacord.api.interaction.SlashCommandOptionType;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.fthlbot.discordbotfthl.Util.GeneralService.*;
+import static java.util.Arrays.asList;
 
 @SpringBootApplication
 public class DiscordBotFthlApplication {

@@ -150,6 +150,9 @@ public class Pagination {
 
         CompletableFuture<InteractionOriginalResponseUpdater> send = event.getSlashCommandInteraction().createImmediateResponder()
                 .addEmbeds(em.get(0)).respond();
+        send.thenAccept(res -> {
+            res.addComponents(ActionRow.of(lowLevelComponents));
+        });
 
 
         send.thenAccept(message -> {
