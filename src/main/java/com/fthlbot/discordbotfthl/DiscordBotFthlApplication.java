@@ -2,17 +2,22 @@ package com.fthlbot.discordbotfthl;
 
 import Core.JClash;
 import Core.exception.ClashAPIException;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.*;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.HelpImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.PingImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.RegistrationImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdd.RosterAdditionImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterRemove;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
-import com.fthlbot.discordbotfthl.Handlers.*;
+import com.fthlbot.discordbotfthl.Handlers.Command;
+import com.fthlbot.discordbotfthl.Handlers.MessageHandlers;
+import com.fthlbot.discordbotfthl.Handlers.MessageHolder;
+import com.fthlbot.discordbotfthl.Handlers.CommandListener;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.interaction.SlashCommand;
 import org.javacord.api.interaction.SlashCommandOption;
-import org.javacord.api.interaction.SlashCommandOptionChoice;
 import org.javacord.api.interaction.SlashCommandOptionType;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -28,8 +33,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.fthlbot.discordbotfthl.Util.GeneralService.*;
-import static java.util.Arrays.asList;
+import static com.fthlbot.discordbotfthl.Util.GeneralService.getFileContent;
+import static org.javacord.api.interaction.SlashCommandOptionType.*;
 
 @SpringBootApplication
 public class DiscordBotFthlApplication {
@@ -90,6 +95,17 @@ public class DiscordBotFthlApplication {
         log.info("Logged in as {}", api.getYourself().getDiscriminatedName());
         log.info("Watching servers {}", servers.size());
 
+        SlashCommand command = SlashCommand.with(
+                "help",
+                api.getYourself().getName() + "'s help command!")
+                .setOptions(List.of(
+                        SlashCommandOption.create(STRING,
+                                "command-name",
+                                "enter a valid command name, to view more detailed information",
+                                false)
+                        )
+                ).createForServer(api.getServerById(testID).get())
+                .join();
 
         List<Command> commandList = new ArrayList<>(List.of(
                 this.pingImpl,
@@ -97,7 +113,6 @@ public class DiscordBotFthlApplication {
                 this.rosterAddition,
                 this.rosterRemove
         ));
-        //TODO make slash command for roster remove
 
         HelpImpl help = new HelpImpl(commandList);
         commandList.add(help);
@@ -106,9 +121,9 @@ public class DiscordBotFthlApplication {
 
         MessageHolder messageHolder = messageHandlers.setCommands();
 
-        MessageListener messageListener = new MessageListener(messageHolder, loggerService);
+        CommandListener commandListener = new CommandListener(messageHolder, loggerService);
 
-        api.addListener(messageListener);
+        api.addListener(commandListener);
 
         return api;
     }

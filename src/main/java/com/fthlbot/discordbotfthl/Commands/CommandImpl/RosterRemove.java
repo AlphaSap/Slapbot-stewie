@@ -19,6 +19,7 @@ import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.callback.InteractionCallbackDataFlag;
+import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -44,12 +45,12 @@ public class RosterRemove implements Command {
 
     @Override
     public void execute(SlashCommandCreateEvent event) {
-        SlashCommandInteraction slashCommandInteraction = event.getSlashCommandInteraction();
-
+        SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+        CompletableFuture<InteractionOriginalResponseUpdater> re = interaction.respondLater(true);
         try {
-            String divAlias = slashCommandInteraction.getArguments().get(0).getStringValue().get();
-            String teamAlias = slashCommandInteraction.getArguments().get(1).getStringValue().get();
-            String[] tags = slashCommandInteraction.getArguments().get(2).getStringValue().get().split("\\s+");
+            String divAlias = interaction.getArguments().get(0).getStringValue().get();
+            String teamAlias = interaction.getArguments().get(1).getStringValue().get();
+            String[] tags = interaction.getArguments().get(2).getStringValue().get().split("\\s+");
 
             Division divisionByAlias = divisionService.getDivisionByAlias(divAlias);
             Team teamByDivisionAndAlias = teamService.getTeamByDivisionAndAlias(teamAlias, divisionByAlias);
@@ -60,12 +61,15 @@ public class RosterRemove implements Command {
                     Player player = clash.getPlayer(tag);
                     removeAcc(teamByDivisionAndAlias, player, event);
                     //success message
-                    sendMessage(tag, slashCommandInteraction.getChannel().get());
+                    sendMessage(player.getTag(), interaction.getChannel().get());
                 } catch (ClashAPIException | IOException e) {
                     e.printStackTrace();
                 }
             }
-            slashCommandInteraction.respondLater().thenAccept(res -> res.setContent("task Completed!").setFlags(InteractionCallbackDataFlag.EPHEMERAL));
+            re.thenAccept(res -> res.setContent("task Complete!")
+                            .setFlags(InteractionCallbackDataFlag.EPHEMERAL)
+                            .update()
+                    );
         } catch (LeagueException e) {
             leagueSlashErrorMessage(event, e);
         }

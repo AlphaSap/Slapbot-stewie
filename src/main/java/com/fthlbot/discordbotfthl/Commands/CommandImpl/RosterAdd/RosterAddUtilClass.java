@@ -13,12 +13,15 @@ import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
 public class RosterAddUtilClass {
+    private final static Logger log = LoggerFactory.getLogger(RosterAddUtilClass.class);
     public void addPlayers(SlashCommandCreateEvent event, String[] tags, Team team, RosterService service) {
         for (String tag : tags) {
             try {
@@ -29,10 +32,12 @@ public class RosterAddUtilClass {
                 //send a message for each addition
                 sendMessage(player.getTag(), team.getName(), event.getSlashCommandInteraction().getChannel().get());
             }catch (LeagueException e){
-                GeneralService.leagueSlashErrorMessage(event, e);
+                EmbedBuilder leagueError = GeneralService.getLeagueError(e, event);
+                event.getSlashCommandInteraction().getChannel().get().sendMessage(leagueError);
             }
             catch (ClashAPIException | IOException e) {
                 e.printStackTrace();
+                log.error("Could not add the tag {}", tag);
             }
         }
     }

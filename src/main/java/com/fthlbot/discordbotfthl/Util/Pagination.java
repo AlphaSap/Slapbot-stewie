@@ -22,7 +22,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import javax.swing.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -149,11 +153,7 @@ public class Pagination {
         };
 
         CompletableFuture<InteractionOriginalResponseUpdater> send = event.getSlashCommandInteraction().createImmediateResponder()
-                .addEmbeds(em.get(0)).respond();
-        send.thenAccept(res -> {
-            res.addComponents(ActionRow.of(lowLevelComponents));
-        });
-
+                .addEmbeds(em.get(0)).addComponents(ActionRow.of(lowLevelComponents)).respond();
 
         send.thenAccept(message -> {
             AtomicInteger i = new AtomicInteger();
@@ -174,25 +174,28 @@ public class Pagination {
                     switch (customId) {
                         case "first" -> {
                             button.getButtonInteraction().acknowledge().thenAccept(a -> {
-                                message.update().thenAccept(m -> m.edit(em.get(0)));
+                                message.removeAllEmbeds().addEmbed(em.get(0)).update();
                                 i.set(0);
                             });
                         }
                         case "last" -> {
                             button.getButtonInteraction().acknowledge().thenAccept(a -> {
-                                message.update().thenAccept(m -> m.edit(em.get(em.size() - 1)));
+                                message.removeAllEmbeds().addEmbed(em.get(em.size() - 1)).update();
+                              //  message.update().thenAccept(m -> m.edit(em.get(em.size() - 1)));
                                 i.set(em.size() - 1);
                             });
                         }
                         case "next" -> {
                             button.getButtonInteraction().acknowledge().thenAccept(a -> {
-                                message.update().thenAccept(m -> m.edit(em.get(i.get() + 1)));
+                                message.removeAllEmbeds().addEmbed(em.get(i.get() + 1)).update();
+                                //message.update().thenAccept(m -> m.edit(em.get(i.get() + 1)));
                                 i.incrementAndGet();
                             });
                         }
                         case "previous" -> {
                             button.getButtonInteraction().acknowledge().thenAccept(a -> {
-                                message.update().thenAccept(m -> m.edit(em.get(i.get() - 1)));
+                                message.removeAllEmbeds().addEmbed(em.get(i.get() - 1)).update();
+                               // message.update().thenAccept(m -> m.edit(em.get(i.get() - 1)));
                                 i.decrementAndGet();
                             });
                         }
@@ -202,8 +205,20 @@ public class Pagination {
                 }
                 //Delete the buttons after some time!
 
-            }).removeAfter(11, TimeUnit.MINUTES);
+            });
+            removeButton(message, 10, TimeUnit.MINUTES);
         });
 
+    }
+
+    private void removeButton( InteractionOriginalResponseUpdater message, int delay, TimeUnit unit ){
+        Timer timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                message.removeAllComponents().update();
+            }
+        };
+        timer.schedule(timerTask, unit.toMillis(delay));
     }
 }

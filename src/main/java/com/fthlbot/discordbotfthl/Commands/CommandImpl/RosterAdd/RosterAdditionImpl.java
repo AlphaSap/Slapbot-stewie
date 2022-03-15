@@ -13,10 +13,13 @@ import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.SlashCommandInteractionOption;
 import org.javacord.api.interaction.callback.InteractionCallbackDataFlag;
+import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
+import org.javacord.api.util.logging.ExceptionLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Invoker(
         alias = "roster-add",
@@ -36,7 +39,7 @@ public class RosterAdditionImpl extends RosterAddUtilClass implements RosterAddL
     public void execute(SlashCommandCreateEvent event) {
         try {
             SlashCommandInteraction slashCommandInteraction = event.getSlashCommandInteraction();
-
+            CompletableFuture<InteractionOriginalResponseUpdater> res = event.getSlashCommandInteraction().respondLater(true);
             List<SlashCommandInteractionOption> arguments = slashCommandInteraction.getArguments();
 
             String divisionAlias = arguments.get(0).getStringValue().get();
@@ -49,12 +52,13 @@ public class RosterAdditionImpl extends RosterAddUtilClass implements RosterAddL
             Team team = teamService.getTeamByDivisionAndAlias(teamAlias, division);
             addPlayers(event, tags, team, rosterService);
 
-            event.getSlashCommandInteraction().respondLater().thenAccept(res -> {
-                res.setFlags(InteractionCallbackDataFlag.EPHEMERAL).setContent("Process complete").update();
-            });
+            res.thenAccept(r -> {
+                r.setFlags(InteractionCallbackDataFlag.EPHEMERAL).setContent("Process complete").update();
+            }).exceptionally(ExceptionLogger.get());
 
         }catch (LeagueException e){
             GeneralService.leagueSlashErrorMessage(event, e);
         }
     }
+
 }

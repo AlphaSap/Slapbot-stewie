@@ -4,22 +4,20 @@ import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLogger;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
-import org.javacord.api.interaction.SlashCommandInteractionOption;
 import org.javacord.api.listener.interaction.SlashCommandCreateListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class MessageListener implements SlashCommandCreateListener {
-    private final Logger log = LoggerFactory.getLogger(MessageListener.class);
+public class CommandListener implements SlashCommandCreateListener {
+    private final Logger log = LoggerFactory.getLogger(CommandListener.class);
     private final MessageHolder messageHolder;
     private final CommandLoggerService service;
 
-    public MessageListener(MessageHolder messageHolder, CommandLoggerService service) {
+    public CommandListener(MessageHolder messageHolder, CommandLoggerService service) {
         this.messageHolder = messageHolder;
         this.service = service;
     }

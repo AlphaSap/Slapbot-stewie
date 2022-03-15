@@ -40,9 +40,6 @@ public class GeneralService extends DiscordBotFthlApplication {
         String s = jsonObject.getJSONObject(key).getString("startDate");
         String e = jsonObject.getJSONObject(key).getString("endDate");
 
-        log.info("start date {}", s);
-        log.info("End date {}", e);
-
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
         LocalDate startDate = convertToLocalDateViaInstant(format.parse(s));
@@ -118,6 +115,14 @@ public class GeneralService extends DiscordBotFthlApplication {
                 .setTitle("<:deny:934405749881315380>Error! ")
                 .setDescription(message.getMessage())
                 .setAuthor(event.getMessageAuthor())
+                .setColor(Color.red)
+                .setTimestampToNow();
+    }
+    public static EmbedBuilder getLeagueError(Exception message, SlashCommandCreateEvent event) {
+        return new EmbedBuilder()
+                .setTitle("<:deny:934405749881315380>Error! ")
+                .setDescription(message.getMessage())
+                .setAuthor(event.getSlashCommandInteraction().getUser())
                 .setColor(Color.red)
                 .setTimestampToNow();
     }
