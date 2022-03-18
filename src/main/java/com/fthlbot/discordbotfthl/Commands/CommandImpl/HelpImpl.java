@@ -5,23 +5,28 @@ import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.HelpListener;
 import com.fthlbot.discordbotfthl.Handlers.Command;
 import com.fthlbot.discordbotfthl.Util.Pagination;
+import org.javacord.api.entity.message.embed.Embed;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
+import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteractionOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
+import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.fthlbot.discordbotfthl.Annotation.CommandType.*;
 import static com.fthlbot.discordbotfthl.Annotation.CommandType.IGNORE;
 
 @Invoker(
         alias = "help",
-        description = "A general help command",
+        description = "You need help with \"help\" for `help` command",
         usage = "/help",
         type = IGNORE
 )
@@ -33,17 +38,59 @@ public class HelpImpl implements HelpListener {
         this.commands = commands;
     }
 
-    /*@Override
-    public void execute(MessageCreateEvent event) {
-        log.info("help command is working!");
-        Pagination pagination = new Pagination();
-        pagination.buttonPaginate(createHelpEmbeds(), event);
-    }*/
-
     @Override
     public void execute(SlashCommandCreateEvent event) {
+        List<SlashCommandInteractionOption> arguments = event.getSlashCommandInteraction().getArguments();
+        if  (arguments.size() >= 1){
+            boolean present = arguments.get(0).getStringValue().isPresent();
+            if (present){
+                String s = arguments.get(0).getStringValue().get();
+                EmbedBuilder embedBuilder = findCommand(s, event.getSlashCommandInteraction().getUser());
+                event.getSlashCommandInteraction().createImmediateResponder().addEmbeds(embedBuilder).respond();
+            }
+            return;
+        }
         Pagination pagination = new Pagination();
         pagination.buttonPaginate(createHelpEmbeds(), event);
+    }
+
+    /**
+     *
+     * @param name: takes the name of the command
+     * @param user: Take the user who invoked the command
+     * @return EmbedBuilder: returns an embedBuilder which will be sent to the user once they find the command they were looking for!
+     */
+    private EmbedBuilder findCommand(String name, User user) {
+        for (Command command : commands) {
+            Annotation[] annotations = command.getClass().getAnnotations();
+            for (Annotation annotation : annotations) {
+                if (annotation instanceof Invoker invoker){
+                    if (invoker.alias().equalsIgnoreCase(name)) {
+                        EmbedBuilder em = new EmbedBuilder()
+                                .setTitle(invoker.alias())
+                                .setDescription(invoker.description())
+                                .setTimestampToNow()
+                                .setColor(Color.cyan)
+                                .setAuthor(user);
+                        if (invoker.type() == UNSUPPORTED) {
+                            return new EmbedBuilder()
+                                    .setTitle(invoker.alias())
+                                    .setDescription(invoker.description())
+                                    .setTimestampToNow()
+                                    .setAuthor(user)
+                                    .setColor(Color.red)
+                                    .setFooter("Note - this command is deprecated, find an alternative command!");
+                        }
+                        return em;
+                    }
+                }
+            }
+        }
+        return new EmbedBuilder()
+                .setTitle("Command Not found!")
+                .setDescription("Use `/help` command to view a list of all the available commands!")
+                .setColor(Color.RED)
+                .setTimestampToNow();
     }
 
     private List<EmbedBuilder> createHelpEmbeds(){
@@ -100,7 +147,7 @@ public class HelpImpl implements HelpListener {
                     .setTitle(commandType.name().replace("_", " "))
                     .setDescription(str.toString())
                     .setTimestampToNow()
-                    .setFooter("type the name of the command after `>help` to get command specific help")
+                    .setFooter("type the name of the command after `/help` to get command specific help")
                     .setColor(Color.DARK_GRAY));
         });
         return embedBuilders;
