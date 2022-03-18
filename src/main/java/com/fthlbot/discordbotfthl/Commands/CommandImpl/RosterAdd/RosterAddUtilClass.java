@@ -7,6 +7,7 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Roster.Roster;
 import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
+import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.Message;
@@ -37,8 +38,10 @@ public class RosterAddUtilClass {
             }
             catch (ClashAPIException | IOException e) {
                 e.printStackTrace();
-                log.error("Could not add the tag {}", tag);
-            }
+                ClashExceptionHandler handler = new ClashExceptionHandler();
+                handler.setSlashCommandCreateEvent(event)
+                        .setStatusCode(Integer.valueOf(e.getMessage()));
+                handler.respond();            }
         }
     }
 

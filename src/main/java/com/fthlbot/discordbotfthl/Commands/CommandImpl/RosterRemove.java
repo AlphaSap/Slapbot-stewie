@@ -12,6 +12,7 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
 import com.fthlbot.discordbotfthl.Handlers.Command;
+import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageBuilder;
@@ -63,6 +64,10 @@ public class RosterRemove implements Command {
                     //success message
                     sendMessage(player.getTag(), interaction.getChannel().get());
                 } catch (ClashAPIException | IOException e) {
+                    ClashExceptionHandler handler = new ClashExceptionHandler();
+                    handler.setSlashCommandCreateEvent(event)
+                            .setStatusCode(Integer.valueOf(e.getMessage()));
+                    handler.respond();
                     e.printStackTrace();
                 }
             }

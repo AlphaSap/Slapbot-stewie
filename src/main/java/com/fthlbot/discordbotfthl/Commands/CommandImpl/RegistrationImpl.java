@@ -11,6 +11,7 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
+import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
@@ -38,7 +39,7 @@ import static com.fthlbot.discordbotfthl.Util.GeneralService.*;
         usage = "/register <CLAN TAG> <DIVISION ALIAS> <TEAM ALIAS> <@Second Rep (optional)>",
         type = CommandType.REGISTRATION
 )
-/*
+/* TODO
  * Notes to myself -
  *
  * make a channel
@@ -179,6 +180,10 @@ public class RegistrationImpl implements RegistrationListener {
             leagueSlashErrorMessage(event, e);
             e.printStackTrace();
         }catch (ClashAPIException | IOException e){
+            ClashExceptionHandler handler = new ClashExceptionHandler();
+            handler.setSlashCommandCreateEvent(event)
+                    .setStatusCode(Integer.valueOf(e.getMessage()));
+            handler.respond();
             e.printStackTrace();
         }catch (Exception e){
             e.printStackTrace();
