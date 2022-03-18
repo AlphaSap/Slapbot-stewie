@@ -44,7 +44,7 @@ public class ClashExceptionHandler {
     }
 
     private ClashExceptionHandler createEmbed() {
-        switch (statusCode) {
+        switch (getStatusCode()) {
             case 400 -> {
                 return this.setEmbedBuilder(
                         new EmbedBuilder()
