@@ -6,6 +6,7 @@ import com.fthlbot.discordbotfthl.Commands.CommandImpl.HelpImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.PingImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.RegistrationImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdd.RosterAdditionImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdd.TeamRoster.TeamRoster;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterRemove;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
 import com.fthlbot.discordbotfthl.Handlers.Command;
@@ -18,6 +19,7 @@ import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.interaction.SlashCommand;
 import org.javacord.api.interaction.SlashCommandOption;
+import org.javacord.api.interaction.SlashCommandOptionChoice;
 import org.javacord.api.interaction.SlashCommandOptionType;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -34,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.fthlbot.discordbotfthl.Util.GeneralService.getFileContent;
+import static java.util.Arrays.asList;
 import static org.javacord.api.interaction.SlashCommandOptionType.*;
 
 @SpringBootApplication
@@ -56,6 +59,9 @@ public class DiscordBotFthlApplication {
 
     @Autowired
     private RosterRemove rosterRemove;
+
+    @Autowired
+    private TeamRoster teamRoster;
 
     public static final String prefix = "+";
 
@@ -95,23 +101,14 @@ public class DiscordBotFthlApplication {
         log.info("Logged in as {}", api.getYourself().getDiscriminatedName());
         log.info("Watching servers {}", servers.size());
 
-        SlashCommand command = SlashCommand.with(
-                "help",
-                api.getYourself().getName() + "'s help command!")
-                .setOptions(List.of(
-                        SlashCommandOption.create(STRING,
-                                "command-name",
-                                "enter a valid command name, to view more detailed information",
-                                false)
-                        )
-                ).createForServer(api.getServerById(testID).get())
-                .join();
+
 
         List<Command> commandList = new ArrayList<>(List.of(
                 this.pingImpl,
                 this.registration,
                 this.rosterAddition,
-                this.rosterRemove
+                this.rosterRemove,
+                this.teamRoster
         ));
 
         HelpImpl help = new HelpImpl(commandList);
@@ -124,6 +121,8 @@ public class DiscordBotFthlApplication {
         CommandListener commandListener = new CommandListener(messageHolder, loggerService);
 
         api.addListener(commandListener);
+
+
 
         return api;
     }

@@ -1,5 +1,6 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdd;
 
+import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.RosterAddListener;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
@@ -24,7 +25,9 @@ import java.util.concurrent.CompletableFuture;
 @Invoker(
         alias = "roster-add",
         description = "This command allows you to add accounts to your roster!",
-        usage = "/roster-add <Division alias> <Team alias> <tags...>"
+        usage = "/roster-add <Division alias> <Team alias> <tags...>",
+        type = CommandType.ROSTER_MANAGEMENT
+
 )
 @Component
 public class RosterAdditionImpl extends RosterAddUtilClass implements RosterAddListener {

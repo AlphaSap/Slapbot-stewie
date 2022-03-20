@@ -81,7 +81,7 @@ public class RegistrationImpl implements RegistrationListener {
                     event.getMessage().getMentionedUsers().get(0);
 
             Division division = divisionService.getDivisionByAlias(divAlias);
-            ClanModel clan = clash.getClan(tag);
+            ClanModel clan = clash.getClan(tag).join();
 
             //Make team
             Team team = new Team(
@@ -145,7 +145,7 @@ public class RegistrationImpl implements RegistrationListener {
             secondRep = arguments.get(3).getUserValue().orElse(user);
 
         Division division = divisionService.getDivisionByAlias(divisionAlias);
-        ClanModel clan = clash.getClan(clanTag);
+        ClanModel clan = clash.getClan(clanTag).join();
 
         //Make team
         Team team = new Team(

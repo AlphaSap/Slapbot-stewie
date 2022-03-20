@@ -24,12 +24,12 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.javacord:javacord:3.4.0'
     runtimeOnly 'org.apache.logging.log4j:log4j-core:2.17.1'
-    // implementation files('C:\\Users\\sahil\\Desktop\\sahil\\JClash\\build\\libs\\JClash-1.0-SNAPSHOT.jar')
+    implementation files('C:\\Users\\sahil\\Desktop\\sahil\\JClash\\build\\libs\\JClash-1.1.3.jar')
 
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation group: 'org.json', name: 'json', version: '20210307'
     implementation 'com.github.S3nS3IW00:JCommands:4.2.0'
-    implementation 'com.github.SaHHiiLL:JClash:1.1.1'
+ //   implementation'com.github.SaHHiiLL:JClash:1.2.1'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
 }

@@ -3,6 +3,7 @@ package com.fthlbot.discordbotfthl.Commands.CommandImpl;
 import Core.Enitiy.player.Player;
 import Core.JClash;
 import Core.exception.ClashAPIException;
+import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
@@ -33,7 +34,8 @@ import static com.fthlbot.discordbotfthl.Util.GeneralService.leagueSlashErrorMes
 @Invoker(
         alias = "roster-remove",
         description = "A command to remove accounts from your master roster. Add multiple tags seperated by tags",
-        usage = "/roster-remove <DIVISION ALIAS> <TEAM ALIAS> <TAGs ...>"
+        usage = "/roster-remove <DIVISION ALIAS> <TEAM ALIAS> <TAGs ...>",
+        type = CommandType.ROSTER_MANAGEMENT
 )
 @Component
 public class RosterRemove implements Command {
@@ -57,19 +59,18 @@ public class RosterRemove implements Command {
             Team teamByDivisionAndAlias = teamService.getTeamByDivisionAndAlias(teamAlias, divisionByAlias);
 
             for (String tag : tags) {
-                try {
                     JClash clash = new JClash();
-                    Player player = clash.getPlayer(tag);
-                    removeAcc(teamByDivisionAndAlias, player, event);
-                    //success message
-                    sendMessage(player.getTag(), interaction.getChannel().get());
-                } catch (ClashAPIException | IOException e) {
-                    ClashExceptionHandler handler = new ClashExceptionHandler();
-                    handler.setSlashCommandCreateEvent(event)
-                            .setStatusCode(Integer.valueOf(e.getMessage()));
-                    handler.respond();
-                    e.printStackTrace();
-                }
+                    clash.getPlayer(tag).thenAccept(player -> {
+                        removeAcc(teamByDivisionAndAlias, player, event);
+                        //success message
+                        sendMessage(player.getTag(), interaction.getChannel().get());
+                    }).exceptionally(e -> {
+                        ClashExceptionHandler c = new ClashExceptionHandler();
+                        c.setStatusCode(Integer.valueOf(e.getMessage()));
+                        c.setSlashCommandCreateEvent(event);
+                        c.respond();
+                        return null;
+                    });
             }
             re.thenAccept(res -> res.setContent("task Complete!")
                             .setFlags(InteractionCallbackDataFlag.EPHEMERAL)
@@ -77,6 +78,8 @@ public class RosterRemove implements Command {
                     );
         } catch (LeagueException e) {
             leagueSlashErrorMessage(event, e);
+        }catch (IOException e){
+            e.printStackTrace();
         }
     }
 

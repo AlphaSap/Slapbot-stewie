@@ -115,6 +115,8 @@ public class HelpImpl implements HelpListener {
                     switch (((Invoker) annotation).type()){
                         case INFO -> {
                             em.get(INFO).add(((Invoker) annotation).alias());
+                        }case TEAM -> {
+                            em.get(TEAM).add(((Invoker) annotation).alias());
                         }case MISC -> {
                             em.get(MISC).add(((Invoker) annotation).alias());
                         }case REGISTRATION -> {
@@ -125,8 +127,10 @@ public class HelpImpl implements HelpListener {
                             em.get(SCHEDULE).add(((Invoker) annotation).alias());
                         }case STAFF -> {
                             em.get(STAFF).add(((Invoker) annotation).alias());
+                        }case UNSUPPORTED -> {
+                            em.get(UNSUPPORTED).add(((Invoker) annotation).alias());
                         }default -> {
-                            em.get(UNSUPPORTED).add("un");
+                            // do nothing...
                         }
                     }
                 }

@@ -14,6 +14,7 @@ import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
+import org.javacord.api.util.logging.ExceptionLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,11 +28,12 @@ public class RosterAddUtilClass {
         for (String tag : tags) {
             try {
                 JClash clash = new JClash();
-                Player player = clash.getPlayer(tag);
+                Player player = clash.getPlayer(tag).join();
                 Roster roster = new Roster(player.getName(), player.getTag(), player.getTownHallLevel(), team);
                 service.addToRoster(roster);
                 //send a message for each addition
-                sendMessage(player.getTag(), team.getName(), event.getSlashCommandInteraction().getChannel().get());
+                sendMessage(player.getTag(), team.getName(), event.getSlashCommandInteraction().getChannel().get())
+                        .exceptionally(ExceptionLogger.get());
             }catch (LeagueException e){
                 EmbedBuilder leagueError = GeneralService.getLeagueError(e, event);
                 event.getSlashCommandInteraction().getChannel().get().sendMessage(leagueError);
