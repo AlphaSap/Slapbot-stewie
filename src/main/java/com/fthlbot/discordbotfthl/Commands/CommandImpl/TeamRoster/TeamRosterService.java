@@ -1,4 +1,4 @@
-package com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdd.TeamRoster;
+package com.fthlbot.discordbotfthl.Commands.CommandImpl.TeamRoster;
 
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
@@ -54,7 +54,7 @@ public class TeamRosterService {
         List<List<String>> strTeam = new ArrayList<>();
         int currentList = 0;
         int lineCount = 0;
-        strTeam.add(new ArrayList<String>());
+        strTeam.add(new ArrayList<>());
 
         for(Roster roster: rosters){
             String tag = roster.getPlayerTag();

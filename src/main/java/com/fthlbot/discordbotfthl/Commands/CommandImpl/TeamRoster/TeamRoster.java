@@ -1,4 +1,4 @@
-package com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdd.TeamRoster;
+package com.fthlbot.discordbotfthl.Commands.CommandImpl.TeamRoster;
 
 import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
