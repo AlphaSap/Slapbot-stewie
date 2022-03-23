@@ -2,11 +2,12 @@ package com.fthlbot.discordbotfthl;
 
 import Core.JClash;
 import Core.exception.ClashAPIException;
+import com.fthlbot.discordbotfthl.Commands.ClashCommandImpl.AttackImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.HelpImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.PingImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.RegistrationImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdd.RosterAdditionImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdd.TeamRoster.TeamRoster;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.TeamRoster.TeamRoster;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterRemove;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
 import com.fthlbot.discordbotfthl.Handlers.Command;
@@ -19,8 +20,6 @@ import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.interaction.SlashCommand;
 import org.javacord.api.interaction.SlashCommandOption;
-import org.javacord.api.interaction.SlashCommandOptionChoice;
-import org.javacord.api.interaction.SlashCommandOptionType;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,13 +30,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.fthlbot.discordbotfthl.Util.GeneralService.getFileContent;
-import static java.util.Arrays.asList;
-import static org.javacord.api.interaction.SlashCommandOptionType.*;
+import static org.javacord.api.interaction.SlashCommandOptionType.STRING;
 
 @SpringBootApplication
 public class DiscordBotFthlApplication {
@@ -62,6 +61,9 @@ public class DiscordBotFthlApplication {
 
     @Autowired
     private TeamRoster teamRoster;
+
+    @Autowired
+    private AttackImpl attack;
 
     public static final String prefix = "+";
 
@@ -108,7 +110,8 @@ public class DiscordBotFthlApplication {
                 this.registration,
                 this.rosterAddition,
                 this.rosterRemove,
-                this.teamRoster
+                this.teamRoster,
+                this.attack
         ));
 
         HelpImpl help = new HelpImpl(commandList);

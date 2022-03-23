@@ -2,6 +2,7 @@ package com.fthlbot.discordbotfthl.DatabaseModels.Roster;
 
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityAlreadyExistsException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;
+import com.fthlbot.discordbotfthl.DatabaseModels.Exception.IncorrectTownHallException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.NoMoreRosterChangesLeftException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
@@ -33,7 +34,7 @@ public class RosterService {
     }
 
     //TODO fp checks
-    public Roster addToRoster(Roster roster) throws EntityAlreadyExistsException, NoMoreRosterChangesLeftException {
+    public Roster addToRoster(Roster roster) throws EntityAlreadyExistsException, NoMoreRosterChangesLeftException, IncorrectTownHallException {
         Optional<Roster> alreadyAddedAccount = repo.findRosterByPlayerTagAndDivision(roster.getPlayerTag(), roster.getDivision());
         List<Roster> rosterByTeam = repo.findRosterByTeam(roster.getTeam());
         if (alreadyAddedAccount.isPresent()){
@@ -44,6 +45,16 @@ public class RosterService {
         if (rosterByTeam.size() <= 0){
             String s = String.format("`%s` has no more roster changes left! No more accounts can be added!", roster.getTeam().getName());
             throw new NoMoreRosterChangesLeftException(s);
+        }
+        List<Integer> allowedTownHall = roster.getDivision().getAllowedTownHall();
+
+        Roster finalRoster = roster;
+        boolean b = allowedTownHall
+                .stream()
+                .anyMatch(x -> x.intValue() == finalRoster.getTownHallLevel().intValue());
+
+        if (!b){
+            throw new IncorrectTownHallException(roster.getTownHallLevel(), roster.getDivision());
         }
         roster = repo.save(roster);
         return roster;
