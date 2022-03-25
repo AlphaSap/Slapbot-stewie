@@ -1,11 +1,9 @@
 package com.fthlbot.discordbotfthl.DatabaseModels.Roster;
 
-import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityAlreadyExistsException;
-import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;
-import com.fthlbot.discordbotfthl.DatabaseModels.Exception.IncorrectTownHallException;
-import com.fthlbot.discordbotfthl.DatabaseModels.Exception.NoMoreRosterChangesLeftException;
+import com.fthlbot.discordbotfthl.DatabaseModels.Exception.*;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
+import org.javacord.api.entity.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +39,7 @@ public class RosterService {
     //only reps
     //change has transactions
     //check pos
-    public Roster addToRoster(Roster roster) throws EntityAlreadyExistsException, NoMoreRosterChangesLeftException, IncorrectTownHallException {
+    public Roster addToRoster(Roster roster, User user) throws EntityAlreadyExistsException, NoMoreRosterChangesLeftException, IncorrectTownHallException, NotTheRepException {
         Optional<Roster> alreadyAddedAccount = repo.findRosterByPlayerTagAndDivision(roster.getPlayerTag(), roster.getDivision());
         List<Roster> rosterByTeam = repo.findRosterByTeam(roster.getTeam());
         if (alreadyAddedAccount.isPresent()){
@@ -51,6 +49,13 @@ public class RosterService {
             );
         }
 
+        boolean isRep =
+                roster.getTeam().getRep1ID().equals(user.getId())
+                ||
+                roster.getTeam().getRep2ID().equals(user.getId());
+        if (!isRep){
+            throw new NotTheRepException(user, roster.getTeam());
+        }
 
         if (rosterByTeam.size() >= roster.getDivision().getRosterSize()){
             String s = String.format("`%s` has no more roster changes left! No more accounts can be added!", roster.getTeam().getName());

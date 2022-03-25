@@ -37,7 +37,7 @@ public class RosterAddUtilClass {
                     return null;
                 }).join();
                 Roster roster = new Roster(player.getName(), player.getTag(), player.getTownHallLevel(), team);
-                service.addToRoster(roster);
+                service.addToRoster(roster, event.getInteraction().getUser());
                 //send a message for each addition
                 sendMessage(player.getTag(), team.getName(), event.getSlashCommandInteraction().getChannel().get())
                         .exceptionally(ExceptionLogger.get());
