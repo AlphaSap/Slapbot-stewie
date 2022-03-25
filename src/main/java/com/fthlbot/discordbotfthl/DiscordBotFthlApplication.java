@@ -7,19 +7,17 @@ import com.fthlbot.discordbotfthl.Commands.CommandImpl.HelpImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.PingImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.RegistrationImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdd.RosterAdditionImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.TeamRoster.TeamRoster;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterRemove;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.TeamRoster.TeamRoster;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
 import com.fthlbot.discordbotfthl.Handlers.Command;
+import com.fthlbot.discordbotfthl.Handlers.CommandListener;
 import com.fthlbot.discordbotfthl.Handlers.MessageHandlers;
 import com.fthlbot.discordbotfthl.Handlers.MessageHolder;
-import com.fthlbot.discordbotfthl.Handlers.CommandListener;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
-import org.javacord.api.interaction.SlashCommand;
-import org.javacord.api.interaction.SlashCommandOption;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,13 +28,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.fthlbot.discordbotfthl.Util.GeneralService.getFileContent;
-import static org.javacord.api.interaction.SlashCommandOptionType.STRING;
 
 @SpringBootApplication
 public class DiscordBotFthlApplication {

@@ -30,7 +30,7 @@ public class GeneralService extends DiscordBotFthlApplication {
      *
      * @param key of json object
      * @return returns if the today's date is between the noted date define in the json (not inclusive)
-     * @throws IOException
+     * @throws IOException throw when something goes wrong lmao
      * @throws ParseException - will throw an error if I mess up json formatting
      */
     public static boolean isValidDate(String key) throws IOException, ParseException {
