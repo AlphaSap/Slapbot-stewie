@@ -30,3 +30,14 @@ SlapBot also used the latest version of spring boot to manage dependency injecti
 Lastly it uses JClash, a custom open source java clash of clans wrapper with dynamic key handling which was developed by me 
 after not having a static Ip for my home testing environment. Read more about JClash [here]().
 
+# TODO
+- Make team all command
+- Make clan change command
+- Make Rep change command
+- Make alias change command
+- Make nego channel shit!
+
+
+- Make stats command
+- Make player command
+- ~~Make defense command~~
