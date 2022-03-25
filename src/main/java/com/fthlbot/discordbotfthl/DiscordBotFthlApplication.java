@@ -10,6 +10,7 @@ import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdd.RosterAdditionI
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterRemove;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.TeamRoster.TeamRoster;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
+import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
 import com.fthlbot.discordbotfthl.Handlers.Command;
 import com.fthlbot.discordbotfthl.Handlers.CommandListener;
 import com.fthlbot.discordbotfthl.Handlers.MessageHandlers;
@@ -39,6 +40,9 @@ public class DiscordBotFthlApplication {
 
     @Autowired
     private Environment env;
+
+    @Autowired
+    private DivisionService service;
 
     @Autowired
     private PingImpl pingImpl;
@@ -120,8 +124,7 @@ public class DiscordBotFthlApplication {
         CommandListener commandListener = new CommandListener(messageHolder, loggerService);
 
         api.addListener(commandListener);
-
-
+        service.createDivisions();
 
         return api;
     }

@@ -3,6 +3,7 @@ package com.fthlbot.discordbotfthl.Util.Exception;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
+import org.javacord.api.interaction.callback.InteractionCallbackDataFlag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,7 +108,7 @@ public class ClashExceptionHandler {
     public void respond(){
         SlashCommandInteraction i = this.createEmbed().getSlashCommandCreateEvent().getSlashCommandInteraction();
         i.respondLater().thenAccept(res -> {
-            res.addEmbed(this.getEmbedBuilder()).update();
+            res.addEmbed(this.getEmbedBuilder()).setFlags(InteractionCallbackDataFlag.EPHEMERAL).update();
         });
     }
 }

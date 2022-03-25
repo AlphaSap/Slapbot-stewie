@@ -16,14 +16,12 @@ public class Division {
     private String alias;
     private Integer rosterSize;
     private Integer allowedRosterChanges;
-    @ElementCollection
-    private List<Integer> allowedTownHall = new ArrayList<>();
-
+    private Integer[] allowedTownHall;
 
     public Division() {
     }
 
-    public Division(String name, String alias, Integer rosterSize, Integer allowedRosterChanges, List<Integer> allowedTownHall) {
+    public Division(String name, String alias, Integer rosterSize, Integer allowedRosterChanges, Integer[] allowedTownHall) {
         this.name = name;
         this.alias = alias;
         this.rosterSize = rosterSize;
@@ -31,11 +29,11 @@ public class Division {
         this.allowedTownHall = allowedTownHall;
     }
 
-    public List<Integer> getAllowedTownHall() {
-        return allowedTownHall;
+    public Integer[] getAllowedTownHall() {
+        return this.allowedTownHall;
     }
 
-    public Division(Integer id, String name, String alias, Integer rosterSize, Integer allowedRosterChanges, List<Integer> allowedTownHall) {
+    public Division(Integer id, String name, String alias, Integer rosterSize, Integer allowedRosterChanges, Integer[] allowedTownHall) {
         this.id = id;
         this.name = name;
         this.alias = alias;
@@ -45,23 +43,23 @@ public class Division {
     }
 
     public Integer getId() {
-        return id;
+        return this.id;
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public String getAlias() {
-        return alias;
+        return this.alias;
     }
 
     public Integer getRosterSize() {
-        return rosterSize;
+        return this.rosterSize;
     }
 
     public Integer getAllowedRosterChanges() {
-        return allowedRosterChanges;
+        return this.allowedRosterChanges;
     }
 
 }

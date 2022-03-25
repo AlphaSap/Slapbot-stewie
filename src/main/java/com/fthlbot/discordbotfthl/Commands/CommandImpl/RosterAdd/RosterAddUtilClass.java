@@ -28,7 +28,14 @@ public class RosterAddUtilClass {
         for (String tag : tags) {
             try {
                 JClash clash = new JClash();
-                Player player = clash.getPlayer(tag).join();
+                Player player = clash.getPlayer(tag).exceptionally(e -> {
+                    e.printStackTrace();
+                    ClashExceptionHandler handler = new ClashExceptionHandler();
+                    handler.setSlashCommandCreateEvent(event)
+                            .setStatusCode(Integer.valueOf(e.getMessage()));
+                    handler.respond();
+                    return null;
+                }).join();
                 Roster roster = new Roster(player.getName(), player.getTag(), player.getTownHallLevel(), team);
                 service.addToRoster(roster);
                 //send a message for each addition
@@ -37,13 +44,9 @@ public class RosterAddUtilClass {
             }catch (LeagueException e){
                 EmbedBuilder leagueError = GeneralService.getLeagueError(e, event);
                 event.getSlashCommandInteraction().getChannel().get().sendMessage(leagueError);
-            }
-            catch (ClashAPIException | IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
-                ClashExceptionHandler handler = new ClashExceptionHandler();
-                handler.setSlashCommandCreateEvent(event)
-                        .setStatusCode(Integer.valueOf(e.getMessage()));
-                handler.respond();            }
+            }
         }
     }
 

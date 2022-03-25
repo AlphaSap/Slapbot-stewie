@@ -7,9 +7,9 @@ public class IncorrectTownHallException extends LeagueException{
     private final Integer townHallLevel;
     private final Division division;
 
-    private static final String MESSAGE = "Cannot add a th%d to %s";
+    private static final String MESSAGE = "Cannot add a th%d in %s";
     public IncorrectTownHallException(Integer townHallLevel, Division division) {
-        super(String.format(MESSAGE, townHallLevel, division));
+        super(String.format(MESSAGE, townHallLevel, division.getName()));
         this.townHallLevel = townHallLevel;
         this.division = division;
     }
