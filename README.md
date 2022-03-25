@@ -36,6 +36,7 @@ after not having a static Ip for my home testing environment. Read more about JC
 - Make Rep change command
 - Make alias change command
 - Make nego channel shit!
+- fix the clash error class
 
 
 - Make stats command
