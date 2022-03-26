@@ -104,7 +104,7 @@ public class DiscordBotFthlApplication {
         log.info("Watching servers {}", servers.size());
 
 
-
+        //Add commands to the handler
         List<Command> commandList = new ArrayList<>(List.of(
                 this.pingImpl,
                 this.registration,
@@ -113,8 +113,9 @@ public class DiscordBotFthlApplication {
                 this.teamRoster,
                 this.attack
         ));
-
+        //Making help command
         HelpImpl help = new HelpImpl(commandList);
+        //Add help command
         commandList.add(help);
 
         MessageHandlers messageHandlers = new MessageHandlers(commandList);

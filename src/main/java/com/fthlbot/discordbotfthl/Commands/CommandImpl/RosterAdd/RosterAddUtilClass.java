@@ -45,7 +45,16 @@ public class RosterAddUtilClass {
                 EmbedBuilder leagueError = GeneralService.getLeagueError(e, event);
                 event.getSlashCommandInteraction().getChannel().get().sendMessage(leagueError);
             } catch (IOException e) {
-                e.printStackTrace();
+                event.getSlashCommandInteraction()
+                        .respondLater()
+                        .thenAccept(res -> {
+                            res.setContent("Unhandled exception, this happenes when Clash of clans make a changes without notifying me !")
+                                    .update();
+                        });
+                event.getApi().getChannelById(899282429678878801L).ifPresent(ch -> {
+                    String s = "You managed to get the most unexpected error! \nIn rosterAddUtillClass, IException:  "  +  e.getMessage();
+                    ch.asServerTextChannel().get().sendMessage(s);
+                });
             }
         }
     }
