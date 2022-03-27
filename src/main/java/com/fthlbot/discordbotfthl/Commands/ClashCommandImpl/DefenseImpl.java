@@ -9,6 +9,7 @@ import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.ClashCommandListener.AttackListener;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
+import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
@@ -30,32 +31,35 @@ import java.util.concurrent.CompletableFuture;
         usage = "/defense <TAG>",
         type = CommandType.CLASH
 )
+//TODO revist this shit ass code and fix the 2hit glitch, this thing mad annoying not gonna continue this again.
 public class DefenseImpl implements AttackListener {
     private static final Logger log = LoggerFactory.getLogger(DefenseImpl.class);
     private final static int NAME_MAX_LEN = 20, ID_MAX_LEN = 11, ALIAS_MAX_LEN = 10;
     @Override
     public void execute(SlashCommandCreateEvent event) {
         SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+         CompletableFuture<InteractionOriginalResponseUpdater> respondLater = interaction.respondLater();
         String tag = interaction.getArguments().get(0).getStringValue().get();
 
         JClash clash = new JClash();
 
         try {
             clash.getCurrentWar(tag).thenAccept(c -> {
-                CompletableFuture<InteractionOriginalResponseUpdater> respondLater = interaction.respondLater();
-                Map<ClanWarMember, List<Attack>> defAndAttacks = this.getDefAndAttacks(c);
-                StringBuilder stringBuilder = setDefense(defAndAttacks);
-                EmbedBuilder em = new EmbedBuilder();
-                em = em.setTitle("Defenses for " + c.getClan().getName())
-                        .setDescription(stringBuilder.toString())
-                        .setColor(Color.cyan)
-                        .setAuthor(interaction.getUser())
-                        .setTimestampToNow();
+                EmbedBuilder em = getDefEmbed(interaction, c);
                 //EmbedBuilder finalEm = em;
 
-                EmbedBuilder finalEm = em;
                 respondLater.thenAccept(res -> {
-                    res.addEmbed(finalEm).update();
+                    CompletableFuture<Message> message = res.addEmbed(em).update();
+
+                    message.thenAccept(msg -> {
+                        msg.addReaction("\uD83D\uDD01");
+                        msg.addReactionAddListener(react -> {
+                            if (react.getUser().get().getId() != react.getApi().getYourself().getId()){
+                              msg.removeEmbed().thenAccept(m -> m.edit(new DefenseForOpponent().getDefEmbed(interaction.getUser(), c)));
+                            }
+                        });
+                    });
+
                 });
 
             });
@@ -66,7 +70,20 @@ public class DefenseImpl implements AttackListener {
                     .respond();
         }
     }
-     class tempWarMember {
+
+    private EmbedBuilder getDefEmbed(SlashCommandInteraction interaction, WarInfo c) {
+        Map<ClanWarMember, List<Attack>> defAndAttacks = this.getDefAndAttacks(c);
+        StringBuilder stringBuilder = setDefense(defAndAttacks);
+        EmbedBuilder em = new EmbedBuilder();
+        em = em.setTitle("Defenses for " + c.getClan().getName())
+                .setDescription(stringBuilder.toString())
+                .setColor(Color.cyan)
+                .setAuthor(interaction.getUser())
+                .setTimestampToNow();
+        return em;
+    }
+
+    class tempWarMember {
         private final List<Attack> attacks;
         private final ClanWarMember clanWarMember;
 
@@ -83,6 +100,13 @@ public class DefenseImpl implements AttackListener {
             return attacks;
         }
 
+        @Override
+        public String toString() {
+            return "tempWarMember{" +
+                    "attacks=" + attacks +
+                    ", clanWarMember=" + clanWarMember +
+                    '}';
+        }
     }
     private static String formatRow(String name, String tag, String alias, String ext) {
         return String.format("%-" + (ID_MAX_LEN + ext.length()) + "s%-" + (ALIAS_MAX_LEN + ext.length()) +
@@ -92,14 +116,16 @@ public class DefenseImpl implements AttackListener {
     private StringBuilder setDefense(Map<ClanWarMember, List<Attack>> defence){
         List<tempWarMember> tempWarMembers = new ArrayList<>();
         defence.forEach((x, y) -> {
-            tempWarMembers.add(new tempWarMember(y, x));
+            tempWarMember e = new tempWarMember(y, x);
+            log.info(e.toString());
+            tempWarMembers.add(e);
         });
 
         List<tempWarMember> collect = tempWarMembers.stream()
                 .sorted(Comparator.comparingInt(x -> x.getClanWarMember().getMapPosition()))
                 .toList();
         StringBuilder s = new StringBuilder();
-        tempWarMembers.stream()
+        collect.stream()
                 .filter(x -> !x.getAttacks().isEmpty())
                 .forEach(tempWarMember -> {
                     final int[] defWon = {0};
@@ -126,15 +152,18 @@ public class DefenseImpl implements AttackListener {
 
         Map<ClanWarMember, List<Attack>> defence = new HashMap<>();
 
-        enemyWarMembers
-                .stream()
+        enemyWarMembers.stream()
                 .filter(member -> member.getAttacks() != null)
                 .forEach(member -> {
                     member.getAttacks().forEach(attack -> {
-                        ClanWarMember homeWarMember = homeWarMembers
-                                .stream()
-                                .filter(warMember -> warMember.getTag().equalsIgnoreCase(attack.getDefenderTag()))
-                                .findFirst().get();
+                        ClanWarMember homeWarMember = null;
+                        String defenderTag = attack.getDefenderTag();
+                        for (ClanWarMember warMember : homeWarMembers) {
+                            if (warMember.getTag().equalsIgnoreCase(defenderTag)){
+                                homeWarMember = warMember;
+                                break;
+                            }
+                        }
 
                         if (defence.containsKey(homeWarMember)){
                             List<Attack> attacks = defence.get(homeWarMember);
