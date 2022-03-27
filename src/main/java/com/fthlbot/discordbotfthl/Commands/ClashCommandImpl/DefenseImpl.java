@@ -60,17 +60,9 @@ public class DefenseImpl implements AttackListener {
 
             });
         } catch (ClashAPIException | IOException e) {
-            e.printStackTrace();
-            Integer statusCode = null;
-            try {
-                statusCode = Integer.valueOf(e.getMessage());
-                System.out.println(statusCode);
-            } catch (NumberFormatException ex) {
-                ex.printStackTrace();
-            }
             new ClashExceptionHandler()
-                    .setSlashCommandInteraction(event)
-                    .setStatusCode(statusCode)
+                    .setSlashCommandInteraction(interaction)
+                    .setStatusCode(Integer.valueOf(e.getMessage()))
                     .respond();
         }
     }

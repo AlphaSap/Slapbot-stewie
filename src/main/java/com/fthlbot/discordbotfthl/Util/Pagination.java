@@ -1,14 +1,9 @@
 package com.fthlbot.discordbotfthl.Util;
 
-import com.sun.istack.NotNull;
-import org.javacord.api.entity.emoji.CustomEmojiBuilder;
-import org.javacord.api.entity.emoji.Emoji;
-import org.javacord.api.entity.emoji.KnownCustomEmoji;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
-import org.javacord.api.entity.message.component.HighLevelComponent;
 import org.javacord.api.entity.message.component.LowLevelComponent;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
@@ -17,16 +12,11 @@ import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.interaction.callback.InteractionCallbackDataFlag;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.javacord.api.util.logging.ExceptionLogger;
-import org.springframework.scheduling.annotation.Scheduled;
 
-import javax.swing.*;
 import java.util.List;
-import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 

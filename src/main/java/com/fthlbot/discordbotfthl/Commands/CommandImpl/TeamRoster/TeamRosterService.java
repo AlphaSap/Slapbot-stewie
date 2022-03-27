@@ -47,6 +47,7 @@ public class TeamRosterService {
             GeneralService.leagueSlashErrorMessage(interaction, e);
         }catch (Exception e){
             e.printStackTrace();
+            
         }
     }
 
