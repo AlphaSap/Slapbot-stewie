@@ -4,6 +4,7 @@ import Core.Enitiy.clanwar.Attack;
 import Core.Enitiy.clanwar.ClanWarMember;
 import Core.Enitiy.clanwar.WarInfo;
 import Core.JClash;
+import Core.exception.ClashAPIException;
 import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.ClashCommandListener.AttackListener;
@@ -12,6 +13,8 @@ import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
@@ -27,20 +30,21 @@ import java.util.concurrent.CompletableFuture;
         usage = "/defense <TAG>",
         type = CommandType.CLASH
 )
-public class AttackImpl implements AttackListener {
+public class DefenseImpl implements AttackListener {
+    private static final Logger log = LoggerFactory.getLogger(DefenseImpl.class);
     private final static int NAME_MAX_LEN = 20, ID_MAX_LEN = 11, ALIAS_MAX_LEN = 10;
     @Override
     public void execute(SlashCommandCreateEvent event) {
         SlashCommandInteraction interaction = event.getSlashCommandInteraction();
-        CompletableFuture<InteractionOriginalResponseUpdater> respondLater = interaction.respondLater();
         String tag = interaction.getArguments().get(0).getStringValue().get();
 
         JClash clash = new JClash();
 
         try {
             clash.getCurrentWar(tag).thenAccept(c -> {
+                CompletableFuture<InteractionOriginalResponseUpdater> respondLater = interaction.respondLater();
                 Map<ClanWarMember, List<Attack>> defAndAttacks = this.getDefAndAttacks(c);
-                StringBuilder stringBuilder = setAttacks(defAndAttacks);
+                StringBuilder stringBuilder = setDefense(defAndAttacks);
                 EmbedBuilder em = new EmbedBuilder();
                 em = em.setTitle("Defenses for " + c.getClan().getName())
                         .setDescription(stringBuilder.toString())
@@ -54,15 +58,20 @@ public class AttackImpl implements AttackListener {
                     res.addEmbed(finalEm).update();
                 });
 
-            }).exceptionally(e -> {
-                ClashExceptionHandler handler = new ClashExceptionHandler();
-                handler.setSlashCommandCreateEvent(event)
-                        .setStatusCode(Integer.valueOf(e.getMessage()));
-                handler.respond();
-                return null;
             });
-        } catch (IOException e) {
+        } catch (ClashAPIException | IOException e) {
             e.printStackTrace();
+            Integer statusCode = null;
+            try {
+                statusCode = Integer.valueOf(e.getMessage());
+                System.out.println(statusCode);
+            } catch (NumberFormatException ex) {
+                ex.printStackTrace();
+            }
+            new ClashExceptionHandler()
+                    .setSlashCommandInteraction(event)
+                    .setStatusCode(statusCode)
+                    .respond();
         }
     }
      class tempWarMember {
@@ -88,7 +97,7 @@ public class AttackImpl implements AttackListener {
                 "s%-" + NAME_MAX_LEN + "s", name + ext, tag + ext, alias);
     }
     //perfect  example for setting fresh hits just add a spark after the attack lenght is 1 and is a 3 star
-    private StringBuilder setAttacks(Map<ClanWarMember, List<Attack>> defence){
+    private StringBuilder setDefense(Map<ClanWarMember, List<Attack>> defence){
         List<tempWarMember> tempWarMembers = new ArrayList<>();
         defence.forEach((x, y) -> {
             tempWarMembers.add(new tempWarMember(y, x));

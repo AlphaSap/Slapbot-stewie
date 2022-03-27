@@ -1,9 +1,8 @@
 package com.fthlbot.discordbotfthl.Util.Exception;
 
 import org.javacord.api.entity.message.embed.EmbedBuilder;
-import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
-import org.javacord.api.interaction.callback.InteractionCallbackDataFlag;
+import org.javacord.api.util.logging.ExceptionLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,10 +14,9 @@ public class ClashExceptionHandler {
 
     private EmbedBuilder embedBuilder;
     private Integer statusCode;
-    private SlashCommandCreateEvent slashCommandCreateEvent;
-
-    public ClashExceptionHandler setSlashCommandCreateEvent(SlashCommandCreateEvent slashCommandCreateEvent) {
-        this.slashCommandCreateEvent = slashCommandCreateEvent;
+    private SlashCommandInteraction interaction;
+    public ClashExceptionHandler setSlashCommandInteraction(SlashCommandInteraction interaction) {
+        this.interaction = interaction;
         return this;
     }
 
@@ -40,8 +38,8 @@ public class ClashExceptionHandler {
         return statusCode;
     }
 
-    private SlashCommandCreateEvent getSlashCommandCreateEvent() {
-        return slashCommandCreateEvent;
+    private SlashCommandInteraction getSlashCommandCreateEvent() {
+        return interaction;
     }
 
     private ClashExceptionHandler createEmbed() {
@@ -52,7 +50,7 @@ public class ClashExceptionHandler {
                                 .setDescription("Invalid request! `Connection Timeout`")
                                 .setColor(Color.RED)
                                 .setTimestampToNow()
-                                .setAuthor(this.getSlashCommandCreateEvent().getSlashCommandInteraction().getUser())
+                                .setAuthor(this.getSlashCommandCreateEvent().getUser())
                 );
             }
             case 403 -> {
@@ -63,10 +61,11 @@ public class ClashExceptionHandler {
                                 .setDescription("Authorization Error!\n this error occurred, because clash of clans API has revoked my rights :( please contact Sahil to report this issue ")
                                 .setColor(Color.RED)
                                 .setTimestampToNow()
-                                .setAuthor(this.getSlashCommandCreateEvent().getSlashCommandInteraction().getUser())
+                                .setAuthor(this.getSlashCommandCreateEvent().getUser())
                 );
             }
             case 404 -> {
+                log.warn("404");
                 return this.setEmbedBuilder(
                         new EmbedBuilder()
                                 .setDescription("`Invalid Tag`")
@@ -80,7 +79,7 @@ public class ClashExceptionHandler {
                                 .setDescription("Hey I got rate limited by clash of clans! I would need some time to recover from this devastating blow")
                                 .setColor(Color.RED)
                                 .setTimestampToNow()
-                                .setAuthor(this.getSlashCommandCreateEvent().getSlashCommandInteraction().getUser())
+                                .setAuthor(this.getSlashCommandCreateEvent().getUser())
                 );
             }
             case 503 -> {
@@ -89,7 +88,7 @@ public class ClashExceptionHandler {
                                 .setDescription("Clash of clans is currently experiencing Maintenance, please try again once the game is up!")
                                 .setColor(Color.RED)
                                 .setTimestampToNow()
-                                .setAuthor(this.getSlashCommandCreateEvent().getSlashCommandInteraction().getUser())
+                                .setAuthor(this.getSlashCommandCreateEvent().getUser())
                 );
             }
             default -> {
@@ -99,16 +98,18 @@ public class ClashExceptionHandler {
                                 .setColor(Color.RED)
                                 .setFooter("No commands related to clash of clans will work, this may include some league commands!")
                                 .setTimestampToNow()
-                                .setAuthor(this.getSlashCommandCreateEvent().getSlashCommandInteraction().getUser())
+                                .setAuthor(this.getSlashCommandCreateEvent().getUser())
                 );
             }
         }
     }
 
-    public void respond(){
-        SlashCommandInteraction i = this.createEmbed().getSlashCommandCreateEvent().getSlashCommandInteraction();
+    public void respond() {
+        log.info("trying to respond......");
+        SlashCommandInteraction i = this.createEmbed().getSlashCommandCreateEvent();
+
         i.respondLater().thenAccept(res -> {
-            res.addEmbed(this.getEmbedBuilder()).setFlags(InteractionCallbackDataFlag.EPHEMERAL).update();
-        });
+            res.addEmbed(this.getEmbedBuilder()).update();
+        }).exceptionally(ExceptionLogger.get());
     }
 }

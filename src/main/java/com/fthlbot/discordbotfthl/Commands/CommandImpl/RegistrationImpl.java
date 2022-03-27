@@ -19,14 +19,12 @@ import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.SlashCommandInteractionOption;
-import org.javacord.api.interaction.callback.InteractionCallbackDataFlag;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import static com.fthlbot.discordbotfthl.DiscordBotFthlApplication.clash;
@@ -124,8 +122,8 @@ public class RegistrationImpl implements RegistrationListener {
 
     @Override
     public void execute(SlashCommandCreateEvent event) {
-        try{
         SlashCommandInteraction slashCommandInteraction = event.getSlashCommandInteraction();
+        try{
         //Return if channel is not the same as reg channel
             //TODO
            /* if (!isRegChannel(event.getSlashCommandInteraction().getChannel().get().getCommandID())){
@@ -177,11 +175,11 @@ public class RegistrationImpl implements RegistrationListener {
         });*/
 
         }catch(LeagueException e){
-            leagueSlashErrorMessage(event, e);
+            leagueSlashErrorMessage(slashCommandInteraction, e);
             e.printStackTrace();
         }catch (ClashAPIException | IOException e){
             ClashExceptionHandler handler = new ClashExceptionHandler();
-            handler.setSlashCommandCreateEvent(event)
+            handler.setSlashCommandInteraction(slashCommandInteraction)
                     .setStatusCode(Integer.valueOf(e.getMessage()));
             handler.respond();
             e.printStackTrace();

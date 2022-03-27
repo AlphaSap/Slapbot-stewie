@@ -20,8 +20,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class TeamRosterService {
     public void execute(SlashCommandCreateEvent event, TeamService teamService, DivisionService divisionService, RosterService rosterService, long time){
-        try{
             SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+        try{
             String divAlias = interaction.getArguments().get(0).getStringValue().get();
             String teamAlias = interaction.getArguments().get(1).getStringValue().get();
 
@@ -44,7 +44,7 @@ public class TeamRosterService {
 
         } catch (EntityNotFoundException e) {
             e.printStackTrace();
-            GeneralService.leagueSlashErrorMessage(event, e);
+            GeneralService.leagueSlashErrorMessage(interaction, e);
         }catch (Exception e){
             e.printStackTrace();
         }

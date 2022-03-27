@@ -61,15 +61,16 @@ public class RosterRemove implements Command {
             for (String tag : tags) {
                     JClash clash = new JClash();
                     clash.getPlayer(tag).thenAccept(player -> {
-                        removeAcc(teamByDivisionAndAlias, player, event);
-                        //success message
-                        sendMessage(player.getTag(), interaction.getChannel().get());
-                    }).exceptionally(e -> {
-                        ClashExceptionHandler c = new ClashExceptionHandler();
-                        c.setStatusCode(Integer.valueOf(e.getMessage()));
-                        c.setSlashCommandCreateEvent(event);
-                        c.respond();
-                        return null;
+                        try {
+                            removeAcc(teamByDivisionAndAlias, player, interaction);
+                            //success message
+                            sendMessage(player.getTag(), interaction.getChannel().get());
+                        } catch (ClashAPIException e) {
+                            ClashExceptionHandler c = new ClashExceptionHandler();
+                            c.setStatusCode(Integer.valueOf(e.getMessage()));
+                            c.setSlashCommandInteraction(interaction);
+                            c.respond();
+                        }
                     });
             }
             re.thenAccept(res -> res.setContent("task Complete!")
@@ -77,13 +78,13 @@ public class RosterRemove implements Command {
                             .update()
                     );
         } catch (LeagueException e) {
-            leagueSlashErrorMessage(event, e);
+            leagueSlashErrorMessage(interaction, e);
         }catch (IOException e){
             e.printStackTrace();
         }
     }
 
-    private void removeAcc(Team teamByDivisionAndAlias, Player player, SlashCommandCreateEvent event) {
+    private void removeAcc(Team teamByDivisionAndAlias, Player player, SlashCommandInteraction event) {
         try {
             rosterService.removeFromRoster(teamByDivisionAndAlias, player.getTag());
         } catch (EntityNotFoundException e) {

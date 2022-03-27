@@ -2,7 +2,7 @@ package com.fthlbot.discordbotfthl;
 
 import Core.JClash;
 import Core.exception.ClashAPIException;
-import com.fthlbot.discordbotfthl.Commands.ClashCommandImpl.AttackImpl;
+import com.fthlbot.discordbotfthl.Commands.ClashCommandImpl.DefenseImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.HelpImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.PingImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.RegistrationImpl;
@@ -10,7 +10,6 @@ import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdd.RosterAdditionI
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterRemove;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.TeamRoster.TeamRoster;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
-import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
 import com.fthlbot.discordbotfthl.Handlers.Command;
 import com.fthlbot.discordbotfthl.Handlers.CommandListener;
 import com.fthlbot.discordbotfthl.Handlers.MessageHandlers;
@@ -22,7 +21,6 @@ import org.javacord.api.entity.server.Server;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -30,45 +28,47 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
 import java.io.IOException;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import static com.fthlbot.discordbotfthl.Util.GeneralService.getFileContent;
 
 @SpringBootApplication
 public class DiscordBotFthlApplication {
 
-    @Autowired
-    private Environment env;
+    private final Environment env;
 
-    @Autowired
-    private DivisionService service;
+    private final PingImpl pingImpl;
 
-    @Autowired
-    private PingImpl pingImpl;
+    private final RegistrationImpl registration;
 
-    @Autowired
-    private RegistrationImpl registration;
+    private final RosterAdditionImpl rosterAddition;
 
-    @Autowired
-    private RosterAdditionImpl rosterAddition;
+    private final CommandLoggerService loggerService;
 
-    @Autowired
-    private CommandLoggerService loggerService;
+    private final RosterRemove rosterRemove;
 
-    @Autowired
-    private RosterRemove rosterRemove;
+    private final TeamRoster teamRoster;
 
-    @Autowired
-    private TeamRoster teamRoster;
-
-    @Autowired
-    private AttackImpl attack;
+    private final DefenseImpl attack;
 
     public static final String prefix = "+";
 
     private static final Logger log = LoggerFactory.getLogger(DiscordBotFthlApplication.class);
     public static JClash clash;
+
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack) {
+        this.env = env;
+        this.pingImpl = pingImpl;
+        this.registration = registration;
+        this.rosterAddition = rosterAddition;
+        this.loggerService = loggerService;
+        this.rosterRemove = rosterRemove;
+        this.teamRoster = teamRoster;
+        this.attack = attack;
+    }
 
 
     public static void main(String[] args) {
@@ -78,7 +78,7 @@ public class DiscordBotFthlApplication {
     @Bean
     @ConfigurationProperties(value = "discord-bot")
     public DiscordApi api() throws ClashAPIException, IOException {
-
+        TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
         String content = getFileContent("Servers.json");
 
         JSONObject jsonObject = new JSONObject(content);
@@ -121,11 +121,9 @@ public class DiscordBotFthlApplication {
         MessageHandlers messageHandlers = new MessageHandlers(commandList);
 
         MessageHolder messageHolder = messageHandlers.setCommands();
-
         CommandListener commandListener = new CommandListener(messageHolder, loggerService);
 
         api.addListener(commandListener);
-        service.createDivisions();
 
         return api;
     }

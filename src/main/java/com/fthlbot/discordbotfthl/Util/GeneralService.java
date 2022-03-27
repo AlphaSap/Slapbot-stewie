@@ -2,15 +2,24 @@ package com.fthlbot.discordbotfthl.Util;
 
 import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
+import com.fthlbot.discordbotfthl.Commands.ClashCommandImpl.DefenseImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.PingImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.RegistrationImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdd.RosterAdditionImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterRemove;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.TeamRoster.TeamRoster;
+import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
 import com.fthlbot.discordbotfthl.DiscordBotFthlApplication;
 import com.fthlbot.discordbotfthl.Util.Exception.UnsupportedCommandException;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -24,8 +33,15 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
+
 public class GeneralService extends DiscordBotFthlApplication {
     private static final Logger log = LoggerFactory.getLogger(GeneralService.class);
+
+    public GeneralService(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack) {
+        super(env, pingImpl, registration, rosterAddition, loggerService, rosterRemove, teamRoster, attack);
+    }
+
+
     /**
      *
      * @param key of json object
@@ -73,13 +89,14 @@ public class GeneralService extends DiscordBotFthlApplication {
         return sb.toString();
     }
 
-    public static void leagueSlashErrorMessage(SlashCommandCreateEvent event, LeagueException e) {
-        event.getSlashCommandInteraction().respondLater().thenAccept(res -> {
+    public static void leagueSlashErrorMessage(SlashCommandInteraction interaction, LeagueException e) {
+        interaction.respondLater().thenAccept(res -> {
             res.setContent(e.getMessage());
             res.update();
         });
     }
 
+    @Deprecated
     private static boolean isCommand(String args, String command, MessageCreateEvent event, Invoker invoker ) throws UnsupportedCommandException {
         if (!args.equalsIgnoreCase(command)){
             return false;
