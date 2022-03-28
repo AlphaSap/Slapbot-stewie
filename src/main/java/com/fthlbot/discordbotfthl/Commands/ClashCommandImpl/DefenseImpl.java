@@ -36,11 +36,11 @@ import java.util.concurrent.CompletableFuture;
 //TODO revist this shit ass code and fix the 2hit glitch, this thing mad annoying not gonna continue this again.
 public class DefenseImpl implements AttackListener {
     private static final Logger log = LoggerFactory.getLogger(DefenseImpl.class);
-    private final static int NAME_MAX_LEN = 20, ID_MAX_LEN = 11, ALIAS_MAX_LEN = 10;
+    private final static int NAME_MAX_LEN = 20, ID_MAX_LEN = 11, ALIAS_MAX_LEN = 15;
     @Override
     public void execute(SlashCommandCreateEvent event) {
         SlashCommandInteraction interaction = event.getSlashCommandInteraction();
-         CompletableFuture<InteractionOriginalResponseUpdater> respondLater = interaction.respondLater();
+        CompletableFuture<InteractionOriginalResponseUpdater> respondLater = interaction.respondLater();
         String tag = interaction.getArguments().get(0).getStringValue().get();
 
         JClash clash = new JClash();
@@ -56,7 +56,7 @@ public class DefenseImpl implements AttackListener {
                     message.thenAccept(msg -> {
                         msg.addReaction("\uD83D\uDD01");
                         msg.addReactionAddListener(react -> {
-                            if (react.getUser().get().getId() != react.getApi().getYourself().getId()){
+                            if (react.getUser().get().getId() != react.getApi().getYourself().getId()) {
                                 EmbedBuilder defEmbed = new DefenseForOpponent().getDefEmbed(interaction.getUser(), c);
                                 event.getInteraction().getChannel().get().sendMessage(defEmbed);
                             }
@@ -117,12 +117,14 @@ public class DefenseImpl implements AttackListener {
                     '}';
         }
     }
+
     private static String formatRow(String name, String tag, String alias, String ext) {
         return String.format("%-" + (ID_MAX_LEN + ext.length()) + "s%-" + (ALIAS_MAX_LEN + ext.length()) +
                 "s%-" + NAME_MAX_LEN + "s", name + ext, tag + ext, alias);
     }
+
     //perfect  example for setting fresh hits just add a spark after the attack lenght is 1 and is a 3 star
-    private StringBuilder setDefense(Map<ClanWarMember, List<Attack>> defence){
+    private StringBuilder setDefense(Map<ClanWarMember, List<Attack>> defence) {
         List<tempWarMember> tempWarMembers = new ArrayList<>();
         defence.forEach((x, y) -> {
             tempWarMember e = new tempWarMember(y, x);
@@ -138,16 +140,19 @@ public class DefenseImpl implements AttackListener {
                 continue;
             }
             final int[] defWon = {0};
-            String defwonstats = "";
             for (Attack attack : x.getAttacks()) {
                 if (attack.getStars() <= 0)
                     defWon[0]++;
+            }
+            String defwonstats = "`  " + defWon[0] + "/" + x.getAttacks().size();
+            x.attacks.sort(Comparator.comparingInt(Attack::getStars));//.stream().anyMatch(a -> a.getStars().equals(3));
+            defwonstats += "⭐".repeat(x.attacks.get(x.attacks.size() - 1).getStars());
 
-                defwonstats = "`  " + defWon[0] + "/" + x.getAttacks().size();
-                if (x.getAttacks().size() == 1)
-                    if (x.getAttacks().get(0).getStars().equals(3))
-                        defwonstats += "\uD83D\uDCA5";
 
+            if (x.getAttacks().size() == 1) {
+                if (x.getAttacks().get(0).getStars().equals(3)) {
+                    defwonstats += "\uD83D\uDCA5";
+                }
             }
             String temp = formatRow(getTownHallEmote(x.getClanWarMember().getTownhallLevel()), defwonstats, x.getClanWarMember().getName() + "`", " ");
             s.append(temp).append("\n");
@@ -155,7 +160,7 @@ public class DefenseImpl implements AttackListener {
         return s;
     }
 
-    private Map<ClanWarMember, List<Attack>> getDefAndAttacks(WarInfo war){
+    private Map<ClanWarMember, List<Attack>> getDefAndAttacks(WarInfo war) {
         List<ClanWarMember> homeWarMembers = war.getClan().getWarMembers();
         List<ClanWarMember> enemyWarMembers = war.getEnemy().getWarMembers();
 
@@ -168,17 +173,17 @@ public class DefenseImpl implements AttackListener {
                         ClanWarMember homeWarMember = null;
                         String defenderTag = attack.getDefenderTag();
                         for (ClanWarMember warMember : homeWarMembers) {
-                            if (warMember.getTag().equalsIgnoreCase(defenderTag)){
+                            if (warMember.getTag().equalsIgnoreCase(defenderTag)) {
                                 homeWarMember = warMember;
                                 break;
                             }
                         }
 
-                        if (defence.containsKey(homeWarMember)){
+                        if (defence.containsKey(homeWarMember)) {
                             List<Attack> attacks = defence.get(homeWarMember);
                             attacks.add(attack);
-                            defence.replace(homeWarMember,attacks);
-                        }else {
+                            defence.replace(homeWarMember, attacks);
+                        } else {
                             List<Attack> newAttacks = new ArrayList<>();
                             newAttacks.add(attack);
                             defence.put(homeWarMember, newAttacks);
@@ -188,7 +193,7 @@ public class DefenseImpl implements AttackListener {
         return defence;
     }
 
-    public String getTownHallEmote(int townhallLevel){
+    public String getTownHallEmote(int townhallLevel) {
         switch (townhallLevel) {
             case 1:
                 return "<:th1:947276195945381978>";
@@ -197,9 +202,9 @@ public class DefenseImpl implements AttackListener {
             case 3:
                 return "<:th3:947276192770318368>";
             case 4:
-                return  "<:th4:947277976293220362>";
+                return "<:th4:947277976293220362>";
             case 5:
-                return  "<:th5:947276195991552011>";
+                return "<:th5:947276195991552011>";
             case 6:
                 return "<:th6:947276151418667049>";
             case 7:
@@ -211,13 +216,13 @@ public class DefenseImpl implements AttackListener {
             case 10:
                 return "<:th10:947276159782113280>";
             case 11:
-                return  "<:th11:947276991030243468>";
+                return "<:th11:947276991030243468>";
             case 12:
                 return "<:th12:947276159954092088>";
             case 13:
-                return  "<:th13:947282074249879572>";
+                return "<:th13:947282074249879572>";
             case 14:
-                return  "<:th14:947276161006829590>";
+                return "<:th14:947276161006829590>";
             default:
                 return null;
         }

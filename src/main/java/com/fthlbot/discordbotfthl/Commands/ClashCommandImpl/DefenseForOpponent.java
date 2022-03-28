@@ -29,66 +29,6 @@ public class DefenseForOpponent {
         return em;
     }
 
-    private Map<ClanWarMember, List<Attack>> getDefAndAttacks(WarInfo war){
-        List<ClanWarMember> homeWarMembers = war.getEnemy().getWarMembers();
-        List<ClanWarMember> enemyWarMembers = war.getClan().getWarMembers();
-
-        Map<ClanWarMember, List<Attack>> defence = new HashMap<>();
-
-        enemyWarMembers
-                .stream()
-                .filter(member -> member.getAttacks() != null)
-                .forEach(member -> {
-                    member.getAttacks().forEach(attack -> {
-                        ClanWarMember homeWarMember = homeWarMembers
-                                .stream()
-                                .filter(warMember -> warMember.getTag().equalsIgnoreCase(attack.getDefenderTag()))
-                                .findFirst().get();
-
-                        if (defence.containsKey(homeWarMember)){
-                            List<Attack> attacks = defence.get(homeWarMember);
-                            attacks.add(attack);
-                            defence.replace(homeWarMember,attacks);
-                        }else {
-                            List<Attack> newAttacks = new ArrayList<>();
-                            newAttacks.add(attack);
-                            defence.put(homeWarMember, newAttacks);
-                        }
-                    });
-                });
-        return defence;
-    }
-
-    private StringBuilder setDefense(Map<ClanWarMember, List<Attack>> defence){
-        List<tempWarMember> tempWarMembers = new ArrayList<>();
-        defence.forEach((x, y) -> {
-            tempWarMembers.add(new tempWarMember(y, x));
-        });
-
-        List<tempWarMember> collect = tempWarMembers.stream()
-                .sorted(Comparator.comparingInt(x -> x.getClanWarMember().getMapPosition()))
-                .toList();
-        StringBuilder s = new StringBuilder();
-        for (tempWarMember x : collect) {
-            if (!x.getAttacks().isEmpty()) {
-                final int[] defWon = {0};
-                String defwonstats = "";
-                for (Attack attack : x.getAttacks()) {
-                    if (attack.getStars() <= 0)
-                        defWon[0]++;
-
-                    defwonstats = "`  " + defWon[0] + "/" + x.getAttacks().size();
-                    if (x.getAttacks().size() == 1)
-                        if (x.getAttacks().get(0).getStars().equals(3))
-                            defwonstats += "\uD83D\uDCA5";
-                }
-                String temp = formatRow(getTownHallEmote(x.getClanWarMember().getTownhallLevel()), defwonstats, x.getClanWarMember().getName() + "`", " ");
-                s.append(temp).append("\n");
-            }
-        }
-        return s;
-    }
-
     class tempWarMember {
         private final List<Attack> attacks;
         private final ClanWarMember clanWarMember;
@@ -106,6 +46,13 @@ public class DefenseForOpponent {
             return attacks;
         }
 
+        @Override
+        public String toString() {
+            return "tempWarMember{" +
+                    "attacks=" + attacks +
+                    ", clanWarMember=" + clanWarMember +
+                    '}';
+        }
     }
 
     private static String formatRow(String name, String tag, String alias, String ext) {
@@ -113,7 +60,77 @@ public class DefenseForOpponent {
                 "s%-" + NAME_MAX_LEN + "s", name + ext, tag + ext, alias);
     }
 
-    public String getTownHallEmote(int townhallLevel){
+    //perfect  example for setting fresh hits just add a spark after the attack lenght is 1 and is a 3 star
+    private StringBuilder setDefense(Map<ClanWarMember, List<Attack>> defence) {
+        List<tempWarMember> tempWarMembers = new ArrayList<>();
+        defence.forEach((x, y) -> {
+            tempWarMember e = new tempWarMember(y, x);
+            tempWarMembers.add(e);
+        });
+
+        List<tempWarMember> collect = tempWarMembers.stream()
+                .sorted(Comparator.comparingInt(x -> x.getClanWarMember().getMapPosition()))
+                .toList();
+        StringBuilder s = new StringBuilder();
+        for (tempWarMember x : collect) {
+            if (x.getAttacks().isEmpty()) {
+                continue;
+            }
+            final int[] defWon = {0};
+            for (Attack attack : x.getAttacks()) {
+                if (attack.getStars() <= 0)
+                    defWon[0]++;
+            }
+            String defwonstats = "`  " + defWon[0] + "/" + x.getAttacks().size();
+            x.attacks.sort(Comparator.comparingInt(Attack::getStars));//.stream().anyMatch(a -> a.getStars().equals(3));
+            defwonstats += "⭐".repeat(x.attacks.get(x.attacks.size() - 1).getStars());
+
+
+            if (x.getAttacks().size() == 1) {
+                if (x.getAttacks().get(0).getStars().equals(3)) {
+                    defwonstats += "\uD83D\uDCA5";
+                }
+            }
+            String temp = formatRow(getTownHallEmote(x.getClanWarMember().getTownhallLevel()), defwonstats, x.getClanWarMember().getName() + "`", " ");
+            s.append(temp).append("\n");
+        }
+        return s;
+    }
+
+    private Map<ClanWarMember, List<Attack>> getDefAndAttacks(WarInfo war) {
+        List<ClanWarMember> homeWarMembers =  war.getEnemy().getWarMembers();
+        List<ClanWarMember> enemyWarMembers =war.getClan().getWarMembers();
+
+        Map<ClanWarMember, List<Attack>> defence = new HashMap<>();
+
+        enemyWarMembers.stream()
+                .filter(member -> member.getAttacks() != null)
+                .forEach(member -> {
+                    member.getAttacks().forEach(attack -> {
+                        ClanWarMember homeWarMember = null;
+                        String defenderTag = attack.getDefenderTag();
+                        for (ClanWarMember warMember : homeWarMembers) {
+                            if (warMember.getTag().equalsIgnoreCase(defenderTag)) {
+                                homeWarMember = warMember;
+                                break;
+                            }
+                        }
+
+                        if (defence.containsKey(homeWarMember)) {
+                            List<Attack> attacks = defence.get(homeWarMember);
+                            attacks.add(attack);
+                            defence.replace(homeWarMember, attacks);
+                        } else {
+                            List<Attack> newAttacks = new ArrayList<>();
+                            newAttacks.add(attack);
+                            defence.put(homeWarMember, newAttacks);
+                        }
+                    });
+                });
+        return defence;
+    }
+
+    public String getTownHallEmote(int townhallLevel) {
         switch (townhallLevel) {
             case 1:
                 return "<:th1:947276195945381978>";
@@ -122,9 +139,9 @@ public class DefenseForOpponent {
             case 3:
                 return "<:th3:947276192770318368>";
             case 4:
-                return  "<:th4:947277976293220362>";
+                return "<:th4:947277976293220362>";
             case 5:
-                return  "<:th5:947276195991552011>";
+                return "<:th5:947276195991552011>";
             case 6:
                 return "<:th6:947276151418667049>";
             case 7:
@@ -136,13 +153,13 @@ public class DefenseForOpponent {
             case 10:
                 return "<:th10:947276159782113280>";
             case 11:
-                return  "<:th11:947276991030243468>";
+                return "<:th11:947276991030243468>";
             case 12:
                 return "<:th12:947276159954092088>";
             case 13:
-                return  "<:th13:947282074249879572>";
+                return "<:th13:947282074249879572>";
             case 14:
-                return  "<:th14:947276161006829590>";
+                return "<:th14:947276161006829590>";
             default:
                 return null;
         }
