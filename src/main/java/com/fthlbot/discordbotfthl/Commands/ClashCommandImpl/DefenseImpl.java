@@ -117,7 +117,6 @@ public class DefenseImpl implements AttackListener {
         List<tempWarMember> tempWarMembers = new ArrayList<>();
         defence.forEach((x, y) -> {
             tempWarMember e = new tempWarMember(y, x);
-            log.info(e.toString());
             tempWarMembers.add(e);
         });
 
@@ -125,24 +124,24 @@ public class DefenseImpl implements AttackListener {
                 .sorted(Comparator.comparingInt(x -> x.getClanWarMember().getMapPosition()))
                 .toList();
         StringBuilder s = new StringBuilder();
-        collect.stream()
-                .filter(x -> !x.getAttacks().isEmpty())
-                .forEach(tempWarMember -> {
-                    final int[] defWon = {0};
-                    tempWarMember.getAttacks()
-                            .forEach(attack -> {
-                                if (attack.getStars() <= 0)
-                                    defWon[0]++;
+        for (tempWarMember x : collect) {
+            if (!x.getAttacks().isEmpty()) {
+                final int[] defWon = {0};
+                String defwonstats = "";
+                for (Attack attack : x.getAttacks()) {
+                    if (attack.getStars() <= 0)
+                        defWon[0]++;
 
-                                String defwonstats = "`  " + defWon[0] + "/" + tempWarMember.getAttacks().size();
-                                if (tempWarMember.getAttacks().size() == 1)
-                                    if (tempWarMember.getAttacks().get(0).getStars().equals(3))
-                                        defwonstats += "\uD83D\uDCA5";
+                    defwonstats = "`  " + defWon[0] + "/" + x.getAttacks().size();
+                    if (x.getAttacks().size() == 1)
+                        if (x.getAttacks().get(0).getStars().equals(3))
+                            defwonstats += "\uD83D\uDCA5";
 
-                                String temp = formatRow(getTownHallEmote(tempWarMember.getClanWarMember().getTownhallLevel()), defwonstats, tempWarMember.getClanWarMember().getName()+"`", " ");
-                                s.append(temp).append("\n");
-                            });
-                });
+                }
+                String temp = formatRow(getTownHallEmote(x.getClanWarMember().getTownhallLevel()), defwonstats, x.getClanWarMember().getName() + "`", " ");
+                s.append(temp).append("\n");
+            }
+        }
         return s;
     }
 

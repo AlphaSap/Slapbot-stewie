@@ -5,7 +5,6 @@ import Core.Enitiy.clanwar.ClanWarMember;
 import Core.Enitiy.clanwar.WarInfo;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
-import org.javacord.api.interaction.SlashCommandInteraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,24 +69,23 @@ public class DefenseForOpponent {
                 .sorted(Comparator.comparingInt(x -> x.getClanWarMember().getMapPosition()))
                 .toList();
         StringBuilder s = new StringBuilder();
-        tempWarMembers.stream()
-                .filter(x -> !x.getAttacks().isEmpty())
-                .forEach(tempWarMember -> {
-                    final int[] defWon = {0};
-                    tempWarMember.getAttacks()
-                            .forEach(attack -> {
-                                if (attack.getStars() <= 0)
-                                    defWon[0]++;
+        for (tempWarMember x : collect) {
+            if (!x.getAttacks().isEmpty()) {
+                final int[] defWon = {0};
+                String defwonstats = "";
+                for (Attack attack : x.getAttacks()) {
+                    if (attack.getStars() <= 0)
+                        defWon[0]++;
 
-                                String defwonstats = "`  " + defWon[0] + "/" + tempWarMember.getAttacks().size();
-                                if (tempWarMember.getAttacks().size() == 1)
-                                    if (tempWarMember.getAttacks().get(0).getStars().equals(3))
-                                        defwonstats += "\uD83D\uDCA5";
-
-                                String temp = formatRow(getTownHallEmote(tempWarMember.getClanWarMember().getTownhallLevel()), defwonstats, tempWarMember.getClanWarMember().getName()+"`", " ");
-                                s.append(temp).append("\n");
-                            });
-                });
+                    defwonstats = "`  " + defWon[0] + "/" + x.getAttacks().size();
+                    if (x.getAttacks().size() == 1)
+                        if (x.getAttacks().get(0).getStars().equals(3))
+                            defwonstats += "\uD83D\uDCA5";
+                }
+                String temp = formatRow(getTownHallEmote(x.getClanWarMember().getTownhallLevel()), defwonstats, x.getClanWarMember().getName() + "`", " ");
+                s.append(temp).append("\n");
+            }
+        }
         return s;
     }
 
