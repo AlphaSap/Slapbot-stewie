@@ -9,6 +9,8 @@ import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.ClashCommandListener.AttackListener;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
+import com.fthlbot.discordbotfthl.Util.JavacordLogger;
+import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
@@ -55,7 +57,8 @@ public class DefenseImpl implements AttackListener {
                         msg.addReaction("\uD83D\uDD01");
                         msg.addReactionAddListener(react -> {
                             if (react.getUser().get().getId() != react.getApi().getYourself().getId()){
-                              msg.removeEmbed().thenAccept(m -> m.edit(new DefenseForOpponent().getDefEmbed(interaction.getUser(), c)));
+                                EmbedBuilder defEmbed = new DefenseForOpponent().getDefEmbed(interaction.getUser(), c);
+                                event.getInteraction().getChannel().get().sendMessage(defEmbed);
                             }
                         });
                     });
@@ -69,6 +72,12 @@ public class DefenseImpl implements AttackListener {
                     .setStatusCode(Integer.valueOf(e.getMessage()))
                     .respond();
         }
+        new JavacordLogger()
+                .setLogger(DefenseImpl.class)
+                .setChannel((ServerTextChannel) event.getApi().getTextChannelById(777902179771613184L).get())
+                .info("User def command",
+                        event.getInteraction().getUser(),
+                        event.getSlashCommandInteraction().getServer().get());
     }
 
     private EmbedBuilder getDefEmbed(SlashCommandInteraction interaction, WarInfo c) {
@@ -125,22 +134,23 @@ public class DefenseImpl implements AttackListener {
                 .toList();
         StringBuilder s = new StringBuilder();
         for (tempWarMember x : collect) {
-            if (!x.getAttacks().isEmpty()) {
-                final int[] defWon = {0};
-                String defwonstats = "";
-                for (Attack attack : x.getAttacks()) {
-                    if (attack.getStars() <= 0)
-                        defWon[0]++;
-
-                    defwonstats = "`  " + defWon[0] + "/" + x.getAttacks().size();
-                    if (x.getAttacks().size() == 1)
-                        if (x.getAttacks().get(0).getStars().equals(3))
-                            defwonstats += "\uD83D\uDCA5";
-
-                }
-                String temp = formatRow(getTownHallEmote(x.getClanWarMember().getTownhallLevel()), defwonstats, x.getClanWarMember().getName() + "`", " ");
-                s.append(temp).append("\n");
+            if (x.getAttacks().isEmpty()) {
+                continue;
             }
+            final int[] defWon = {0};
+            String defwonstats = "";
+            for (Attack attack : x.getAttacks()) {
+                if (attack.getStars() <= 0)
+                    defWon[0]++;
+
+                defwonstats = "`  " + defWon[0] + "/" + x.getAttacks().size();
+                if (x.getAttacks().size() == 1)
+                    if (x.getAttacks().get(0).getStars().equals(3))
+                        defwonstats += "\uD83D\uDCA5";
+
+            }
+            String temp = formatRow(getTownHallEmote(x.getClanWarMember().getTownhallLevel()), defwonstats, x.getClanWarMember().getName() + "`", " ");
+            s.append(temp).append("\n");
         }
         return s;
     }
