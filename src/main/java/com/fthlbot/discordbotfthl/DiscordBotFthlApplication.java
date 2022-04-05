@@ -3,11 +3,8 @@ package com.fthlbot.discordbotfthl;
 import Core.JClash;
 import Core.exception.ClashAPIException;
 import com.fthlbot.discordbotfthl.Commands.ClashCommandImpl.DefenseImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.HelpImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.PingImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.RegistrationImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdd.RosterAdditionImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterRemove;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.TeamRoster.TeamRoster;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
 import com.fthlbot.discordbotfthl.Handlers.Command;
@@ -19,6 +16,10 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
+import org.javacord.api.interaction.SlashCommand;
+import org.javacord.api.interaction.SlashCommandOption;
+import org.javacord.api.interaction.SlashCommandOptionChoice;
+import org.javacord.api.interaction.SlashCommandOptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -32,6 +33,8 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
+
+import static java.util.Arrays.asList;
 
 @SpringBootApplication
 public class DiscordBotFthlApplication {
@@ -52,6 +55,7 @@ public class DiscordBotFthlApplication {
 
     private final DefenseImpl attack;
 
+    private final AllTeamsImpl allTeams;
     public static final String prefix = "+";
 
     private static final Logger log = LoggerFactory.getLogger(DiscordBotFthlApplication.class);
@@ -60,7 +64,7 @@ public class DiscordBotFthlApplication {
     public final BotConfig config;
 
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, BotConfig config) {
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, BotConfig config) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -69,6 +73,7 @@ public class DiscordBotFthlApplication {
         this.rosterRemove = rosterRemove;
         this.teamRoster = teamRoster;
         this.attack = attack;
+        this.allTeams = allTeams;
         this.config = config;
     }
 
@@ -112,7 +117,8 @@ public class DiscordBotFthlApplication {
                 this.rosterAddition,
                 this.rosterRemove,
                 this.teamRoster,
-                this.attack
+                this.attack,
+                this.allTeams
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
@@ -125,6 +131,26 @@ public class DiscordBotFthlApplication {
         CommandListener commandListener = new CommandListener(messageHolder, loggerService);
 
         api.addListener(commandListener);
+
+        SlashCommand command = SlashCommand.with(
+                        "all-teams",
+                        "Returns a list of all the teams participating in a given division")
+                .setOptions(List.of(
+                                SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
+                                        "division",
+                                        "choose from one of the following division",
+                                        true,
+                                        asList(
+                                                SlashCommandOptionChoice.create("f8", "f8"),
+                                                SlashCommandOptionChoice.create("f5", "f5"),
+                                                SlashCommandOptionChoice.create("f9", "f9"),
+                                                SlashCommandOptionChoice.create("f11", "f11"),
+                                                SlashCommandOptionChoice.create("f10", "f10"),
+                                                SlashCommandOptionChoice.create("fmix", "fmix")
+                                        )
+                                )))
+                .createForServer(api.getServerById(testID).get())
+                .join();
 
         return api;
     }
