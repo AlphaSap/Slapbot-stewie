@@ -80,7 +80,7 @@ public class DiscordBotFthlApplication {
     @Bean
     @ConfigurationProperties(value = "discord-bot")
     public DiscordApi api() throws ClashAPIException, IOException {
-        log.info(config.getNegoStaffRoleID() + " different log");
+        log.info(config.getNegoStaffRoleID() + " id");
         TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
 
         long testID = config.getTestServerID();
