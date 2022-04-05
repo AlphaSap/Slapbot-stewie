@@ -34,12 +34,8 @@ import java.time.ZoneId;
 import java.util.Date;
 
 
-public class GeneralService extends DiscordBotFthlApplication {
+public class GeneralService {
     private static final Logger log = LoggerFactory.getLogger(GeneralService.class);
-
-    public GeneralService(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack) {
-        super(env, pingImpl, registration, rosterAddition, loggerService, rosterRemove, teamRoster, attack);
-    }
 
 
     /**
