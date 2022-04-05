@@ -12,8 +12,10 @@ import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
+import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
+import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.javacord.api.util.logging.ExceptionLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,7 @@ public class RosterAddUtilClass {
     private final static Logger log = LoggerFactory.getLogger(RosterAddUtilClass.class);
     public int addPlayers(SlashCommandCreateEvent event, SlashCommandInteraction interaction, String[] tags, Team team, RosterService service) {
         int success = 0;
+        CompletableFuture<InteractionOriginalResponseUpdater> respondLater = event.getSlashCommandInteraction().respondLater();
         for (String tag : tags) {
             try {
                 JClash clash = new JClash();
@@ -40,17 +43,16 @@ public class RosterAddUtilClass {
                 Roster roster = new Roster(player.getName(), player.getTag(), player.getTownHallLevel(), team);
                 service.addToRoster(roster, event.getInteraction().getUser());
                 //send a message for each addition
-                sendMessage(player.getTag(), team.getName(), interaction.getChannel().get())
+                sendMessage(player.getTag(), team.getName(), interaction.getChannel().get(), interaction.getUser())
                         .exceptionally(ExceptionLogger.get());
                 success++;
             }catch (LeagueException e){
                 EmbedBuilder leagueError = GeneralService.getLeagueError(e, event);
                 interaction.getChannel().get().sendMessage(leagueError);
             } catch (IOException e) {
-                event.getSlashCommandInteraction()
-                        .respondLater()
+                respondLater
                         .thenAccept(res -> {
-                            res.setContent("Unhandled exception, this happenes when Clash of clans make a changes without notifying me !")
+                            res.setContent("Unhandled exception, this happens when Clash of clans make a changes without notifying me !")
                                     .update();
                         });
                 event.getApi().getChannelById(899282429678878801L).ifPresent(ch -> {
@@ -62,16 +64,13 @@ public class RosterAddUtilClass {
         return success;
     }
 
-    private CompletableFuture<Message> sendMessage(String tag, String teamName, TextChannel channel){
+    private CompletableFuture<Message> sendMessage(String tag, String teamName, TextChannel channel, User user){
         return new MessageBuilder()
                 .setEmbed(
                         new EmbedBuilder()
+                                .setAuthor(user)
                                 .setTitle("Roster addition!")
-                                .setDescription(String.format(
-                                        """
-                                        successfully added `%s` to `%s`'s roster
-                                        """,
-                                        tag, teamName))
+                                .setDescription("successfully added `%s` to `%s`'s roster".formatted(tag, teamName))
                                 .setTimestampToNow().setColor(Color.GREEN)
                 ).send(channel);
     }

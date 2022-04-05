@@ -56,7 +56,7 @@ public class RosterAdditionImpl extends RosterAddUtilClass implements RosterAddL
             int i = addPlayers(event, slashCommandInteraction, tags, team, rosterService);
 
             res.thenAccept(r -> {
-                r.setContent("Successfully added :" + i + " accounts!").update();
+                r.setContent("Successfully added: `" + i + "` accounts!").update();
             }).exceptionally(ExceptionLogger.get());
 
         }catch (LeagueException e){

@@ -31,7 +31,7 @@ Lastly it uses JClash, a custom open source java clash of clans wrapper with dyn
 after not having a static Ip for my home testing environment. Read more about JClash [here](https://github.com/SaHHiiLL/JClash).
 
 # TODO
-- Make team all command
+- ~~Make team all command~~
 - Make clan change command
 - Make Rep change command
 - Make alias change command
