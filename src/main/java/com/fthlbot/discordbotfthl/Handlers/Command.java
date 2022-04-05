@@ -2,6 +2,7 @@ package com.fthlbot.discordbotfthl.Handlers;
 
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 
+@FunctionalInterface
 public interface Command {
     void execute(SlashCommandCreateEvent event);
 }
