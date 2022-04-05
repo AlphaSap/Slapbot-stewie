@@ -27,7 +27,6 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation group: 'org.json', name: 'json', version: '20210307'
-    implementation 'com.github.S3nS3IW00:JCommands:4.2.0'
     implementation'com.github.SaHHiiLL:JClash:1.2.2'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
