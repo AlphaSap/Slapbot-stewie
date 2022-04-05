@@ -8,6 +8,7 @@ import Core.exception.ClashAPIException;
 import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.ClashCommandListener.AttackListener;
+import com.fthlbot.discordbotfthl.Util.ClashUtils;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import com.fthlbot.discordbotfthl.Util.JavacordLogger;
 import org.javacord.api.entity.channel.ServerTextChannel;
@@ -154,7 +155,7 @@ public class DefenseImpl implements AttackListener {
                     defwonstats += "\uD83D\uDCA5";
                 }
             }
-            String temp = formatRow(getTownHallEmote(x.getClanWarMember().getTownhallLevel()), defwonstats, x.getClanWarMember().getName() + "`", " ");
+            String temp = formatRow(ClashUtils.getTownHallEmote(x.getClanWarMember().getTownhallLevel()), defwonstats, x.getClanWarMember().getName() + "`", " ");
             s.append(temp).append("\n");
         }
         return s;
@@ -191,41 +192,6 @@ public class DefenseImpl implements AttackListener {
                     });
                 });
         return defence;
-    }
-
-    public String getTownHallEmote(int townhallLevel) {
-        switch (townhallLevel) {
-            case 1:
-                return "<:th1:947276195945381978>";
-            case 2:
-                return "<:th2:947276191998570506>";
-            case 3:
-                return "<:th3:947276192770318368>";
-            case 4:
-                return "<:th4:947277976293220362>";
-            case 5:
-                return "<:th5:947276195991552011>";
-            case 6:
-                return "<:th6:947276151418667049>";
-            case 7:
-                return "<:th7:947276197887352942>";
-            case 8:
-                return "<:th8:947276734200446976>";
-            case 9:
-                return "<:th9:947276159681445898>";
-            case 10:
-                return "<:th10:947276159782113280>";
-            case 11:
-                return "<:th11:947276991030243468>";
-            case 12:
-                return "<:th12:947276159954092088>";
-            case 13:
-                return "<:th13:947282074249879572>";
-            case 14:
-                return "<:th14:947276161006829590>";
-            default:
-                return null;
-        }
     }
 
 }
