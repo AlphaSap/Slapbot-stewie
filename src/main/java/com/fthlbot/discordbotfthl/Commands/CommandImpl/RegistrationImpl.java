@@ -11,6 +11,7 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
+import com.fthlbot.discordbotfthl.Util.BotConfig;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
@@ -61,6 +62,8 @@ public class RegistrationImpl implements RegistrationListener {
     private DivisionService divisionService;
     @Autowired
     private TeamService teamService;
+    @Autowired
+    private BotConfig config;
 
     @Deprecated(since = "2022/March/12")
     public void execute1(MessageCreateEvent event) {
@@ -188,15 +191,8 @@ public class RegistrationImpl implements RegistrationListener {
         }
     }
 
-    private boolean isRegChannel(long channelID) throws IOException {
-        String content = getFileContent("Channels.json");
-
-        JSONObject jsonObject = new JSONObject(content);
-
-        long registrationChannel = jsonObject.getLong("registrationChannel");
-
-        return channelID == registrationChannel;
+    private boolean isRegChannel(long channelID) {
+        return channelID == config.getRegistrationChannelID();
     }
-
 
 }
