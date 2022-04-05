@@ -14,11 +14,11 @@ import com.fthlbot.discordbotfthl.Handlers.Command;
 import com.fthlbot.discordbotfthl.Handlers.CommandListener;
 import com.fthlbot.discordbotfthl.Handlers.MessageHandlers;
 import com.fthlbot.discordbotfthl.Handlers.MessageHolder;
+import com.fthlbot.discordbotfthl.Util.BotConfig;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -32,8 +32,6 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
-
-import static com.fthlbot.discordbotfthl.Util.GeneralService.getFileContent;
 
 @SpringBootApplication
 public class DiscordBotFthlApplication {
@@ -59,7 +57,10 @@ public class DiscordBotFthlApplication {
     private static final Logger log = LoggerFactory.getLogger(DiscordBotFthlApplication.class);
     public static JClash clash;
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack) {
+    public final BotConfig config;
+
+
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, BotConfig config) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -68,6 +69,7 @@ public class DiscordBotFthlApplication {
         this.rosterRemove = rosterRemove;
         this.teamRoster = teamRoster;
         this.attack = attack;
+        this.config = config;
     }
 
 
@@ -78,11 +80,10 @@ public class DiscordBotFthlApplication {
     @Bean
     @ConfigurationProperties(value = "discord-bot")
     public DiscordApi api() throws ClashAPIException, IOException {
+        log.info(config.getNegoStaffRoleID() + " id");
         TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
-        String content = getFileContent("Servers.json");
 
-        JSONObject jsonObject = new JSONObject(content);
-        long testID = jsonObject.getLong("test");
+        long testID = config.getTestServerID();
 
 
         clash = new JClash(env.getProperty("CLASH_EMAIL"), env.getProperty("CLASH_PASS"));
