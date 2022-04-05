@@ -6,6 +6,7 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundExcepti
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -62,5 +63,9 @@ public class TeamService {
         }
         team = repo.updateRosterChange(team.getID());
         return team;
+    }
+
+    public List<Team> getAllTeamsByDivision(Division division){
+        return repo.findTeamByDivision(division);
     }
 }

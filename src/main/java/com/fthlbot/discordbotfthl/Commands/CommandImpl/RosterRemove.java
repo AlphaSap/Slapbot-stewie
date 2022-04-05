@@ -39,12 +39,15 @@ import static com.fthlbot.discordbotfthl.Util.GeneralService.leagueSlashErrorMes
 )
 @Component
 public class RosterRemove implements Command {
-    @Autowired
-    private TeamService teamService;
-    @Autowired
-    private DivisionService divisionService;
-    @Autowired
-    private RosterService rosterService;
+    private final TeamService teamService;
+    private final DivisionService divisionService;
+    private final RosterService rosterService;
+
+    public RosterRemove(DivisionService divisionService, TeamService teamService, RosterService rosterService) {
+        this.divisionService = divisionService;
+        this.teamService = teamService;
+        this.rosterService = rosterService;
+    }
 
     @Override
     public void execute(SlashCommandCreateEvent event) {
@@ -62,7 +65,7 @@ public class RosterRemove implements Command {
                     JClash clash = new JClash();
                     clash.getPlayer(tag).thenAccept(player -> {
                         try {
-                            removeAcc(teamByDivisionAndAlias, player, interaction);
+                            removeAcc(teamByDivisionAndAlias, player, re);
                             //success message
                             sendMessage(player.getTag(), interaction.getChannel().get());
                         } catch (ClashAPIException e) {
@@ -78,13 +81,13 @@ public class RosterRemove implements Command {
                             .update()
                     );
         } catch (LeagueException e) {
-            leagueSlashErrorMessage(interaction, e);
+            leagueSlashErrorMessage(re, e);
         }catch (IOException e){
             e.printStackTrace();
         }
     }
 
-    private void removeAcc(Team teamByDivisionAndAlias, Player player, SlashCommandInteraction event) {
+    private void removeAcc(Team teamByDivisionAndAlias, Player player, CompletableFuture<InteractionOriginalResponseUpdater> event) {
         try {
             rosterService.removeFromRoster(teamByDivisionAndAlias, player.getTag());
         } catch (EntityNotFoundException e) {

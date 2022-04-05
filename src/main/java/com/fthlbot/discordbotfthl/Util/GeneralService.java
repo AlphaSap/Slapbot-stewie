@@ -2,24 +2,16 @@ package com.fthlbot.discordbotfthl.Util;
 
 import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
-import com.fthlbot.discordbotfthl.Commands.ClashCommandImpl.DefenseImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.PingImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.RegistrationImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdd.RosterAdditionImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterRemove;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.TeamRoster.TeamRoster;
-import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
 import com.fthlbot.discordbotfthl.DiscordBotFthlApplication;
 import com.fthlbot.discordbotfthl.Util.Exception.UnsupportedCommandException;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
-import org.javacord.api.interaction.SlashCommandInteraction;
+import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.env.Environment;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -32,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
 
 
 public class GeneralService {
@@ -85,9 +78,15 @@ public class GeneralService {
         return sb.toString();
     }
 
-    public static void leagueSlashErrorMessage(SlashCommandInteraction interaction, LeagueException e) {
-        interaction.respondLater().thenAccept(res -> {
+    public static void leagueSlashErrorMessage(CompletableFuture<InteractionOriginalResponseUpdater> responder, LeagueException e) {
+        responder.thenAccept(res -> {
             res.setContent(e.getMessage());
+            res.update();
+        });
+    }
+    public static void leagueSlashErrorMessage(CompletableFuture<InteractionOriginalResponseUpdater> responder, String e) {
+        responder.thenAccept(res -> {
+            res.setContent(e);
             res.update();
         });
     }

@@ -21,11 +21,11 @@ import java.util.concurrent.CompletableFuture;
 public class TeamRosterService {
     public void execute(SlashCommandCreateEvent event, TeamService teamService, DivisionService divisionService, RosterService rosterService, long time){
             SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+            CompletableFuture<InteractionOriginalResponseUpdater> response = interaction.respondLater();
         try{
             String divAlias = interaction.getArguments().get(0).getStringValue().get();
             String teamAlias = interaction.getArguments().get(1).getStringValue().get();
 
-            CompletableFuture<InteractionOriginalResponseUpdater> response = interaction.respondLater();
 
             Division division = divisionService.getDivisionByAlias(divAlias);
             Team team = teamService.getTeamByDivisionAndAlias(teamAlias, division);
@@ -44,10 +44,10 @@ public class TeamRosterService {
 
         } catch (EntityNotFoundException e) {
             e.printStackTrace();
-            GeneralService.leagueSlashErrorMessage(interaction, e);
+            GeneralService.leagueSlashErrorMessage(response, e);
         }catch (Exception e){
             e.printStackTrace();
-            
+            GeneralService.leagueSlashErrorMessage(response, "expected error!");
         }
     }
 
@@ -76,7 +76,7 @@ public class TeamRosterService {
     private void addField(EmbedBuilder em, List<List<String>> list) {
         for (List<String> roster : list) {
             String description = String.join("\n", roster);
-            em.addField(formatRow("ID" ,"Tag", "TownHall", "Name", "   "), "```" + description + "```");
+            em.addField(formatRow("ID" ,"Tag", "Alias", "Name", "   "), "```" + description + "```");
         }
     }
     final static int ID_MAX_LEN = 11,  ALIAS_MAX_LEN = 5, NAME_MAX_LEN = 2, MAXID = 4;

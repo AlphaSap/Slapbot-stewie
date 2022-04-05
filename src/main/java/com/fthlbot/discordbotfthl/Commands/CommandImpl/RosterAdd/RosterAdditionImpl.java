@@ -41,8 +41,8 @@ public class RosterAdditionImpl extends RosterAddUtilClass implements RosterAddL
     @Override
     public void execute(SlashCommandCreateEvent event) {
             SlashCommandInteraction slashCommandInteraction = event.getSlashCommandInteraction();
-        try {
             CompletableFuture<InteractionOriginalResponseUpdater> res = event.getSlashCommandInteraction().respondLater(true);
+        try {
             List<SlashCommandInteractionOption> arguments = slashCommandInteraction.getArguments();
 
             String divisionAlias = arguments.get(0).getStringValue().get();
@@ -60,7 +60,7 @@ public class RosterAdditionImpl extends RosterAddUtilClass implements RosterAddL
             }).exceptionally(ExceptionLogger.get());
 
         }catch (LeagueException e){
-            GeneralService.leagueSlashErrorMessage(slashCommandInteraction, e);
+            GeneralService.leagueSlashErrorMessage(res, e);
         }
     }
 

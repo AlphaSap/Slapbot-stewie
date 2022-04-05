@@ -20,13 +20,14 @@ import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.SlashCommandInteractionOption;
-import org.json.JSONObject;
+import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static com.fthlbot.discordbotfthl.DiscordBotFthlApplication.clash;
 import static com.fthlbot.discordbotfthl.Util.GeneralService.*;
@@ -126,6 +127,7 @@ public class RegistrationImpl implements RegistrationListener {
     @Override
     public void execute(SlashCommandCreateEvent event) {
         SlashCommandInteraction slashCommandInteraction = event.getSlashCommandInteraction();
+        CompletableFuture<InteractionOriginalResponseUpdater> respond = slashCommandInteraction.respondLater();
         try{
         //Return if channel is not the same as reg channel
             //TODO
@@ -171,14 +173,14 @@ public class RegistrationImpl implements RegistrationListener {
                 .setColor(Color.green)
                 .setAuthor(user);
 
-        slashCommandInteraction.createImmediateResponder().addEmbeds(embedBuilder).respond();
-        /*slashCommandInteraction.respondLater().thenAccept(res -> {
+        //slashCommandInteraction.createImmediateResponder().addEmbeds(embedBuilder).respond();
+            respond.thenAccept(res -> {
             res.addEmbed(embedBuilder);
             res.update();
-        });*/
+        });
 
         }catch(LeagueException e){
-            leagueSlashErrorMessage(slashCommandInteraction, e);
+            leagueSlashErrorMessage(respond, e);
             e.printStackTrace();
         }catch (ClashAPIException | IOException e){
             ClashExceptionHandler handler = new ClashExceptionHandler();
