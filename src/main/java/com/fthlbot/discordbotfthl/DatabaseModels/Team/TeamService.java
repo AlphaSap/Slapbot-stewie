@@ -3,8 +3,11 @@ package com.fthlbot.discordbotfthl.DatabaseModels.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityAlreadyExistsException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;
+import com.fthlbot.discordbotfthl.DatabaseModels.Exception.NoMoreRosterChangesLeftException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.NotTheRepException;
 import org.javacord.api.entity.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +17,7 @@ import java.util.Optional;
 @Service
 public class TeamService {
     private final TeamRepo repo;
+    private final Logger log = LoggerFactory.getLogger(TeamService.class);
 
     @Autowired
     public TeamService(TeamRepo repo) {
@@ -57,13 +61,13 @@ public class TeamService {
         ));
     }
 
-    public Team decrementRC (Team team) throws EntityNotFoundException {
-        Optional<Team> teamOpt = repo.findById(team.getID());
-
-        if (teamOpt.isEmpty()){
-            throw new EntityNotFoundException("Team with the ID " + team.getID() + " is not present!, please notify the admins for this error immediately ");
+    public Team decrementRC (Team team) throws NoMoreRosterChangesLeftException {
+        Integer changesLeft = team.getAllowRosterChangesLeft();
+        if (changesLeft <= 0){
+            throw new NoMoreRosterChangesLeftException(team);
         }
-        team = repo.updateRosterChange(team.getID());
+        team.setAllowRosterChangesLeft(changesLeft - 1);
+        team = repo.save(team);
         return team;
     }
 
@@ -72,10 +76,14 @@ public class TeamService {
     }
 
     public Team changeRep(User NewUser, User oldUser, Team team) throws NotTheRepException {
+        log.info("old user: {} new user: {} ", oldUser.getDiscriminatedName(), NewUser.getDiscriminatedName());
+
         if (oldUser.getId() == team.getRep1ID()){
-            team = repo.updateRep1(team.getID(), NewUser.getId(), oldUser.getId());
+            team.setRep1ID(NewUser.getId());
+            repo.save(team);
         }else if (oldUser.getId() == team.getRep2ID()){
-            team = repo.updateRep2(team.getID(), NewUser.getId(), oldUser.getId());
+            team.setRep2ID(NewUser.getId());
+            repo.save(team);
         }else {
             throw new NotTheRepException(oldUser, team);
         }

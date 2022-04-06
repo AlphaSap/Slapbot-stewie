@@ -44,8 +44,8 @@ public class CommandListener implements SlashCommandCreateListener {
             CompletableFuture.runAsync(() -> {
                 Command command = messageHolder.getCommand().get(commandName);
                 command.execute(event);
-                logCommand(event);
             });
+            logCommand(event);
         }
     }
 

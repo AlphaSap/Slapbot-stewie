@@ -18,6 +18,9 @@ import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
+import org.javacord.api.util.logging.ExceptionLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
@@ -35,6 +38,7 @@ public class ChangeRepImpl implements ChangeRepListener {
     private final DivisionService divisionService;
     private final TeamService teamService;
     private final BotConfig config;
+    private final Logger log = LoggerFactory.getLogger(ChangeRepImpl.class);
 
     public ChangeRepImpl(DivisionService divisionService, TeamService teamService, BotConfig config) {
         this.divisionService = divisionService;
@@ -56,6 +60,7 @@ public class ChangeRepImpl implements ChangeRepListener {
             respondLater.thenAccept(res -> {
                 res.setContent("This command is restriced to staff only!").update();
             });
+            log.info("not the rep!");
             return;
         }
         String divAlias = slashCommandInteraction.getArguments().get(0).getStringValue().get();
@@ -65,19 +70,25 @@ public class ChangeRepImpl implements ChangeRepListener {
         Division division = null;
         try {
             division = divisionService.getDivisionByAlias(divAlias);
+            log.info(division.getName());
         } catch (EntityNotFoundException e) {
             GeneralService.leagueSlashErrorMessage(respondLater, e);
+            e.printStackTrace();
             return;
         }
         Team team = null;
         try {
              team = teamService.getTeamByDivisionAndAlias(teamAlias, division);
+             log.info(team.getName());
         } catch (EntityNotFoundException e) {
             GeneralService.leagueSlashErrorMessage(respondLater, e);
+            e.printStackTrace();
             return;
         }
         try {
             team = teamService.changeRep(newRep, oldRep, team);
+            log.info(team.getRep1ID() + "");
+            log.info(team.getRep2ID()+  "");
         } catch (NotTheRepException e) {
             e.printStackTrace();
         }
@@ -94,7 +105,7 @@ public class ChangeRepImpl implements ChangeRepListener {
                 .setAuthor(user);
         respondLater.thenAccept(res -> {
             res.addEmbed(embedBuilder).update();
-        });
+        }).exceptionally(ExceptionLogger.get());
     }
 
     private boolean hasStaffRole(Server server, User user){

@@ -3,6 +3,7 @@ package com.fthlbot.discordbotfthl.DatabaseModels.Roster;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.*;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
+import com.fthlbot.discordbotfthl.Util.BotConfig;
 import org.javacord.api.entity.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,12 +19,13 @@ public class RosterService {
 
     private final RosterRepo repo;
     private final TeamService teamService;
+    private final BotConfig config;
     private final Logger log = LoggerFactory.getLogger(RosterService.class);
 
-    @Autowired
-    public RosterService(RosterRepo repo, TeamService teamService) {
+    public RosterService(RosterRepo repo, TeamService teamService, BotConfig config) {
         this.repo = repo;
         this.teamService = teamService;
+        this.config = config;
     }
 
     public List<Roster> getRosterForATeam(Team team) throws EntityNotFoundException {
@@ -58,8 +60,7 @@ public class RosterService {
         }
 
         if (rosterByTeam.size() >= roster.getDivision().getRosterSize()){
-            String s = String.format("`%s` has no more roster changes left! No more accounts can be added!", roster.getTeam().getName());
-            throw new NoMoreRosterChangesLeftException(s);
+            throw new NoMoreRosterChangesLeftException(roster.getTeam());
         }
 
         Roster finalRoster = roster;
