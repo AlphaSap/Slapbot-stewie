@@ -1,4 +1,4 @@
-package com.fthlbot.discordbotfthl.Commands.ClashCommandImpl;
+package com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl;
 
 import Core.Enitiy.clanwar.Attack;
 import Core.Enitiy.clanwar.ClanWarMember;
@@ -7,7 +7,7 @@ import Core.JClash;
 import Core.exception.ClashAPIException;
 import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
-import com.fthlbot.discordbotfthl.Commands.ClashCommandListener.AttackListener;
+import com.fthlbot.discordbotfthl.Commands.CommandListener.ClashCommandListener.AttackListener;
 import com.fthlbot.discordbotfthl.Util.ClashUtils;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import com.fthlbot.discordbotfthl.Util.JavacordLogger;

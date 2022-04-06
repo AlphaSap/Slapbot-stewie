@@ -1,4 +1,4 @@
-package com.fthlbot.discordbotfthl.Commands.ClashCommandListener;
+package com.fthlbot.discordbotfthl.Commands.CommandListener.ClashCommandListener;
 
 import com.fthlbot.discordbotfthl.Handlers.Command;
 

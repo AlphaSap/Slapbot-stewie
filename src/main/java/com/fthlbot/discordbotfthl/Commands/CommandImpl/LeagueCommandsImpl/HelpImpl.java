@@ -1,25 +1,21 @@
-package com.fthlbot.discordbotfthl.Commands.CommandImpl;
+package com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl;
 
 import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.HelpListener;
 import com.fthlbot.discordbotfthl.Handlers.Command;
 import com.fthlbot.discordbotfthl.Util.Pagination;
-import org.javacord.api.entity.message.embed.Embed;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
-import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteractionOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.fthlbot.discordbotfthl.Annotation.CommandType.*;
 import static com.fthlbot.discordbotfthl.Annotation.CommandType.IGNORE;

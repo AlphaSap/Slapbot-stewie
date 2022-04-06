@@ -1,4 +1,4 @@
-package com.fthlbot.discordbotfthl.Commands.ClashCommandImpl;
+package com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl;
 
 import Core.Enitiy.clanwar.Attack;
 import Core.Enitiy.clanwar.ClanWarMember;

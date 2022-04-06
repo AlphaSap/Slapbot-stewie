@@ -1,4 +1,4 @@
-package com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdd;
+package com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.RosterAdd;
 
 import Core.Enitiy.player.Player;
 import Core.JClash;

@@ -32,10 +32,6 @@ public class JavacordLogger {
     private static final String ANSI_CYAN = "\u001B[36m";
     private static final String ANSI_WHITE = "\u001B[37m";
 
-    public JavacordLogger() {
-    }
-
-
     public JavacordLogger setLogger(Class<?> clazz) {
         this.clazz = clazz;
         this.log = LoggerFactory.getLogger(clazz);

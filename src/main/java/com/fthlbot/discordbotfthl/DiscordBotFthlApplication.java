@@ -2,10 +2,10 @@ package com.fthlbot.discordbotfthl;
 
 import Core.JClash;
 import Core.exception.ClashAPIException;
-import com.fthlbot.discordbotfthl.Commands.ClashCommandImpl.DefenseImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.*;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.RosterAdd.RosterAdditionImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.TeamRoster.TeamRoster;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.DefenseImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.*;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.RosterAdd.RosterAdditionImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.TeamRoster.TeamRoster;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
 import com.fthlbot.discordbotfthl.Handlers.Command;
 import com.fthlbot.discordbotfthl.Handlers.CommandListener;
@@ -16,10 +16,6 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
-import org.javacord.api.interaction.SlashCommand;
-import org.javacord.api.interaction.SlashCommandOption;
-import org.javacord.api.interaction.SlashCommandOptionChoice;
-import org.javacord.api.interaction.SlashCommandOptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -33,8 +29,6 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
-
-import static java.util.Arrays.asList;
 
 @SpringBootApplication
 public class DiscordBotFthlApplication {
@@ -132,25 +126,7 @@ public class DiscordBotFthlApplication {
 
         api.addListener(commandListener);
 
-        SlashCommand command = SlashCommand.with(
-                        "all-teams",
-                        "Returns a list of all the teams participating in a given division")
-                .setOptions(List.of(
-                                SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
-                                        "division",
-                                        "choose from one of the following division",
-                                        true,
-                                        asList(
-                                                SlashCommandOptionChoice.create("f8", "f8"),
-                                                SlashCommandOptionChoice.create("f5", "f5"),
-                                                SlashCommandOptionChoice.create("f9", "f9"),
-                                                SlashCommandOptionChoice.create("f11", "f11"),
-                                                SlashCommandOptionChoice.create("f10", "f10"),
-                                                SlashCommandOptionChoice.create("fmix", "fmix")
-                                        )
-                                )))
-                .createForServer(api.getServerById(testID).get())
-                .join();
+
 
         return api;
     }

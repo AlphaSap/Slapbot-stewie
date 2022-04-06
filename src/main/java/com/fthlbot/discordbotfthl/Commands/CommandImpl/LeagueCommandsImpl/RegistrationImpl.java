@@ -1,4 +1,4 @@
-package com.fthlbot.discordbotfthl.Commands.CommandImpl;
+package com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl;
 
 import Core.Enitiy.clan.ClanModel;
 import Core.JClash;
