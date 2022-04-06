@@ -6,6 +6,7 @@ import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.DefenseI
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.RosterAdd.RosterAdditionImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.TeamRoster.TeamRoster;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeRepImpl;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
 import com.fthlbot.discordbotfthl.Handlers.Command;
 import com.fthlbot.discordbotfthl.Handlers.CommandListener;
@@ -16,6 +17,10 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
+import org.javacord.api.interaction.SlashCommand;
+import org.javacord.api.interaction.SlashCommandOption;
+import org.javacord.api.interaction.SlashCommandOptionChoice;
+import org.javacord.api.interaction.SlashCommandOptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -29,6 +34,8 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
+
+import static java.util.Arrays.asList;
 
 @SpringBootApplication
 public class DiscordBotFthlApplication {
@@ -57,8 +64,10 @@ public class DiscordBotFthlApplication {
 
     public final BotConfig config;
 
+    public final ChangeRepImpl changeRep;
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, BotConfig config) {
+
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, BotConfig config, ChangeRepImpl changeRep) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -69,6 +78,7 @@ public class DiscordBotFthlApplication {
         this.attack = attack;
         this.allTeams = allTeams;
         this.config = config;
+        this.changeRep = changeRep;
     }
 
 
@@ -112,7 +122,8 @@ public class DiscordBotFthlApplication {
                 this.rosterRemove,
                 this.teamRoster,
                 this.attack,
-                this.allTeams
+                this.allTeams,
+                this.changeRep
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);

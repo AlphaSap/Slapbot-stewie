@@ -3,6 +3,8 @@ package com.fthlbot.discordbotfthl.DatabaseModels.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityAlreadyExistsException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;
+import com.fthlbot.discordbotfthl.DatabaseModels.Exception.NotTheRepException;
+import org.javacord.api.entity.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,5 +69,16 @@ public class TeamService {
 
     public List<Team> getAllTeamsByDivision(Division division){
         return repo.findTeamByDivision(division);
+    }
+
+    public Team changeRep(User NewUser, User oldUser, Team team) throws NotTheRepException {
+        if (oldUser.getId() == team.getRep1ID()){
+            team = repo.updateRep1(team.getID(), NewUser.getId(), oldUser.getId());
+        }else if (oldUser.getId() == team.getRep2ID()){
+            team = repo.updateRep2(team.getID(), NewUser.getId(), oldUser.getId());
+        }else {
+            throw new NotTheRepException(oldUser, team);
+        }
+        return team;
     }
 }

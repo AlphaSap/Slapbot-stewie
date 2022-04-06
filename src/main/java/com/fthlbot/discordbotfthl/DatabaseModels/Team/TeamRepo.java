@@ -27,4 +27,18 @@ public interface TeamRepo extends JpaRepository<Team, Integer> {
     Team updateRosterChange(int id);
 
     List<Team> findTeamByDivision(Division division);
+
+    @Modifying
+    @Query(
+            value = "UPDATE fthldb.team SET rep1id = ?2 WHERE id = ?1 AND rep1id = ?3",
+            nativeQuery = true
+    )
+    Team updateRep1(int id, long newRepID, long oldRepID);
+
+    @Modifying
+    @Query(
+            value = "UPDATE fthldb.team SET rep2id = ?2 WHERE id = ?1 AND rep2id = ?3",
+            nativeQuery = true
+    )
+    Team updateRep2(int id, long newRepID, long oldRepID);
 }
