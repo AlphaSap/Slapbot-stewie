@@ -51,18 +51,7 @@ public class ChangeRepImpl implements ChangeRepListener {
         SlashCommandInteraction slashCommandInteraction = event.getSlashCommandInteraction();
         CompletableFuture<InteractionOriginalResponseUpdater> respondLater = slashCommandInteraction.respondLater();
         User user = slashCommandInteraction.getUser();
-        long fthlServerID = config.getFthlServerID();
-        long testServerID = config.getTestServerID();
 
-        Server server = event.getApi().getServerById(fthlServerID).orElse(event.getApi().getServerById(testServerID).get());
-        boolean b = hasStaffRole(server, user) || user.isBotOwner();
-        if (!b){
-            respondLater.thenAccept(res -> {
-                res.setContent("This command is restriced to staff only!").update();
-            });
-            log.info("not the rep!");
-            return;
-        }
         String divAlias = slashCommandInteraction.getArguments().get(0).getStringValue().get();
         String teamAlias = slashCommandInteraction.getArguments().get(1).getStringValue().get();
         User oldRep = slashCommandInteraction.getArguments().get(2).getUserValue().get();
@@ -108,8 +97,5 @@ public class ChangeRepImpl implements ChangeRepListener {
         }).exceptionally(ExceptionLogger.get());
     }
 
-    private boolean hasStaffRole(Server server, User user){
-        List<Role> roles = user.getRoles(server);
-        return roles.stream().anyMatch(x -> x.getId() == config.getStaffRoleID());
-    }
+
 }

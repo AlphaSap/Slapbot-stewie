@@ -6,6 +6,7 @@ import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.DefenseI
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.RosterAdd.RosterAdditionImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.TeamRoster.TeamRoster;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeClanImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeRepImpl;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
 import com.fthlbot.discordbotfthl.Handlers.Command;
@@ -17,10 +18,6 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
-import org.javacord.api.interaction.SlashCommand;
-import org.javacord.api.interaction.SlashCommandOption;
-import org.javacord.api.interaction.SlashCommandOptionChoice;
-import org.javacord.api.interaction.SlashCommandOptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -34,8 +31,6 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
-
-import static java.util.Arrays.asList;
 
 @SpringBootApplication
 public class DiscordBotFthlApplication {
@@ -57,6 +52,8 @@ public class DiscordBotFthlApplication {
     private final DefenseImpl attack;
 
     private final AllTeamsImpl allTeams;
+
+    private final ChangeClanImpl changeClan;
     public static final String prefix = "+";
 
     private static final Logger log = LoggerFactory.getLogger(DiscordBotFthlApplication.class);
@@ -67,7 +64,7 @@ public class DiscordBotFthlApplication {
     public final ChangeRepImpl changeRep;
 
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, BotConfig config, ChangeRepImpl changeRep) {
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -77,6 +74,7 @@ public class DiscordBotFthlApplication {
         this.teamRoster = teamRoster;
         this.attack = attack;
         this.allTeams = allTeams;
+        this.changeClan = changeClan;
         this.config = config;
         this.changeRep = changeRep;
     }
@@ -123,7 +121,8 @@ public class DiscordBotFthlApplication {
                 this.teamRoster,
                 this.attack,
                 this.allTeams,
-                this.changeRep
+                this.changeRep,
+                this.changeClan
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
@@ -133,7 +132,7 @@ public class DiscordBotFthlApplication {
         MessageHandlers messageHandlers = new MessageHandlers(commandList);
 
         MessageHolder messageHolder = messageHandlers.setCommands();
-        CommandListener commandListener = new CommandListener(messageHolder, loggerService);
+        CommandListener commandListener = new CommandListener(messageHolder, loggerService, config);
 
         api.addListener(commandListener);
 
