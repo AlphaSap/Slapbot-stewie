@@ -136,8 +136,6 @@ public class DiscordBotFthlApplication {
 
         api.addListener(commandListener);
 
-
-
         return api;
     }
 

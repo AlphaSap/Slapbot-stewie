@@ -89,4 +89,11 @@ public class TeamService {
         }
         return team;
     }
+
+    public Team changeTag(Team team, String tag, String name) {
+        team.setTag(tag);
+        team.setName(name);
+        team = repo.save(team);
+        return team;
+    }
 }

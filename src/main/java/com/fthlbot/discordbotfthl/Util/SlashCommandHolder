@@ -238,3 +238,35 @@ SlashCommand command = SlashCommand
                 ))
                 .createForServer(api.getServerById(testID).get())
                 .join();
+*************************************************************************************************
+*************************************************************************************************
+*********************************************************************************************************
+Change clan commands
+SlashCommand command = SlashCommand
+                .with("change-clan", "staff only command to change clan tag of a team")
+                .setOptions(List.of(
+                        SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
+                                "division",
+                                "choose from one of the following division",
+                                true,
+                                asList(
+                                        SlashCommandOptionChoice.create("f8", "f8"),
+                                        SlashCommandOptionChoice.create("f5", "f5"),
+                                        SlashCommandOptionChoice.create("f9", "f9"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
+                                        SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("fmix", "fmix")
+                                )
+                        ),SlashCommandOption.create(SlashCommandOptionType.STRING,
+                                "team-identifier",
+                                "Enter the name of your team or its alias",
+                                true
+                        ),
+                        SlashCommandOption.create(SlashCommandOptionType.STRING,
+                                "clan-tag",
+                                "enter the new clan tag for your team",
+                                true
+                        )
+                ))
+                .createForServer(api.getServerById(testID).get())
+                .join();
