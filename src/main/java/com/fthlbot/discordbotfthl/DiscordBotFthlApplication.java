@@ -2,6 +2,7 @@ package com.fthlbot.discordbotfthl;
 
 import Core.JClash;
 import Core.exception.ClashAPIException;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.AddDivisionWeeksImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.DefenseImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.RosterAdd.RosterAdditionImpl;
@@ -32,6 +33,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,11 +74,13 @@ public class DiscordBotFthlApplication {
 
     private final ChangeAliasImpl changeAlias;
 
+    private final AddDivisionWeeksImpl addDivisionWeeks;
 
 
 
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias) {
+
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -90,6 +94,7 @@ public class DiscordBotFthlApplication {
         this.config = config;
         this.changeRep = changeRep;
         this.changeAlias = changeAlias;
+        this.addDivisionWeeks = addDivisionWeeks;
     }
 
 
@@ -123,6 +128,11 @@ public class DiscordBotFthlApplication {
         ArrayList<Server> servers = new ArrayList<>(api.getServers());
         log.info("Logged in as {}", api.getYourself().getDiscriminatedName());
         log.info("Watching servers {}", servers.size());
+        try {
+            log.info(config.getF5EndDate() + "");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
 
         //Add commands to the handler
@@ -136,7 +146,8 @@ public class DiscordBotFthlApplication {
                 this.allTeams,
                 this.changeRep,
                 this.changeClan,
-                this.changeAlias
+                this.changeAlias,
+                this.addDivisionWeeks
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
@@ -150,7 +161,7 @@ public class DiscordBotFthlApplication {
 
         api.addListener(commandListener);
         SlashCommand command = SlashCommand
-                .with("change-alias", "staff only command to change alias of a team")
+                .with("add-weeks", "staff only command to add weeks to a specific division")
                 .setOptions(List.of(
                         SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
                                 "division",
@@ -165,13 +176,8 @@ public class DiscordBotFthlApplication {
                                         SlashCommandOptionChoice.create("fmix", "fmix")
                                 )
                         ),SlashCommandOption.create(SlashCommandOptionType.STRING,
-                                "team-identifier",
-                                "Enter the name of your team or its alias",
-                                true
-                        ),
-                        SlashCommandOption.create(SlashCommandOptionType.STRING,
-                                "new-alias",
-                                "enter the new alias for your team",
+                                "json",
+                                "Enter a json array with 3 fields, `start`, `end` and `byeWeek`",
                                 true
                         )
                 ))
