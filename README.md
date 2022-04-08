@@ -32,7 +32,7 @@ after not having a static Ip for my home testing environment. Read more about JC
 
 # TODO
 - ~~Make team all command~~
-- Make clan change command
+- ~~Make clan change command~~
 - ~~Make Rep change command~~
 - Make alias change command
 - Make nego channel shit!

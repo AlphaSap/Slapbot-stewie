@@ -6,6 +6,7 @@ import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.DefenseI
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.RosterAdd.RosterAdditionImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.TeamRoster.TeamRoster;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeAliasImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeClanImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeRepImpl;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
@@ -18,6 +19,10 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
+import org.javacord.api.interaction.SlashCommand;
+import org.javacord.api.interaction.SlashCommandOption;
+import org.javacord.api.interaction.SlashCommandOptionChoice;
+import org.javacord.api.interaction.SlashCommandOptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -31,6 +36,8 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
+
+import static java.util.Arrays.asList;
 
 @SpringBootApplication
 public class DiscordBotFthlApplication {
@@ -59,12 +66,17 @@ public class DiscordBotFthlApplication {
     private static final Logger log = LoggerFactory.getLogger(DiscordBotFthlApplication.class);
     public static JClash clash;
 
-    public final BotConfig config;
+    private final BotConfig config;
 
-    public final ChangeRepImpl changeRep;
+    private final ChangeRepImpl changeRep;
+
+    private final ChangeAliasImpl changeAlias;
 
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep) {
+
+
+
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -77,6 +89,7 @@ public class DiscordBotFthlApplication {
         this.changeClan = changeClan;
         this.config = config;
         this.changeRep = changeRep;
+        this.changeAlias = changeAlias;
     }
 
 
@@ -122,7 +135,8 @@ public class DiscordBotFthlApplication {
                 this.attack,
                 this.allTeams,
                 this.changeRep,
-                this.changeClan
+                this.changeClan,
+                this.changeAlias
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
@@ -135,6 +149,34 @@ public class DiscordBotFthlApplication {
         CommandListener commandListener = new CommandListener(messageHolder, loggerService, config);
 
         api.addListener(commandListener);
+        SlashCommand command = SlashCommand
+                .with("change-alias", "staff only command to change alias of a team")
+                .setOptions(List.of(
+                        SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
+                                "division",
+                                "choose from one of the following division",
+                                true,
+                                asList(
+                                        SlashCommandOptionChoice.create("f8", "f8"),
+                                        SlashCommandOptionChoice.create("f5", "f5"),
+                                        SlashCommandOptionChoice.create("f9", "f9"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
+                                        SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("fmix", "fmix")
+                                )
+                        ),SlashCommandOption.create(SlashCommandOptionType.STRING,
+                                "team-identifier",
+                                "Enter the name of your team or its alias",
+                                true
+                        ),
+                        SlashCommandOption.create(SlashCommandOptionType.STRING,
+                                "new-alias",
+                                "enter the new alias for your team",
+                                true
+                        )
+                ))
+                .createForServer(api.getServerById(testID).get())
+                .join();
 
         return api;
     }
