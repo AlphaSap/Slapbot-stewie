@@ -96,4 +96,9 @@ public class TeamService {
         team = repo.save(team);
         return team;
     }
+    public Team changeAlias(Team team, String alias) {
+        team.setAlias(alias);
+        team = repo.save(team);
+        return team;
+    }
 }
