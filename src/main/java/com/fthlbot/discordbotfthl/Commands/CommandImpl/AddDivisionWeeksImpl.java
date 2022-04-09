@@ -14,6 +14,7 @@ import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageAttachment;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteractionOption;
+import org.javacord.api.interaction.callback.InteractionCallbackDataFlag;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.javacord.api.util.DiscordRegexPattern;
 import org.json.JSONArray;
@@ -55,7 +56,14 @@ public class AddDivisionWeeksImpl implements AddDivisionWeekListener {
     public void execute(SlashCommandCreateEvent event) {
         //TODO replace with user input
         //TODO regex for discord attachment link https://cdn.discordapp.com/attachments/[0-9]+/[0-9]+/[a-zA-Z\.]+
-
+        if (!event.getSlashCommandInteraction().getUser().isBotOwner()){
+            event.getSlashCommandInteraction()
+                    .createImmediateResponder()
+                    .setFlags(InteractionCallbackDataFlag.EPHEMERAL)
+                    .setContent("This command can only be used bot owner")
+                    .respond();
+            return;
+        }
         List<SlashCommandInteractionOption> arguments = event.getSlashCommandInteraction().getArguments();
         CompletableFuture<InteractionOriginalResponseUpdater> respondLater = event.getSlashCommandInteraction().respondLater();
         String divAlias = arguments.get(0).getStringValue().get();
