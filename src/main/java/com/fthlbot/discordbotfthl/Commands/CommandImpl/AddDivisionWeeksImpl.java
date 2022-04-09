@@ -10,6 +10,7 @@ import com.fthlbot.discordbotfthl.DatabaseModels.ScheduleWar.DivisonWeek.Divisio
 import com.fthlbot.discordbotfthl.DatabaseModels.ScheduleWar.DivisonWeek.DivisionWeeks;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
+import com.fthlbot.discordbotfthl.Util.JavacordLogger;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageAttachment;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
@@ -99,6 +100,21 @@ public class AddDivisionWeeksImpl implements AddDivisionWeekListener {
                 e.printStackTrace();
                 log.error(e.getMessage());
                 continue;
+            }
+
+            try {
+                Date[] datesForDivision = config.getDateByDivision(division.getAlias());
+                //Validate the dates not as important, more like a quality of life change
+            } catch (ParseException e) {
+                e.printStackTrace();
+                respondLater.thenAccept(res -> {
+                    res.setContent("Unexpected error").update();
+                    JavacordLogger j = new JavacordLogger();
+                    j.setChannel(event.getApi().getServerTextChannelById(config.getErrorLogChannelID()).get());
+                    j.setLogger(this.getClass());
+                    j.error("Cannot parese dates array, line 106", event.getSlashCommandInteraction().getUser(), event.getSlashCommandInteraction().getServer().get());
+                });
+                return;
             }
 
             DivisionWeeks divisionWeek = new DivisionWeeks(i + 1, date, date1, division, isByeWeek);
