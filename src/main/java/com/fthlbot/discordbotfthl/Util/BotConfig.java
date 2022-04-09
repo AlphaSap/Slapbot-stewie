@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 @Configuration
 public class BotConfig {
@@ -14,6 +15,10 @@ public class BotConfig {
     private long registrationChannelID;
     @Value("${channel.transactionChannel}")
     private long transactionChannelID;
+    @Value("${channel.errorLogsAndInfo}")
+    private long errorLogChannelID;
+
+
 
     //Role IDs
     @Value("${role.staff}")
@@ -149,5 +154,42 @@ public class BotConfig {
 
     public long getApplicantServerID() {
         return applicantServerID;
+    }
+
+    public long getErrorLogChannelID() { return errorLogChannelID; }
+
+    public Date[] getDateByDivision(String key) throws ParseException {
+     Date[] dates = {null, null};
+     key = key.toLowerCase(Locale.ROOT);
+     switch (key){
+         case "f5" -> {
+             dates[0] = this.getF5StartDate();
+             dates[1] = this.getF5EndDate();
+         }
+         case "f8" -> {
+             dates[0] = this.getF8StartDate();
+             dates[1] = this.getF8EndDate();
+         }
+         case "f9" -> {
+             dates[0] = this.getF9StartDate();
+             dates[1] = this.getF9StartDate();
+         }
+         case "f10" -> {
+             dates[0] = this.getF10StartDate();
+             dates[1] = this.getF10EndDate();
+         }
+         case "f11" -> {
+             dates[0] = this.getF11StartDate();
+             dates[1] = this.getF11EndDate();
+         }
+         case "fmix" -> {
+             dates[0] = this.getFmixStartDate();
+             dates[1] = this.getFmixEndDate();
+         }
+         default -> {
+             throw new IllegalStateException("Incorrect division alias");
+         }
+     }
+     return dates;
     }
 }
