@@ -104,7 +104,7 @@ public class AddDivisionWeeksImpl implements AddDivisionWeekListener {
 
             try {
                 Date[] datesForDivision = config.getDateByDivision(division.getAlias());
-                //Validate the dates not as important, more like a quality of life change
+                //TODO Validate the dates not as important, more like a quality of life change
             } catch (ParseException e) {
                 e.printStackTrace();
                 respondLater.thenAccept(res -> {
@@ -112,7 +112,7 @@ public class AddDivisionWeeksImpl implements AddDivisionWeekListener {
                     JavacordLogger j = new JavacordLogger();
                     j.setChannel(event.getApi().getServerTextChannelById(config.getErrorLogChannelID()).get());
                     j.setLogger(this.getClass());
-                    j.error("Cannot parese dates array, line 106", event.getSlashCommandInteraction().getUser(), event.getSlashCommandInteraction().getServer().get());
+                    j.error("Cannot parse dates array, line 106", event.getSlashCommandInteraction().getUser(), event.getSlashCommandInteraction().getServer().get());
                 });
                 return;
             }
