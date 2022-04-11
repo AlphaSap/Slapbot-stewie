@@ -1,8 +1,10 @@
 package com.fthlbot.discordbotfthl.DatabaseModels.ScheduleWar.DivisonWeek;
 
+import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class DivisionWeekService {
@@ -19,5 +21,12 @@ public class DivisionWeekService {
     public Collection<DivisionWeeks> save(Collection<DivisionWeeks> divisionWeeks){
         divisionWeeks = repo.saveAll(divisionWeeks);
         return divisionWeeks;
+    }
+
+    public DivisionWeeks getDivWeekByID(int id) throws EntityNotFoundException {
+        Optional<DivisionWeeks> byId = repo.findById(id);
+        if (byId.isPresent())
+            return byId.get();
+        throw new EntityNotFoundException("Cannot find a Division week with the ID: " + id+"");
     }
 }

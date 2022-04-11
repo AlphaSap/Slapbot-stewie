@@ -3,7 +3,7 @@ package com.fthlbot.discordbotfthl.Annotation;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Invoker {
     String alias();
     String description();

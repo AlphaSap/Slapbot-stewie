@@ -101,4 +101,13 @@ public class TeamService {
         team = repo.save(team);
         return team;
     }
+
+    public Team getTeamByID(int id) throws EntityNotFoundException {
+        Optional<Team> byId = repo.findById(id);
+
+        if (byId.isPresent()) {
+            return byId.get();
+        }
+        throw new EntityNotFoundException("Team with the ID: " + id +" not found!");
+    }
 }

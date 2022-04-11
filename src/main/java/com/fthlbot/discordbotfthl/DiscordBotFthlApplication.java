@@ -4,6 +4,7 @@ import Core.JClash;
 import Core.exception.ClashAPIException;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.AddDivisionWeeksImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.DefenseImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.CreateMatchUps;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.RosterAdd.RosterAdditionImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.TeamRoster.TeamRoster;
@@ -20,10 +21,6 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
-import org.javacord.api.interaction.SlashCommand;
-import org.javacord.api.interaction.SlashCommandOption;
-import org.javacord.api.interaction.SlashCommandOptionChoice;
-import org.javacord.api.interaction.SlashCommandOptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -38,8 +35,6 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
-
-import static java.util.Arrays.asList;
 
 @SpringBootApplication
 public class DiscordBotFthlApplication {
@@ -76,11 +71,11 @@ public class DiscordBotFthlApplication {
 
     private final AddDivisionWeeksImpl addDivisionWeeks;
 
+    private final CreateMatchUps createMatchUps;
 
 
 
-
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks) {
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -95,6 +90,7 @@ public class DiscordBotFthlApplication {
         this.changeRep = changeRep;
         this.changeAlias = changeAlias;
         this.addDivisionWeeks = addDivisionWeeks;
+        this.createMatchUps = createMatchUps;
     }
 
 
@@ -147,7 +143,8 @@ public class DiscordBotFthlApplication {
                 this.changeRep,
                 this.changeClan,
                 this.changeAlias,
-                this.addDivisionWeeks
+                this.addDivisionWeeks,
+                this.createMatchUps
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
@@ -160,29 +157,7 @@ public class DiscordBotFthlApplication {
         CommandListener commandListener = new CommandListener(messageHolder, loggerService, config);
 
         api.addListener(commandListener);
-        SlashCommand command = SlashCommand
-                .with("add-weeks", "staff only command to add weeks to a specific division")
-                .setOptions(List.of(
-                        SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
-                                "division",
-                                "choose from one of the following division",
-                                true,
-                                asList(
-                                        SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f5", "f5"),
-                                        SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
-                                        SlashCommandOptionChoice.create("f10", "f10"),
-                                        SlashCommandOptionChoice.create("fmix", "fmix")
-                                )
-                        ),SlashCommandOption.create(SlashCommandOptionType.STRING,
-                                "json",
-                                "Enter a json array with 3 fields, `start`, `end` and `byeWeek`",
-                                true
-                        )
-                ))
-                .createForServer(api.getServerById(testID).get())
-                .join();
+
 
         return api;
     }

@@ -52,6 +52,7 @@ public class CommandListener implements SlashCommandCreateListener {
     @Override
     public void onSlashCommandCreate(SlashCommandCreateEvent event) {
         String commandName = event.getSlashCommandInteraction().getCommandName();
+        log.info("Command is here!!!!!!");
         if (messageHolder.getCommand().containsKey(commandName)){
             CompletableFuture.runAsync(() -> {
                 Command command = messageHolder.getCommand().get(commandName);
