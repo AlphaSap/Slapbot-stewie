@@ -73,6 +73,7 @@ public class AddDivisionWeeksImpl implements AddDivisionWeekListener {
 
         s = getJsonArray(event, respondLater, json);
 
+        //Return because the error message will be sent via the getJsonArray method
         if (s == null) return;
 
         Division division = null;

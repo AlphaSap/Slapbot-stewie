@@ -80,7 +80,12 @@ public class GeneralService {
 
     public static void leagueSlashErrorMessage(CompletableFuture<InteractionOriginalResponseUpdater> responder, LeagueException e) {
         responder.thenAccept(res -> {
-            res.setContent(e.getMessage());
+            EmbedBuilder em = new EmbedBuilder()
+                    .setTitle("<:deny:934405749881315380>Error! ")
+                    .setDescription(e.getMessage())
+                    .setColor(Color.red)
+                    .setTimestampToNow();
+            res.addEmbed(em);
             res.update();
         });
     }
