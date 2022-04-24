@@ -1,4 +1,4 @@
-package com.fthlbot.discordbotfthl.Commands.CommandImpl;
+package com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands;
 
 import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
@@ -26,7 +26,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Component
 @Invoker(
-        alias = "creat-matchups",
+        alias = "create-matchups",
         description = "A command to set match-ups for a specific division",
         usage = "/create-matchups <JSON>",
         type = CommandType.STAFF
@@ -88,7 +88,7 @@ public class CreateMatchUps implements Command {
                 String s = """
                         Both teams must be in the same division.
                         %s and %s are not in the same division.
-                        %d     %d
+                        `%d` , `%d`
                         Index: %d
                         """.formatted(homeTeam.getName(), enemyTeam.getName(), homeTeam.getID(), enemyTeam.getID(), (i+1));
                 throw new LeagueException(s);
@@ -115,6 +115,8 @@ public class CreateMatchUps implements Command {
             });
         } catch (LeagueException e) {
             GeneralService.leagueSlashErrorMessage(respondLater, e);
+        }catch (Exception e){   //TODO
+            GeneralService.sendFatalError(respondLater, e);
         }
     }
 

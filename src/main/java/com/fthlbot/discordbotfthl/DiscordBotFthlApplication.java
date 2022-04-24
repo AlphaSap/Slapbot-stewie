@@ -2,9 +2,9 @@ package com.fthlbot.discordbotfthl;
 
 import Core.JClash;
 import Core.exception.ClashAPIException;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.AddDivisionWeeksImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.AddDivisionWeeksImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.DefenseImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.CreateMatchUps;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.CreateMatchUps;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.RosterAdd.RosterAdditionImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.TeamRoster.TeamRoster;
@@ -111,6 +111,7 @@ public class DiscordBotFthlApplication {
 
         DiscordApi api = new DiscordApiBuilder()
                 .setToken(env.getProperty("TOKEN_TEST_BOT"))
+                .setUserCacheEnabled(false)
                 .setAllIntentsExcept(
                         Intent.GUILD_WEBHOOKS,
                         Intent.GUILD_INTEGRATIONS,
@@ -157,7 +158,6 @@ public class DiscordBotFthlApplication {
         CommandListener commandListener = new CommandListener(messageHolder, loggerService, config);
 
         api.addListener(commandListener);
-
 
         return api;
     }

@@ -80,13 +80,12 @@ public class TeamService {
 
         if (oldUser.getId() == team.getRep1ID()){
             team.setRep1ID(NewUser.getId());
-            repo.save(team);
         }else if (oldUser.getId() == team.getRep2ID()){
             team.setRep2ID(NewUser.getId());
-            repo.save(team);
         }else {
             throw new NotTheRepException(oldUser, team);
         }
+        repo.save(team);
         return team;
     }
 

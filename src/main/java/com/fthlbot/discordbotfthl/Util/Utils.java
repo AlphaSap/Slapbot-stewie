@@ -17,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Configuration
+//This class contains all the utility functions, all the random methods which i need all over the project but don't belong in any other class.
 public class Utils {
     public static String getTownHallEmote(int townhallLevel) {
         return switch (townhallLevel) {
