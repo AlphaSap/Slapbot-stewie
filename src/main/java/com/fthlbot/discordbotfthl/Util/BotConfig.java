@@ -39,6 +39,8 @@ public class BotConfig {
     private long testServerID;
     @Value("${server.applicantServer}")
     private long applicantServerID;
+    @Value("${server.NegotiationServer}")
+    private long negoServerID;
 
     //Dates
     @Value("${f5.startDate}")
@@ -127,6 +129,11 @@ public class BotConfig {
     public long getStaffRoleID() {
         return staffRoleID;
     }
+
+    public long getNegoServerID() {
+        return negoServerID;
+    }
+
 
     public long getApplicantRoleID() {
         return applicantRoleID;

@@ -11,6 +11,7 @@ import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.TeamRo
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeAliasImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeClanImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeRepImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.NegoChannelCreationImpl;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
 import com.fthlbot.discordbotfthl.Handlers.Command;
 import com.fthlbot.discordbotfthl.Handlers.CommandListener;
@@ -21,6 +22,10 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
+import org.javacord.api.interaction.SlashCommand;
+import org.javacord.api.interaction.SlashCommandOption;
+import org.javacord.api.interaction.SlashCommandOptionChoice;
+import org.javacord.api.interaction.SlashCommandOptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -35,6 +40,8 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
+
+import static java.util.Arrays.asList;
 
 @SpringBootApplication
 public class DiscordBotFthlApplication {
@@ -73,9 +80,11 @@ public class DiscordBotFthlApplication {
 
     private final CreateMatchUps createMatchUps;
 
+    private final NegoChannelCreationImpl negoChannelCreation;
 
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps) {
+
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -91,6 +100,7 @@ public class DiscordBotFthlApplication {
         this.changeAlias = changeAlias;
         this.addDivisionWeeks = addDivisionWeeks;
         this.createMatchUps = createMatchUps;
+        this.negoChannelCreation = negoChannelCreation;
     }
 
 
@@ -145,7 +155,8 @@ public class DiscordBotFthlApplication {
                 this.changeClan,
                 this.changeAlias,
                 this.addDivisionWeeks,
-                this.createMatchUps
+                this.createMatchUps,
+                this.negoChannelCreation
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
@@ -158,6 +169,17 @@ public class DiscordBotFthlApplication {
         CommandListener commandListener = new CommandListener(messageHolder, loggerService, config);
 
         api.addListener(commandListener);
+        SlashCommand command = SlashCommand
+                .with("create-negotiation-channels", "staff only command to create negotiation channels")
+                .setOptions(List.of(
+                        SlashCommandOption.create(SlashCommandOptionType.LONG,
+                                "division-week-id",
+                                "The ID of the division week to make channels for",
+                                true
+                        )
+                ))
+                .createForServer(api.getServerById(testID).get())
+                .join();
 
         return api;
     }
