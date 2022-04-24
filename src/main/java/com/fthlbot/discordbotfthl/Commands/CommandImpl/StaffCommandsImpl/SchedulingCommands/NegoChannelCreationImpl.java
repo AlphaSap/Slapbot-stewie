@@ -104,7 +104,7 @@ public class NegoChannelCreationImpl implements NegoChannelCreationListener {
         for (ScheduledWar war : scheduledWar) {
             //make a string that has division name and both teams aliases
             StringBuilder sb2 = new StringBuilder();
-            sb2.append(war.getDivisionWeeks().getDivision().getName());
+            sb2.append(war.getDivisionWeeks().getDivision().getAlias());
             sb2.append(" - ");
             Team teamA = war.getTeamA();
             sb2.append(teamA.getAlias());
