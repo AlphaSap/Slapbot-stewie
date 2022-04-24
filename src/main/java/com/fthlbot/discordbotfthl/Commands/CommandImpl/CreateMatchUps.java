@@ -26,7 +26,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Component
 @Invoker(
-        alias = "create-matchups",
+        alias = "creat-matchups",
         description = "A command to set match-ups for a specific division",
         usage = "/create-matchups <JSON>",
         type = CommandType.STAFF
@@ -111,7 +111,7 @@ public class CreateMatchUps implements Command {
         try {
             create(jsonObject);
             respondLater.thenAccept(res -> {
-                res.setContent("Successfully added the json").update();
+                res.setContent("Teams extracted from json").update();
             });
         } catch (LeagueException e) {
             GeneralService.leagueSlashErrorMessage(respondLater, e);

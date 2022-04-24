@@ -77,6 +77,9 @@ public class CommandListener implements SlashCommandCreateListener {
             });
             logCommand(event);
         }
+        else{
+            event.getSlashCommandInteraction().createImmediateResponder().setContent("Unable to locate this command").respond();
+        }
     }
 
     private boolean isStaffCommand(Command command) {
