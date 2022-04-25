@@ -96,6 +96,14 @@ public class GeneralService {
             res.update();
         });
     }
+    public static void leagueSlashErrorMessage(SlashCommandCreateEvent event, LeagueException e){
+        EmbedBuilder em = new EmbedBuilder()
+                .setTitle("<:deny:934405749881315380>Error! ")
+                .setDescription(e.getMessage())
+                .setColor(Color.red)
+                .setTimestampToNow();
+        event.getSlashCommandInteraction().createImmediateResponder().addEmbeds(em).respond();
+    }
 
     @Deprecated
     private static boolean isCommand(String args, String command, MessageCreateEvent event, Invoker invoker ) throws UnsupportedCommandException {

@@ -89,12 +89,12 @@ public class NegoChannelCreationImpl implements NegoChannelCreationListener {
 
         //make a string that has division week end and start date
         StringBuilder sb = new StringBuilder();
-        sb.append("Week ");
-        sb.append(divisionWeeks.getWeekNumber());
-        sb.append(" - ");
-        sb.append(divisionWeeks.getWeekStartDate().toString());
-        sb.append(" - ");
-        sb.append(divisionWeeks.getWeekEndDate().toString());
+        sb.append("Week ")
+                .append(divisionWeeks.getWeekNumber())
+                .append(" - ")
+                .append(divisionWeeks.getWeekStartDate().toString())
+                .append(" - ")
+                .append(divisionWeeks.getWeekEndDate().toString());
         cat.setName(sb.toString());
         cat.setAuditLogReason("Negotiation category created");
         ChannelCategory join = cat.create().join();

@@ -2,6 +2,7 @@ package com.fthlbot.discordbotfthl;
 
 import Core.JClash;
 import Core.exception.ClashAPIException;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.UtilCommands.ShowDivisionWeekImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.AddDivisionWeeksImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.DefenseImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.CreateMatchUps;
@@ -82,9 +83,11 @@ public class DiscordBotFthlApplication {
 
     private final NegoChannelCreationImpl negoChannelCreation;
 
+    private final ShowDivisionWeekImpl showDivisionWeek;
 
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation) {
+
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -101,6 +104,7 @@ public class DiscordBotFthlApplication {
         this.addDivisionWeeks = addDivisionWeeks;
         this.createMatchUps = createMatchUps;
         this.negoChannelCreation = negoChannelCreation;
+        this.showDivisionWeek = showDivisionWeek;
     }
 
 
@@ -156,7 +160,8 @@ public class DiscordBotFthlApplication {
                 this.changeAlias,
                 this.addDivisionWeeks,
                 this.createMatchUps,
-                this.negoChannelCreation
+                this.negoChannelCreation,
+                this.showDivisionWeek
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
@@ -170,12 +175,20 @@ public class DiscordBotFthlApplication {
 
         api.addListener(commandListener);
         SlashCommand command = SlashCommand
-                .with("create-negotiation-channels", "staff only command to create negotiation channels")
+                .with("show-divisionweek", "Commands to view weeks date for a specific division")
                 .setOptions(List.of(
-                        SlashCommandOption.create(SlashCommandOptionType.LONG,
-                                "division-week-id",
-                                "The ID of the division week to make channels for",
-                                true
+                        SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
+                                "division",
+                                "choose from one of the following division",
+                                true,
+                                asList(
+                                        SlashCommandOptionChoice.create("f8", "f8"),
+                                        SlashCommandOptionChoice.create("f5", "f5"),
+                                        SlashCommandOptionChoice.create("f9", "f9"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
+                                        SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("fmix", "fmix")
+                                )
                         )
                 ))
                 .createForServer(api.getServerById(testID).get())
