@@ -1,11 +1,15 @@
 package com.fthlbot.discordbotfthl.Util;
 
+import org.javacord.api.DiscordApi;
+import org.javacord.api.entity.emoji.Emoji;
+import org.javacord.api.entity.emoji.KnownCustomEmoji;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.message.component.LowLevelComponent;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
+import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
@@ -19,6 +23,7 @@ import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 public class Pagination {
     public void reactionPaginate(List<EmbedBuilder> em, MessageCreateEvent event) {
@@ -135,8 +140,13 @@ public class Pagination {
     }
 
     public void buttonPaginate(List<EmbedBuilder> em, SlashCommandCreateEvent event) {
+        Server server = event.getApi().getServerById(927210932462030860L).get();
+        //todo Change this to all custom emojis when you get time lmao
+        KnownCustomEmoji emoji1 = server.getCustomEmojis().stream().filter(emoji -> emoji.getName().equals("deny")).findFirst().get();
+
+
         LowLevelComponent[] lowLevelComponents = {
-                Button.secondary("first", "⏪"),
+                Button.secondary("first", emoji1),
                 Button.secondary("previous", "◀️"),
                 Button.secondary("next", "▶️"),
                 Button.secondary("last", "⏩")

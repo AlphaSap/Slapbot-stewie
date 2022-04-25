@@ -8,7 +8,7 @@ import Core.exception.ClashAPIException;
 import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.ClashCommandListener.AttackListener;
-import com.fthlbot.discordbotfthl.Util.ClashUtils;
+import com.fthlbot.discordbotfthl.Util.Utils;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import com.fthlbot.discordbotfthl.Util.JavacordLogger;
 import org.javacord.api.entity.channel.ServerTextChannel;
@@ -155,7 +155,7 @@ public class DefenseImpl implements AttackListener {
                     defwonstats += "\uD83D\uDCA5";
                 }
             }
-            String temp = formatRow(ClashUtils.getTownHallEmote(x.getClanWarMember().getTownhallLevel()), defwonstats, x.getClanWarMember().getName() + "`", " ");
+            String temp = formatRow(Utils.getTownHallEmote(x.getClanWarMember().getTownhallLevel()), defwonstats, x.getClanWarMember().getName() + "`", " ");
             s.append(temp).append("\n");
         }
         return s;

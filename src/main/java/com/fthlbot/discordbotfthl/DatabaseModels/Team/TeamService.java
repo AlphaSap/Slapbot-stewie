@@ -80,13 +80,12 @@ public class TeamService {
 
         if (oldUser.getId() == team.getRep1ID()){
             team.setRep1ID(NewUser.getId());
-            repo.save(team);
         }else if (oldUser.getId() == team.getRep2ID()){
             team.setRep2ID(NewUser.getId());
-            repo.save(team);
         }else {
             throw new NotTheRepException(oldUser, team);
         }
+        repo.save(team);
         return team;
     }
 
@@ -100,5 +99,14 @@ public class TeamService {
         team.setAlias(alias);
         team = repo.save(team);
         return team;
+    }
+
+    public Team getTeamByID(int id) throws EntityNotFoundException {
+        Optional<Team> byId = repo.findById(id);
+
+        if (byId.isPresent()) {
+            return byId.get();
+        }
+        throw new EntityNotFoundException("Team with the ID: " + id +" not found!");
     }
 }

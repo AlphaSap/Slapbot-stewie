@@ -18,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -80,7 +81,12 @@ public class GeneralService {
 
     public static void leagueSlashErrorMessage(CompletableFuture<InteractionOriginalResponseUpdater> responder, LeagueException e) {
         responder.thenAccept(res -> {
-            res.setContent(e.getMessage());
+            EmbedBuilder em = new EmbedBuilder()
+                    .setTitle("<:deny:934405749881315380>Error! ")
+                    .setDescription(e.getMessage())
+                    .setColor(Color.red)
+                    .setTimestampToNow();
+            res.addEmbed(em);
             res.update();
         });
     }
@@ -89,6 +95,14 @@ public class GeneralService {
             res.setContent(e);
             res.update();
         });
+    }
+    public static void leagueSlashErrorMessage(SlashCommandCreateEvent event, LeagueException e){
+        EmbedBuilder em = new EmbedBuilder()
+                .setTitle("<:deny:934405749881315380>Error! ")
+                .setDescription(e.getMessage())
+                .setColor(Color.red)
+                .setTimestampToNow();
+        event.getSlashCommandInteraction().createImmediateResponder().addEmbeds(em).respond();
     }
 
     @Deprecated
@@ -152,36 +166,17 @@ public class GeneralService {
                 .setTimestampToNow();
     }
 
-    /*public static boolean messageChecker(MessageCreateEvent event, Class<?> listenerClass) {
-        //Create an array of message received
-        String[] args = event.getMessageContent().split("\\s+");
-        //Annotation object - get Invoker annotation from listenerClass
-        Invoker invoker = listenerClass.getAnnotation(Invoker.class);
-        //New arraylist
-        return Arrays.stream(invoker.alias()).anyMatch(x -> {
-            try {
-                return isCommand(args[0], prefix + x, event, invoker);
-            } catch (UnsupportedCommandException e) {
-                e.printStackTrace();
-                event.getChannel().sendMessage(getLeagueError(e, event));
-                return false;
-            }
-        });
-        *//*ArrayList<String> arrayList = new ArrayList<>();
-        //Add all the aliases into the arrayList
-        Collections.addAll(arrayList, invoker.alias());
-        //Returns true if the args[0] matches any command
-        return arrayList.stream().anyMatch(
-                str -> {
-                    try {
-                        return isCommand(args[0], prefix + str, event, invoker);
-                    } catch (UnsupportedCommandException e) {
-                        e.printStackTrace();
-                        event.getChannel().sendMessage(getLeagueError(e, event));
-                        return false;
-                    }
-                }
-        );
 
-    }*/
+    //create a method that sends a message to the channel when a fatal error occurs
+    public static void sendFatalError(CompletableFuture<InteractionOriginalResponseUpdater> responder, Exception e) {
+        responder.thenAccept(response -> {
+           //Create an embed with error as title and description to say contact the developer
+            EmbedBuilder embed = new EmbedBuilder().setTitle("<:deny:934405749881315380>Error!")
+                    .setDescription("An error occurred!\nContact the developer to fix this issue")
+                    .setColor(Color.red)
+                    .setTimestampToNow();
+            //add the embed in response and send it, via the update method
+            response.addEmbed(embed).update();
+        });
+    }
 }

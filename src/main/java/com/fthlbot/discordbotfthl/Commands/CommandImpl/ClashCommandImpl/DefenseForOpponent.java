@@ -3,7 +3,7 @@ package com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl;
 import Core.Enitiy.clanwar.Attack;
 import Core.Enitiy.clanwar.ClanWarMember;
 import Core.Enitiy.clanwar.WarInfo;
-import com.fthlbot.discordbotfthl.Util.ClashUtils;
+import com.fthlbot.discordbotfthl.Util.Utils;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
 import org.slf4j.Logger;
@@ -93,7 +93,7 @@ public class DefenseForOpponent {
                     defwonstats += "\uD83D\uDCA5";
                 }
             }
-            String temp = formatRow(ClashUtils.getTownHallEmote(x.getClanWarMember().getTownhallLevel()), defwonstats, x.getClanWarMember().getName() + "`", " ");
+            String temp = formatRow(Utils.getTownHallEmote(x.getClanWarMember().getTownhallLevel()), defwonstats, x.getClanWarMember().getName() + "`", " ");
             s.append(temp).append("\n");
         }
         return s;

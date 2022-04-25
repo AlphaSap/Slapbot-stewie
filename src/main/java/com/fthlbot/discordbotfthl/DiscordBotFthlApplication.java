@@ -2,13 +2,17 @@ package com.fthlbot.discordbotfthl;
 
 import Core.JClash;
 import Core.exception.ClashAPIException;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.UtilCommands.ShowDivisionWeekImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.AddDivisionWeeksImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.DefenseImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.CreateMatchUps;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.RosterAdd.RosterAdditionImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.TeamRoster.TeamRoster;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeAliasImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeClanImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeRepImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.NegoChannelCreationImpl;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
 import com.fthlbot.discordbotfthl.Handlers.Command;
 import com.fthlbot.discordbotfthl.Handlers.CommandListener;
@@ -32,6 +36,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,11 +77,17 @@ public class DiscordBotFthlApplication {
 
     private final ChangeAliasImpl changeAlias;
 
+    private final AddDivisionWeeksImpl addDivisionWeeks;
+
+    private final CreateMatchUps createMatchUps;
+
+    private final NegoChannelCreationImpl negoChannelCreation;
+
+    private final ShowDivisionWeekImpl showDivisionWeek;
 
 
 
-
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias) {
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -90,6 +101,10 @@ public class DiscordBotFthlApplication {
         this.config = config;
         this.changeRep = changeRep;
         this.changeAlias = changeAlias;
+        this.addDivisionWeeks = addDivisionWeeks;
+        this.createMatchUps = createMatchUps;
+        this.negoChannelCreation = negoChannelCreation;
+        this.showDivisionWeek = showDivisionWeek;
     }
 
 
@@ -110,6 +125,7 @@ public class DiscordBotFthlApplication {
 
         DiscordApi api = new DiscordApiBuilder()
                 .setToken(env.getProperty("TOKEN_TEST_BOT"))
+                .setUserCacheEnabled(false)
                 .setAllIntentsExcept(
                         Intent.GUILD_WEBHOOKS,
                         Intent.GUILD_INTEGRATIONS,
@@ -123,6 +139,11 @@ public class DiscordBotFthlApplication {
         ArrayList<Server> servers = new ArrayList<>(api.getServers());
         log.info("Logged in as {}", api.getYourself().getDiscriminatedName());
         log.info("Watching servers {}", servers.size());
+        try {
+            log.info(config.getF5EndDate() + "");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
 
         //Add commands to the handler
@@ -136,7 +157,11 @@ public class DiscordBotFthlApplication {
                 this.allTeams,
                 this.changeRep,
                 this.changeClan,
-                this.changeAlias
+                this.changeAlias,
+                this.addDivisionWeeks,
+                this.createMatchUps,
+                this.negoChannelCreation,
+                this.showDivisionWeek
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
@@ -150,7 +175,7 @@ public class DiscordBotFthlApplication {
 
         api.addListener(commandListener);
         SlashCommand command = SlashCommand
-                .with("change-alias", "staff only command to change alias of a team")
+                .with("show-divisionweek", "Commands to view weeks date for a specific division")
                 .setOptions(List.of(
                         SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
                                 "division",
@@ -164,15 +189,6 @@ public class DiscordBotFthlApplication {
                                         SlashCommandOptionChoice.create("f10", "f10"),
                                         SlashCommandOptionChoice.create("fmix", "fmix")
                                 )
-                        ),SlashCommandOption.create(SlashCommandOptionType.STRING,
-                                "team-identifier",
-                                "Enter the name of your team or its alias",
-                                true
-                        ),
-                        SlashCommandOption.create(SlashCommandOptionType.STRING,
-                                "new-alias",
-                                "enter the new alias for your team",
-                                true
                         )
                 ))
                 .createForServer(api.getServerById(testID).get())

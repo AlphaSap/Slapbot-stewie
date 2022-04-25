@@ -1,0 +1,13 @@
+{
+  "divWeekID": 84,
+  "schedule": [
+    {
+      "home": 102,
+      "enemy": 104
+    },
+    {
+      "home": 106,
+      "enemy": 108
+    }
+  ]
+}

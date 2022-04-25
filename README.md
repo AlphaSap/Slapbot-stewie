@@ -30,11 +30,60 @@ SlapBot also used the latest version of spring boot to manage dependency injecti
 Lastly it uses JClash, a custom open source java clash of clans wrapper with dynamic key handling which was developed by me 
 after not having a static Ip for my home testing environment. Read more about JClash [here](https://github.com/SaHHiiLL/JClash).
 
+
+## Required JSONs
+### To add division week.
+will be a json array that has three fields, the first is start date, the second is end date and the third is bye-week boolean.
+```json
+[
+  {
+    "start": "08-04-2022",
+    "end": "14-04-2022",
+    "byeWeek": false
+  },
+  {
+    "start": "15-04-2022",
+    "end": "21-04-2022",
+    "byeWeek": false
+  },
+  {
+    "start": "22-04-2022",
+    "end": "28-04-2022",
+    "byeWeek": false
+  },
+  {
+    "start": "29-04-2022",
+    "end": "05-05-2022",
+    "byeWeek": false
+  }
+]
+```
+### To schedule wars for a division week. 
+will have an int divWeek, and an array of schedule wars, the array will have two element home team and enemy team, should be ints.
+```json
+{
+  "divWeekID": 1,
+  "schedule": [
+    {
+      "home": 9,
+      "enemy": 9
+    },
+    {
+      "home": 9,
+      "enemy": 9
+    },
+    {
+      "home": 9,
+      "enemy": 9
+    }
+  ]
+}
+```
 # TODO
 - ~~Make team all command~~
 - ~~Make clan change command~~
 - ~~Make Rep change command~~
-- Make alias change command
+- ~~Make alias change command~~
 - Make nego channel shit!
 - fix the clash error class
 
