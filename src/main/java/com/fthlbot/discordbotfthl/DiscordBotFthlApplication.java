@@ -174,25 +174,7 @@ public class DiscordBotFthlApplication {
         CommandListener commandListener = new CommandListener(messageHolder, loggerService, config);
 
         api.addListener(commandListener);
-        SlashCommand command = SlashCommand
-                .with("show-divisionweek", "Commands to view weeks date for a specific division")
-                .setOptions(List.of(
-                        SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
-                                "division",
-                                "choose from one of the following division",
-                                true,
-                                asList(
-                                        SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f5", "f5"),
-                                        SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
-                                        SlashCommandOptionChoice.create("f10", "f10"),
-                                        SlashCommandOptionChoice.create("fmix", "fmix")
-                                )
-                        )
-                ))
-                .createForServer(api.getServerById(testID).get())
-                .join();
+
 
         return api;
     }
