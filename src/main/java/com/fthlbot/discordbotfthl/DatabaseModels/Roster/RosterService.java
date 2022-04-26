@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RosterService {
@@ -82,5 +83,10 @@ public class RosterService {
         throw new EntityNotFoundException(String.format("""
                 `%s` is not present on your roster
                 """, tag));
+    }
+
+    //Find teams for a player tag
+    public List<Team> getTeamsForPlayerTag(String tag) {
+        return repo.findRosterByPlayerTag(tag).stream().map(Roster::getTeam).collect(Collectors.toList());
     }
 }

@@ -49,7 +49,6 @@ public class ClashExceptionHandler {
                         new EmbedBuilder()
                                 .setDescription("Invalid request! `Connection Timeout`")
                                 .setColor(Color.RED)
-                                .setTimestampToNow()
                                 .setAuthor(this.getSlashCommandCreateEvent().getUser())
                 );
             }
@@ -60,7 +59,6 @@ public class ClashExceptionHandler {
                         new EmbedBuilder()
                                 .setDescription("Authorization Error!\n this error occurred, because clash of clans API has revoked my rights :( please contact Sahil to report this issue ")
                                 .setColor(Color.RED)
-                                .setTimestampToNow()
                                 .setAuthor(this.getSlashCommandCreateEvent().getUser())
                 );
             }
@@ -70,7 +68,6 @@ public class ClashExceptionHandler {
                         new EmbedBuilder()
                                 .setDescription("`Invalid Tag`")
                                 .setColor(Color.RED)
-                                .setTimestampToNow()
                 );
             }
             case 429 -> {
@@ -78,7 +75,6 @@ public class ClashExceptionHandler {
                         new EmbedBuilder()
                                 .setDescription("Hey I got rate limited by clash of clans! I would need some time to recover from this devastating blow")
                                 .setColor(Color.RED)
-                                .setTimestampToNow()
                                 .setAuthor(this.getSlashCommandCreateEvent().getUser())
                 );
             }
@@ -87,7 +83,6 @@ public class ClashExceptionHandler {
                         new EmbedBuilder()
                                 .setDescription("Clash of clans is currently experiencing Maintenance, please try again once the game is up!")
                                 .setColor(Color.RED)
-                                .setTimestampToNow()
                                 .setAuthor(this.getSlashCommandCreateEvent().getUser())
                 );
             }
@@ -97,15 +92,12 @@ public class ClashExceptionHandler {
                                 .setDescription("Clash of clans did not respond to this request!\nReason: Api is currently overloaded!\nOr it's dead 💀")
                                 .setColor(Color.RED)
                                 .setFooter("No commands related to clash of clans will work, this may include some league commands!")
-                                .setTimestampToNow()
-                                .setAuthor(this.getSlashCommandCreateEvent().getUser())
                 );
             }
         }
     }
 
     public void respond() {
-        log.info("trying to respond......");
         SlashCommandInteraction i = this.createEmbed().getSlashCommandCreateEvent();
 
         i.respondLater().thenAccept(res -> {

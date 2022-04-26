@@ -84,7 +84,7 @@ will have an int divWeek, and an array of schedule wars, the array will have two
 - ~~Make clan change command~~
 - ~~Make Rep change command~~
 - ~~Make alias change command~~
-- Make nego channel shit!
+- ~~Make nego channel shit!~~
 - fix the clash error class
 
 

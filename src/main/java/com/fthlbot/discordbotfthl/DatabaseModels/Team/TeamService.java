@@ -1,5 +1,6 @@
 package com.fthlbot.discordbotfthl.DatabaseModels.Team;
 
+import Core.Enitiy.player.Player;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityAlreadyExistsException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;

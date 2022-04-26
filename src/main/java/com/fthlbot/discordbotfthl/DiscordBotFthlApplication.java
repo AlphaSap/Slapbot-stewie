@@ -2,16 +2,17 @@ package com.fthlbot.discordbotfthl;
 
 import Core.JClash;
 import Core.exception.ClashAPIException;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.UtilCommands.ShowDivisionWeekImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.AddDivisionWeeksImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.DefenseImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.CreateMatchUps;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.PlayerImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.RosterAdd.RosterAdditionImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.TeamRoster.TeamRoster;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.UtilCommands.ShowDivisionWeekImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeAliasImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeClanImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeRepImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.AddDivisionWeeksImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.CreateMatchUps;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.NegoChannelCreationImpl;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
 import com.fthlbot.discordbotfthl.Handlers.Command;
@@ -25,8 +26,8 @@ import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.interaction.SlashCommand;
 import org.javacord.api.interaction.SlashCommandOption;
-import org.javacord.api.interaction.SlashCommandOptionChoice;
 import org.javacord.api.interaction.SlashCommandOptionType;
+import org.javacord.api.interaction.SlashCommandUpdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -41,8 +42,6 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
-
-import static java.util.Arrays.asList;
 
 @SpringBootApplication
 public class DiscordBotFthlApplication {
@@ -85,9 +84,10 @@ public class DiscordBotFthlApplication {
 
     private final ShowDivisionWeekImpl showDivisionWeek;
 
+    private final PlayerImpl player;
 
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek) {
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -105,6 +105,7 @@ public class DiscordBotFthlApplication {
         this.createMatchUps = createMatchUps;
         this.negoChannelCreation = negoChannelCreation;
         this.showDivisionWeek = showDivisionWeek;
+        this.player = player;
     }
 
 
@@ -161,7 +162,8 @@ public class DiscordBotFthlApplication {
                 this.addDivisionWeeks,
                 this.createMatchUps,
                 this.negoChannelCreation,
-                this.showDivisionWeek
+                this.showDivisionWeek,
+                this.player
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
@@ -174,7 +176,20 @@ public class DiscordBotFthlApplication {
         CommandListener commandListener = new CommandListener(messageHolder, loggerService, config);
 
         api.addListener(commandListener);
-
+//        SlashCommand command = SlashCommand
+//                .with("player", "Search a player")
+//                .setOptions(List.of(
+//                        SlashCommandOption.create(SlashCommandOptionType.LONG,
+//                                "tag",
+//                                "The tag of the player you want to search",
+//                                true
+//                        )
+//                ))
+//                .createForServer(api.getServerById(testID).get())
+//                .join();
+//        SlashCommand command = new SlashCommandUpdater(968461947475484704L).setName("player").setDescription("Search a player")
+//                .setSlashCommandOptions(List.of(SlashCommandOption.create(SlashCommandOptionType.STRING, "tag", "The tag of the player you want to search", true))).updateForServer(api.getServerById(testID).get()).join();
+//        System.out.println(command.getId());
 
         return api;
     }

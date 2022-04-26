@@ -17,4 +17,6 @@ public interface RosterRepo extends JpaRepository<Roster, Integer> {
     Optional<Roster> findRosterByPlayerTagAndDivision(String tag, Division division);
 
     Optional<Roster> findRosterByTeamAndPlayerTag(Team team, String playerTag);
+
+    List<Roster> findRosterByPlayerTag(String tag);
 }
