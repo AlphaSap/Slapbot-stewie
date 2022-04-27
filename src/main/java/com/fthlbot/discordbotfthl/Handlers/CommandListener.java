@@ -73,6 +73,7 @@ public class CommandListener implements SlashCommandCreateListener {
                         return;
                     }
                 }
+                log.info(commandName + " " + command.getClass().getName());
                 command.execute(event);
             });
             logCommand(event);

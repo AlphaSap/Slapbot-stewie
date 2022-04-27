@@ -11,6 +11,7 @@ import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.UtilCo
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeAliasImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeClanImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeRepImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.RemoveAllChannelFromACategoryImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.AddDivisionWeeksImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.CreateMatchUps;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.NegoChannelCreationImpl;
@@ -86,8 +87,9 @@ public class DiscordBotFthlApplication {
 
     private final PlayerImpl player;
 
+    private final RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory;
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player) {
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -106,6 +108,7 @@ public class DiscordBotFthlApplication {
         this.negoChannelCreation = negoChannelCreation;
         this.showDivisionWeek = showDivisionWeek;
         this.player = player;
+        this.removeAllChannelFromACategory = removeAllChannelFromACategory;
     }
 
 
@@ -163,7 +166,8 @@ public class DiscordBotFthlApplication {
                 this.createMatchUps,
                 this.negoChannelCreation,
                 this.showDivisionWeek,
-                this.player
+                this.player,
+                this.removeAllChannelFromACategory
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
@@ -176,20 +180,32 @@ public class DiscordBotFthlApplication {
         CommandListener commandListener = new CommandListener(messageHolder, loggerService, config);
 
         api.addListener(commandListener);
-//        SlashCommand command = SlashCommand
-//                .with("player", "Search a player")
+
+//        SlashCommand command = SlashCommand.with("remove-channels-from-category", "Staff only command to delete channels from a category with logs!")
 //                .setOptions(List.of(
 //                        SlashCommandOption.create(SlashCommandOptionType.LONG,
-//                                "tag",
-//                                "The tag of the player you want to search",
-//                                true
-//                        )
-//                ))
-//                .createForServer(api.getServerById(testID).get())
+//                                "category-id",
+//                                "Enter the ID of the category you want to delete all channels from",
+//                                true),
+//                        SlashCommandOption.create(SlashCommandOptionType.BOOLEAN,
+//                                "preserve-logs",
+//                                "Set this to true to preserve logs of all channels (True by default)",
+//                                false)
+//                )).createForServer(api.getServerById(testID).get())
 //                .join();
-//        SlashCommand command = new SlashCommandUpdater(968461947475484704L).setName("player").setDescription("Search a player")
-//                .setSlashCommandOptions(List.of(SlashCommandOption.create(SlashCommandOptionType.STRING, "tag", "The tag of the player you want to search", true))).updateForServer(api.getServerById(testID).get()).join();
-//        System.out.println(command.getId());
+//        SlashCommandUpdater slashCommandUpdater = new SlashCommandUpdater(command.getId());
+//        slashCommandUpdater.setName(command.getName());
+//        slashCommandUpdater.setDescription(command.getDescription());
+//        slashCommandUpdater.setSlashCommandOptions(List.of(
+//                SlashCommandOption.create(SlashCommandOptionType.STRING,
+//                        "category-id",
+//                        "Enter the ID of the category you want to delete all channels from",
+//                        true),
+//                SlashCommandOption.create(SlashCommandOptionType.BOOLEAN,
+//                        "preserve-logs",
+//                        "Set this to true to preserve logs of all channels (True by default)",
+//                        false)
+//        )).updateForServer(api.getServerById(testID).get()).join();
 
         return api;
     }

@@ -351,3 +351,17 @@ SlashCommand command = SlashCommand
                 ))
                 .createForServer(api.getServerById(testID).get())
                 .join();
+************************************************************************************************************************************
+************************************************************************************************************************************
+
+SlashCommand command = SlashCommand
+                .with("player", "Search a player")
+                .setOptions(List.of(
+                        SlashCommandOption.create(SlashCommandOptionType.STRING,
+                                "tag",
+                                "The tag of the player you want to search",
+                                true
+                        )
+                ))
+                .createForServer(api.getServerById(testID).get())
+                .join();
