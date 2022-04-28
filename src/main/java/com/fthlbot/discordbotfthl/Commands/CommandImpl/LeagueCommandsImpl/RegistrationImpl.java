@@ -59,12 +59,15 @@ import static com.fthlbot.discordbotfthl.Util.GeneralService.*;
 
 //Make slash commands, /register <clan tag> <div alias> <team alias> <optional @second rep>
 public class RegistrationImpl implements RegistrationListener {
-    @Autowired
-    private DivisionService divisionService;
-    @Autowired
-    private TeamService teamService;
-    @Autowired
-    private BotConfig config;
+    private final DivisionService divisionService;
+    private final TeamService teamService;
+    private final BotConfig config;
+
+    public RegistrationImpl(DivisionService divisionService, TeamService teamService, BotConfig config) {
+        this.divisionService = divisionService;
+        this.teamService = teamService;
+        this.config = config;
+    }
 
     @Deprecated(since = "2022/March/12")
     public void execute1(MessageCreateEvent event) {
