@@ -8,6 +8,7 @@ import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.RosterAdd.RosterAdditionImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.TeamRoster.TeamRoster;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.UtilCommands.ShowDivisionWeekImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.UtilCommands.TeamInfoImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeAliasImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeClanImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeRepImpl;
@@ -21,11 +22,11 @@ import com.fthlbot.discordbotfthl.Handlers.CommandListener;
 import com.fthlbot.discordbotfthl.Handlers.MessageHandlers;
 import com.fthlbot.discordbotfthl.Handlers.MessageHolder;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
+import com.fthlbot.discordbotfthl.Util.SlashCommandBuilder;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
-import org.javacord.api.interaction.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -40,9 +41,6 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
-
-import static java.util.Arrays.asList;
-import static org.javacord.api.interaction.SlashCommandOptionType.STRING;
 
 @SpringBootApplication
 public class DiscordBotFthlApplication {
@@ -89,7 +87,10 @@ public class DiscordBotFthlApplication {
 
     private final RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory;
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory) {
+    private final TeamInfoImpl teamInfo;
+
+    private final SlashCommandBuilder builder;
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -109,6 +110,8 @@ public class DiscordBotFthlApplication {
         this.showDivisionWeek = showDivisionWeek;
         this.player = player;
         this.removeAllChannelFromACategory = removeAllChannelFromACategory;
+        this.teamInfo = teamInfo;
+        this.builder = builder;
     }
 
 
@@ -167,7 +170,8 @@ public class DiscordBotFthlApplication {
                 this.negoChannelCreation,
                 this.showDivisionWeek,
                 this.player,
-                this.removeAllChannelFromACategory
+                this.removeAllChannelFromACategory,
+                this.teamInfo
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
@@ -181,25 +185,8 @@ public class DiscordBotFthlApplication {
 
         api.addListener(commandListener);
 
-        SlashCommand command = SlashCommand.with("team-information", "Staff only command to get information about a team")
-                .setOptions(List.of(SlashCommandOption.createWithChoices(STRING,
-                                "division",
-                                "choose from one of the following division",
-                                true,
-                                asList(
-                                        SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f5", "f5"),
-                                        SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
-                                        SlashCommandOptionChoice.create("f10", "f10"),
-                                        SlashCommandOptionChoice.create("fmix", "fmix")
-                                )
-                        ),
-                        SlashCommandOption.create(SlashCommandOptionType.STRING,
-                                "team-identifier",
-                                "Enter the name/alias of the team you want to get information about",
-                                true)
-                )).createForServer(api.getServerById(testID).get()).join();
+//        builder.setApi(api);
+//        builder.makeAllCommands();
 
 
         return api;

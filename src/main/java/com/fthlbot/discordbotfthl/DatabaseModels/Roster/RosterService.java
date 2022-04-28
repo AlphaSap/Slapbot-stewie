@@ -30,12 +30,7 @@ public class RosterService {
     }
 
     public List<Roster> getRosterForATeam(Team team) throws EntityNotFoundException {
-        List<Roster> roster = repo.findRosterByTeam(team);
-        if (roster.isEmpty()){
-            //TODO Convert this into a warning later, it's not an error
-            throw new EntityNotFoundException("Roster for this team is empty");
-        }
-        return roster;
+        return repo.findRosterByTeam(team);
     }
 
     //TODO fp checks

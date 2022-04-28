@@ -32,6 +32,15 @@ public class TeamRosterService {
 
             List<Roster> rosterByTeam = rosterService.getRosterForATeam(team);
 
+            if (rosterByTeam.size() == 0) {
+                //Make a warning embedBuilder
+                EmbedBuilder embedBuilder = GeneralService.getEmbedBuilder(Color.RED,  "No roster found for team `" + team.getName() + "` in division " + division.getName());
+                response.thenAccept(res -> {
+                   res.addEmbed(embedBuilder).update();
+                });
+                return;
+            }
+
             List<List<String>> formattedTeams = getFormattedTeams(rosterByTeam);
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setTitle("Roster for: " + team.getName())

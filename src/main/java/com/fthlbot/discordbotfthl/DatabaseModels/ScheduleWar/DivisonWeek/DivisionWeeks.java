@@ -4,6 +4,7 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 
 import javax.persistence.*;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

@@ -31,6 +31,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class GeneralService {
     private static final Logger log = LoggerFactory.getLogger(GeneralService.class);
+    private static final long UNIX_CONVERTER = 1000L;
 
 
     /**
@@ -187,5 +188,22 @@ public class GeneralService {
             //add the embed in response and send it, via the update method
             response.addEmbed(embed).update();
         });
+    }
+
+    public static EmbedBuilder getEmbedBuilder(Color red, String s) {
+        return new EmbedBuilder()
+                .setTitle("<:deny:934405749881315380>Warning!")
+                .setDescription(s)
+                .setColor(red)
+                .setTimestampToNow();
+    }
+
+    private static long dateToUnix(Date date) {
+        return date.getTime() / UNIX_CONVERTER;
+    }
+
+    public static String dateToStringInDiscordFormat(Date date) {
+        StringBuilder sb = new StringBuilder();
+        return sb.append("<t:").append(dateToUnix(date)).append(":f>").toString();
     }
 }

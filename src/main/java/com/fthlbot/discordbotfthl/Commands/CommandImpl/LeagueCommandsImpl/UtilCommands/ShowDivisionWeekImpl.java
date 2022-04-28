@@ -58,9 +58,10 @@ public class ShowDivisionWeekImpl implements ShowDivisionWeekListener {
             embedBuilders.add(new EmbedBuilder()
                     .setTitle("Division Week")
                             .addInlineField("Week", divisionWeeks.get(i).getWeekNumber().toString())
+                            .addInlineField("ID", divisionWeeks.get(i).getID().toString())
                             .addInlineField("Division", divisionObject.getAlias())
-                            .addInlineField("Start Date", divisionWeeks.get(i).getWeekStartDate() + "")
-                            .addInlineField("End Date", divisionWeeks.get(i).getWeekEndDate() + "")
+                            .addInlineField("Start Date", GeneralService.dateToStringInDiscordFormat(divisionWeeks.get(i).getWeekStartDate()) + "")
+                            .addInlineField("End Date", GeneralService.dateToStringInDiscordFormat(divisionWeeks.get(i).getWeekEndDate()) + "")
                     .setColor(Color.GREEN)
                     .setTimestampToNow());
         }

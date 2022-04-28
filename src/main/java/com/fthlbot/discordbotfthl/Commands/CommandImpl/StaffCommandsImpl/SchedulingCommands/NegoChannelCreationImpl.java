@@ -40,6 +40,7 @@ public class NegoChannelCreationImpl implements NegoChannelCreationListener {
     private final ScheduleWarService scheduleWarService;
     private final BotConfig botConfig;
 
+
     public NegoChannelCreationImpl(DivisionWeekService divisionWeekService, ScheduleWarService scheduleWarService, BotConfig botConfig) {
         this.divisionWeekService = divisionWeekService;
         this.scheduleWarService = scheduleWarService;
@@ -92,9 +93,9 @@ public class NegoChannelCreationImpl implements NegoChannelCreationListener {
         sb.append("Week ")
                 .append(divisionWeeks.getWeekNumber())
                 .append(" - ")
-                .append(divisionWeeks.getWeekStartDate().toString())
+                .append(GeneralService.dateToStringInDiscordFormat(divisionWeeks.getWeekStartDate()))
                 .append(" - ")
-                .append(divisionWeeks.getWeekEndDate().toString());
+                .append(GeneralService.dateToStringInDiscordFormat(divisionWeeks.getWeekEndDate()));
         cat.setName(sb.toString());
         cat.setAuditLogReason("Negotiation category created");
         ChannelCategory join = cat.create().join();
@@ -157,5 +158,7 @@ public class NegoChannelCreationImpl implements NegoChannelCreationListener {
     private boolean isPast(Date date) {
         return date.before(new Date());
     }
+
+    //A method to convert date to unix timestamp
 
 }
