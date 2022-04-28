@@ -25,10 +25,7 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
-import org.javacord.api.interaction.SlashCommand;
-import org.javacord.api.interaction.SlashCommandOption;
-import org.javacord.api.interaction.SlashCommandOptionType;
-import org.javacord.api.interaction.SlashCommandUpdater;
+import org.javacord.api.interaction.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -43,6 +40,9 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
+
+import static java.util.Arrays.asList;
+import static org.javacord.api.interaction.SlashCommandOptionType.STRING;
 
 @SpringBootApplication
 public class DiscordBotFthlApplication {
@@ -181,31 +181,26 @@ public class DiscordBotFthlApplication {
 
         api.addListener(commandListener);
 
-//        SlashCommand command = SlashCommand.with("remove-channels-from-category", "Staff only command to delete channels from a category with logs!")
-//                .setOptions(List.of(
-//                        SlashCommandOption.create(SlashCommandOptionType.LONG,
-//                                "category-id",
-//                                "Enter the ID of the category you want to delete all channels from",
-//                                true),
-//                        SlashCommandOption.create(SlashCommandOptionType.BOOLEAN,
-//                                "preserve-logs",
-//                                "Set this to true to preserve logs of all channels (True by default)",
-//                                false)
-//                )).createForServer(api.getServerById(testID).get())
-//                .join();
-//        SlashCommandUpdater slashCommandUpdater = new SlashCommandUpdater(command.getId());
-//        slashCommandUpdater.setName(command.getName());
-//        slashCommandUpdater.setDescription(command.getDescription());
-//        slashCommandUpdater.setSlashCommandOptions(List.of(
-//                SlashCommandOption.create(SlashCommandOptionType.STRING,
-//                        "category-id",
-//                        "Enter the ID of the category you want to delete all channels from",
-//                        true),
-//                SlashCommandOption.create(SlashCommandOptionType.BOOLEAN,
-//                        "preserve-logs",
-//                        "Set this to true to preserve logs of all channels (True by default)",
-//                        false)
-//        )).updateForServer(api.getServerById(testID).get()).join();
+        SlashCommand command = SlashCommand.with("team-information", "Staff only command to get information about a team")
+                .setOptions(List.of(SlashCommandOption.createWithChoices(STRING,
+                                "division",
+                                "choose from one of the following division",
+                                true,
+                                asList(
+                                        SlashCommandOptionChoice.create("f8", "f8"),
+                                        SlashCommandOptionChoice.create("f5", "f5"),
+                                        SlashCommandOptionChoice.create("f9", "f9"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
+                                        SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("fmix", "fmix")
+                                )
+                        ),
+                        SlashCommandOption.create(SlashCommandOptionType.STRING,
+                                "team-identifier",
+                                "Enter the name/alias of the team you want to get information about",
+                                true)
+                )).createForServer(api.getServerById(testID).get()).join();
+
 
         return api;
     }

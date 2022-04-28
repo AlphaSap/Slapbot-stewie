@@ -365,3 +365,21 @@ SlashCommand command = SlashCommand
                 ))
                 .createForServer(api.getServerById(testID).get())
                 .join();
+
+
+************************************************************************************************************************************
+************************************************************************************************************************************
+************************************************************************************************************************************
+
+ SlashCommand command = SlashCommand.with("remove-channels-from-category", "Staff only command to delete channels from a category with logs!")
+                .setOptions(List.of(
+                        SlashCommandOption.create(SlashCommandOptionType.STRING,
+                                "category-id",
+                                "Enter the ID of the category you want to delete all channels from",
+                                true),
+                        SlashCommandOption.create(SlashCommandOptionType.BOOLEAN,
+                                "preserve-logs",
+                                "Set this to true to preserve logs of all channels (True by default)",
+                                false)
+                )).createForServer(api.getServerById(testID).get())
+                .join();

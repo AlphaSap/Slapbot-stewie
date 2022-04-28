@@ -10,6 +10,8 @@ import java.util.Locale;
 
 @Configuration
 public class BotConfig {
+    //TODO: check all the values and make sure they are correct
+
     //Channel IDs
     @Value("${channel.registrationChannel}")
     private long registrationChannelID;
