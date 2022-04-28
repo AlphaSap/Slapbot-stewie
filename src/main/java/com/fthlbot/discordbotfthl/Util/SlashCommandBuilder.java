@@ -7,6 +7,8 @@ import org.javacord.api.interaction.SlashCommandOptionChoice;
 import org.javacord.api.interaction.SlashCommandOptionType;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -355,24 +357,39 @@ public class SlashCommandBuilder {
     }
 
     public void createTeamInformationCommand(){
-//        SlashCommand command = SlashCommand.with("team-information", "Staff only command to get information about a team")
-//                .setOptions(List.of(SlashCommandOption.createWithChoices(STRING,
-//                                "division",
-//                                "choose from one of the following division",
-//                                true,
-//                                asList(
-//                                        SlashCommandOptionChoice.create("f8", "f8"),
-//                                        SlashCommandOptionChoice.create("f5", "f5"),
-//                                        SlashCommandOptionChoice.create("f9", "f9"),
-//                                        SlashCommandOptionChoice.create("f11", "f11"),
-//                                        SlashCommandOptionChoice.create("f10", "f10"),
-//                                        SlashCommandOptionChoice.create("fmix", "fmix")
-//                                )
-//                        ),
-//                        SlashCommandOption.create(SlashCommandOptionType.STRING,
-//                                "team-identifier",
-//                                "Enter the name/alias of the team you want to get information about",
-//                                true)
-//                )).createForServer(getApi()).join();
+        SlashCommand command = SlashCommand.with("team-information", "A command get information about a team")
+                .setOptions(List.of(SlashCommandOption.createWithChoices(STRING,
+                                "division",
+                                "choose from one of the following division",
+                                true,
+                                asList(
+                                        SlashCommandOptionChoice.create("f8", "f8"),
+                                        SlashCommandOptionChoice.create("f5", "f5"),
+                                        SlashCommandOptionChoice.create("f9", "f9"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
+                                        SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("fmix", "fmix")
+                                )
+                        ),
+                        SlashCommandOption.create(SlashCommandOptionType.STRING,
+                                "team-identifier",
+                                "Enter the name/alias of the team you want to get information about",
+                                true)
+                )).createGlobal(getApi()).join();
+    }
+
+    public void makeAllCommands(){
+        //Make a Method array
+        Method[] methods = this.getClass().getDeclaredMethods();
+        for(Method method : methods){
+            if(method.getName().startsWith("create")){
+                try {
+                    System.out.println("Creating command: " + method.getName());
+                    method.invoke(this);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
