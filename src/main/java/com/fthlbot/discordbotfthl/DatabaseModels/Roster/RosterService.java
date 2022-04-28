@@ -7,37 +7,44 @@ import com.fthlbot.discordbotfthl.Util.BotConfig;
 import org.javacord.api.entity.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.springframework.data.domain.Sort.*;
 
 @Service
 public class RosterService {
 
     private final RosterRepo repo;
     private final TeamService teamService;
-    private final BotConfig config;
+    private final BotConfig botConfig;
     private final Logger log = LoggerFactory.getLogger(RosterService.class);
 
-    public RosterService(RosterRepo repo, TeamService teamService, BotConfig config) {
+    public RosterService(RosterRepo repo, TeamService teamService, BotConfig config, BotConfig botConfig) {
         this.repo = repo;
         this.teamService = teamService;
-        this.config = config;
+        this.botConfig = botConfig;
     }
 
     public List<Roster> getRosterForATeam(Team team) throws EntityNotFoundException {
         return repo.findRosterByTeam(team);
     }
 
+    public Page<Roster> getRoster(Team team){
+        return repo.findRosterByTeam(team, PageRequest.of(0, 10, by(Direction.ASC, "town_hall_level")));
+    }
+
     //TODO fp checks
-    //only reps
-    //change has transactions
     //check pos
-    public Roster addToRoster(Roster roster, User user) throws EntityAlreadyExistsException, NoMoreRosterChangesLeftException, IncorrectTownHallException, NotTheRepException {
+    public Roster addToRoster(Roster roster, User user) throws LeagueException {
         Optional<Roster> alreadyAddedAccount = repo.findRosterByPlayerTagAndDivision(roster.getPlayerTag(), roster.getDivision());
         List<Roster> rosterByTeam = repo.findRosterByTeam(roster.getTeam());
         if (alreadyAddedAccount.isPresent()){
@@ -59,16 +66,34 @@ public class RosterService {
             throw new NoMoreRosterChangesLeftException(roster.getTeam());
         }
 
-        Roster finalRoster = roster;
-        boolean isCorrectTh = Arrays.stream(roster.getDivision().getAllowedTownHall()).anyMatch(x -> x == finalRoster.getTownHallLevel().intValue());
+        boolean isCorrectTh = Arrays.stream(roster.getDivision().getAllowedTownHall()).anyMatch(x -> x == roster.getTownHallLevel().intValue());
 
         if (!isCorrectTh){
-            throw new IncorrectTownHallException(finalRoster.getTownHallLevel(), finalRoster.getDivision());
+            throw new IncorrectTownHallException(roster.getTownHallLevel(), roster.getDivision());
         }
-        roster = repo.save(roster);
-        return roster;
+
+        try {
+            decrementAllowedRosterChanges(roster.getTeam());
+        } catch (ParseException e) {
+            throw new UnExpectedLeagueException("Failed to parse date, this should never happen\n Please report this to the developer");
+        }
+        return repo.save(roster);
     }
 
+    private void decrementAllowedRosterChanges(Team team) throws NoMoreRosterChangesLeftException, ParseException {
+        //decrement allowed roster changes
+        //check if today is after the leagueStartDate in botConfig
+        if (botConfig.getLeagueStartDate().after(new Date())){
+            return;
+        }
+        int allowRosterChangesLeft = team.getAllowRosterChangesLeft() - 1;
+        //throw exception if no more roster changes left
+        if (allowRosterChangesLeft <= 0){
+            throw new NoMoreRosterChangesLeftException(team);
+        }
+        team.setAllowRosterChangesLeft(allowRosterChangesLeft);
+        teamService.updateTeam(team);
+    }
     public void removeFromRoster(Team team, String tag) throws EntityNotFoundException {
         Optional<Roster> roster = repo.findRosterByTeamAndPlayerTag(team, tag);
         if (roster.isPresent()){
@@ -82,6 +107,9 @@ public class RosterService {
 
     //Find teams for a player tag
     public List<Team> getTeamsForPlayerTag(String tag) {
-        return repo.findRosterByPlayerTag(tag).stream().map(Roster::getTeam).collect(Collectors.toList());
+        return repo.findRosterByPlayerTag(tag)
+                .stream()
+                .map(Roster::getTeam)
+                .collect(Collectors.toList());
     }
 }

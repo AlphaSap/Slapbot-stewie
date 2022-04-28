@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class CommandListener implements SlashCommandCreateListener {
-    private final Logger log = LoggerFactory.getLogger(CommandListener.class);
     private final MessageHolder messageHolder;
     private final CommandLoggerService service;
     private final BotConfig config;
@@ -52,7 +51,6 @@ public class CommandListener implements SlashCommandCreateListener {
     @Override
     public void onSlashCommandCreate(SlashCommandCreateEvent event) {
         String commandName = event.getSlashCommandInteraction().getCommandName();
-        log.info("Command is here!!!!!!");
         if (messageHolder.getCommand().containsKey(commandName)){
             CompletableFuture.runAsync(() -> {
                 Command command = messageHolder.getCommand().get(commandName);
@@ -73,7 +71,6 @@ public class CommandListener implements SlashCommandCreateListener {
                         return;
                     }
                 }
-                log.info(commandName + " " + command.getClass().getName());
                 command.execute(event);
             });
             logCommand(event);

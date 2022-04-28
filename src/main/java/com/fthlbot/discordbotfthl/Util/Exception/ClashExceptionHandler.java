@@ -30,7 +30,7 @@ public class ClashExceptionHandler {
         return this;
     }
 
-    private EmbedBuilder getEmbedBuilder() {
+    public EmbedBuilder getEmbedBuilder() {
         return embedBuilder;
     }
 

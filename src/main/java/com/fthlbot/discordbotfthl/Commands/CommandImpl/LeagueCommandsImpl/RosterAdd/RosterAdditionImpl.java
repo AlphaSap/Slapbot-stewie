@@ -30,17 +30,20 @@ import java.util.concurrent.CompletableFuture;
 )
 @Component
 public class RosterAdditionImpl extends RosterAddUtilClass implements RosterAddListener {
-    @Autowired
-    private TeamService teamService;
-    @Autowired
-    private RosterService rosterService;
-    @Autowired
-    private DivisionService divisionService;
+    private final TeamService teamService;
+    private final RosterService rosterService;
+    private final DivisionService divisionService;
+
+    public RosterAdditionImpl(TeamService teamService, RosterService rosterService, DivisionService divisionService) {
+        this.teamService = teamService;
+        this.rosterService = rosterService;
+        this.divisionService = divisionService;
+    }
 
     @Override
     public void execute(SlashCommandCreateEvent event) {
             SlashCommandInteraction slashCommandInteraction = event.getSlashCommandInteraction();
-            CompletableFuture<InteractionOriginalResponseUpdater> res = event.getSlashCommandInteraction().respondLater(true);
+            CompletableFuture<InteractionOriginalResponseUpdater> res = event.getSlashCommandInteraction().respondLater();
         try {
             List<SlashCommandInteractionOption> arguments = slashCommandInteraction.getArguments();
 

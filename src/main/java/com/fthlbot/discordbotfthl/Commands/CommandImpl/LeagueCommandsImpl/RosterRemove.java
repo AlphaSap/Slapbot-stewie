@@ -52,7 +52,7 @@ public class RosterRemove implements Command {
     @Override
     public void execute(SlashCommandCreateEvent event) {
         SlashCommandInteraction interaction = event.getSlashCommandInteraction();
-        CompletableFuture<InteractionOriginalResponseUpdater> re = interaction.respondLater(true);
+        CompletableFuture<InteractionOriginalResponseUpdater> re = interaction.respondLater();
         try {
             String divAlias = interaction.getArguments().get(0).getStringValue().get();
             String teamAlias = interaction.getArguments().get(1).getStringValue().get();
@@ -74,12 +74,9 @@ public class RosterRemove implements Command {
                             c.setSlashCommandInteraction(interaction);
                             c.respond();
                         }
-                    });
+                    }).join();
             }
-            re.thenAccept(res -> res.setContent("task Complete!")
-                            .setFlags(InteractionCallbackDataFlag.EPHEMERAL)
-                            .update()
-                    );
+            re.thenAccept(res -> res.setContent("Accounts Removed!").update());
         } catch (LeagueException e) {
             leagueSlashErrorMessage(re, e);
         }catch (IOException e){

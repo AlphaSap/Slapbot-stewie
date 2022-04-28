@@ -70,6 +70,10 @@ public class BotConfig {
     private String fmixStartDate;
     @Value("${fmix.endTime}")
     private String fmixEndDate;
+    @Value("${league.startDate}")
+    private String leagueStartDate;
+    @Value("${league.RegistrationStartDate}")
+    private String leagueRegistrationStartDate;
 
 
     public Date getF8StartDate() throws ParseException {
@@ -200,5 +204,12 @@ public class BotConfig {
          }
      }
      return dates;
+    }
+
+    public Date getLeagueStartDate() throws ParseException {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(leagueStartDate);
+    }
+    public Date getLeagueEndDate() throws ParseException {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(leagueRegistrationStartDate);
     }
 }

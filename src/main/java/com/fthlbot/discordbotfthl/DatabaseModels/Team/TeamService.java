@@ -110,4 +110,8 @@ public class TeamService {
         }
         throw new EntityNotFoundException("Team with the ID: " + id +" not found!");
     }
+
+    public Team updateTeam(Team team) {
+        return repo.save(team);
+    }
 }

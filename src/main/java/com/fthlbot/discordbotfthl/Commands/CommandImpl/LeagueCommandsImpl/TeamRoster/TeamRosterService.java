@@ -34,7 +34,7 @@ public class TeamRosterService {
 
             if (rosterByTeam.size() == 0) {
                 //Make a warning embedBuilder
-                EmbedBuilder embedBuilder = GeneralService.getEmbedBuilder(Color.RED,  "No roster found for team `" + team.getName() + "` in division " + division.getName());
+                EmbedBuilder embedBuilder = GeneralService.getEmbedBuilder(Color.YELLOW,  "No roster found for team `" + team.getName() + "` in division " + division.getName());
                 response.thenAccept(res -> {
                    res.addEmbed(embedBuilder).update();
                 });
