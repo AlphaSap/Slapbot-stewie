@@ -209,7 +209,7 @@ public class BotConfig {
     public Date getLeagueStartDate() throws ParseException {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(leagueStartDate);
     }
-    public Date getLeagueEndDate() throws ParseException {
+    public Date getRegistrationDate() throws ParseException {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(leagueRegistrationStartDate);
     }
 }
