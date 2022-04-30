@@ -21,11 +21,15 @@ import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.SlashCommandInteractionOption;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -62,6 +66,10 @@ public class RegistrationImpl implements RegistrationListener {
     private final DivisionService divisionService;
     private final TeamService teamService;
     private final BotConfig config;
+    //Logger
+    private final Logger logger = LoggerFactory.getLogger(RegistrationImpl.class);
+
+
 
     public RegistrationImpl(DivisionService divisionService, TeamService teamService, BotConfig config) {
         this.divisionService = divisionService;
@@ -131,6 +139,13 @@ public class RegistrationImpl implements RegistrationListener {
     public void execute(SlashCommandCreateEvent event) {
         SlashCommandInteraction slashCommandInteraction = event.getSlashCommandInteraction();
         CompletableFuture<InteractionOriginalResponseUpdater> respond = slashCommandInteraction.respondLater();
+
+        //check if today is between league start date and registration start date from config
+        if(!isRegistrationOpen()){
+            respond.thenAccept(res -> res.setContent("Registration is closed").update());
+            return;
+        }
+
         try{
         //Return if channel is not the same as reg channel
             //TODO
@@ -194,6 +209,22 @@ public class RegistrationImpl implements RegistrationListener {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private boolean isRegistrationOpen() {
+            Date registrationDate;
+        try {
+            registrationDate = config.getRegistrationDate();
+            Date leagueStartDate = config.getLeagueStartDate();
+
+            if (registrationDate.after(new Date()))
+                return false;
+            return !leagueStartDate.before(new Date());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            logger.error("Error parsing registration date");
+        }
+        return false;
     }
 
     private boolean isRegChannel(long channelID) {
