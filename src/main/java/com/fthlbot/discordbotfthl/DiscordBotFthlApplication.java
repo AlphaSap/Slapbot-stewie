@@ -189,7 +189,7 @@ public class DiscordBotFthlApplication {
 //        builder.setApi(api);
 //        builder.makeAllCommands();
 
-
+        log.info("Am I running on Docker???");
         return api;
     }
 
