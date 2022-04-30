@@ -36,9 +36,9 @@ jobs:
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
         arguments: build
-  - name: Build & push Docker image
+    - name: Build & push Docker image
       uses: mr-smithers-excellent/docker-build-push@v5
-        with:
+      with:
           image: sahil2903/discord-bot-fthl
           tags: latest
           registry: docker.io
