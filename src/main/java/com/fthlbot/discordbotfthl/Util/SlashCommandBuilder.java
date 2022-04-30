@@ -378,6 +378,13 @@ public class SlashCommandBuilder {
                 )).createGlobal(getApi()).join();
     }
 
+    public void createCreateAllDivisionCommand(){
+        SlashCommand command = SlashCommand.with(
+                "create-all-divisions",
+                        "Staff only command to create all division channels"
+                )
+                .createGlobal(getApi()).join();
+    }
     public void makeAllCommands(){
         //Make a Method array
         Method[] methods = this.getClass().getDeclaredMethods();

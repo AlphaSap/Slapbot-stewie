@@ -9,10 +9,7 @@ import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.Roster
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.TeamRoster.TeamRoster;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.UtilCommands.ShowDivisionWeekImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.UtilCommands.TeamInfoImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeAliasImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeClanImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.ChangeRepImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.RemoveAllChannelFromACategoryImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.AddDivisionWeeksImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.CreateMatchUps;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.NegoChannelCreationImpl;
@@ -90,7 +87,9 @@ public class DiscordBotFthlApplication {
     private final TeamInfoImpl teamInfo;
 
     private final SlashCommandBuilder builder;
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder) {
+
+    private final CreateAllDivisionsImpl createAllDivisions;
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -112,6 +111,7 @@ public class DiscordBotFthlApplication {
         this.removeAllChannelFromACategory = removeAllChannelFromACategory;
         this.teamInfo = teamInfo;
         this.builder = builder;
+        this.createAllDivisions = createAllDivisions;
     }
 
 
@@ -171,7 +171,8 @@ public class DiscordBotFthlApplication {
                 this.showDivisionWeek,
                 this.player,
                 this.removeAllChannelFromACategory,
-                this.teamInfo
+                this.teamInfo,
+                this.createAllDivisions
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
