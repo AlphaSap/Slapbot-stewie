@@ -127,7 +127,7 @@ public class DiscordBotFthlApplication {
 
         long testID = config.getTestServerID();
 
-
+        //Push
         clash = new JClash(env.getProperty("CLASH_EMAIL"), env.getProperty("CLASH_PASS"));
 
         DiscordApi api = new DiscordApiBuilder()
