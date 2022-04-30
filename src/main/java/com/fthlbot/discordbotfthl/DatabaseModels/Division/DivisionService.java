@@ -31,6 +31,6 @@ public class DivisionService {
                 new Division(5, "FORGOTTEN 11", "F11", 10, 5, new Integer[]{11}),
                 new Division(6, "FORGOTTEN MIX", "FMIX", 40, 20, new Integer[]{11, 10, 9, 8})
         );
-      //  divisions.forEach(repo::save);
+        divisions.forEach(repo::save);
     }
 }
