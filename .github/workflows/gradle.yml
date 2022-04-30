@@ -55,4 +55,4 @@ jobs:
           port: 22
           source: "build/libs/DiscordBotFTHL-0.0.1-SNAPSHOT.jar"
           target: "/root/DiscordBotFTHL-0.0.1-SNAPSHOT.jar"
-          script: "java -jar /root/DiscordBotFTHL-0.0.1-SNAPSHOT.jar/build/libs/DiscordBotFTHL-0.0.1-SNAPSHOT.jar"
+          script: "nohup java -jar /root/DiscordBotFTHL-0.0.1-SNAPSHOT.jar/build/libs/DiscordBotFTHL-0.0.1-SNAPSHOT.jar &>> logy.log"
