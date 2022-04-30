@@ -81,8 +81,6 @@ public class CommandListener implements SlashCommandCreateListener {
     }
 
     private boolean isStaffCommand(Command command) {
-      //  if (api.getOwnerId() == user.getId()) return true;
-
         Annotation[] annotations = command.getClass().getAnnotations();
         for (Annotation annotation : annotations) {
             if (annotation instanceof Invoker invoker){

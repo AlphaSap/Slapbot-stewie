@@ -16,8 +16,7 @@ class DiscordBotFthlApplicationTests {
 
     @Test
     void isTodayBetweenStartDateAndEndDateForF8() throws ParseException, IOException {
-        boolean f8 = GeneralService.isValidDate("f8");
-        assertThat(f8).isEqualTo(true);
+
     }
 
 }
