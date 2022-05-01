@@ -9,4 +9,6 @@ public @interface Invoker {
     String description();
     String usage();
     CommandType type() default CommandType.MISC;
+
+    AllowedChannel where() default AllowedChannel.ANYWHERE;
 }

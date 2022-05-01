@@ -3,6 +3,7 @@ package com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl;
 import Core.Enitiy.clan.ClanModel;
 import Core.JClash;
 import Core.exception.ClashAPIException;
+import com.fthlbot.discordbotfthl.Annotation.AllowedChannel;
 import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.RegistrationListener;
@@ -46,7 +47,8 @@ import static com.fthlbot.discordbotfthl.Util.GeneralService.*;
         alias = "register",
         description = "A simple registration command!",
         usage = "/register <CLAN TAG> <DIVISION ALIAS> <TEAM ALIAS> <@Second Rep (optional)>",
-        type = CommandType.REGISTRATION
+        type = CommandType.REGISTRATION,
+        where = AllowedChannel.APPLICANT_SERVER
 )
 /* TODO
  * Notes to myself -

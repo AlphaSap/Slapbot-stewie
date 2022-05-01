@@ -1,5 +1,6 @@
 package com.fthlbot.discordbotfthl.Handlers;
 
+import com.fthlbot.discordbotfthl.Annotation.AllowedChannel;
 import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLogger;
@@ -54,6 +55,10 @@ public class CommandListener implements SlashCommandCreateListener {
         if (messageHolder.getCommand().containsKey(commandName)){
             CompletableFuture.runAsync(() -> {
                 Command command = messageHolder.getCommand().get(commandName);
+                if (event.getSlashCommandInteraction().getServer().isEmpty()){
+                    event.getSlashCommandInteraction().createImmediateResponder().setContent("Sorry I do not work in DMs!").respond();
+                    return;
+                }
                 boolean staffCommand = isStaffCommand(command);
                 if (staffCommand){
                     long fthlServerID = config.getFthlServerID();
@@ -78,6 +83,24 @@ public class CommandListener implements SlashCommandCreateListener {
         else{
             event.getSlashCommandInteraction().createImmediateResponder().setContent("Unable to locate this command").respond();
         }
+    }
+
+    private boolean canUserAnywhere(Command command, Server server){
+        Annotation[] annotations = command.getClass().getAnnotations();
+        for (Annotation annotation : annotations) {
+            if (annotation instanceof Invoker invoker) {
+                if (invoker.where().equals(AllowedChannel.ANYWHERE)){
+                    return true;
+                }
+                if (invoker.where().equals(AllowedChannel.APPLICANT_SERVER)){
+                    return server.getId() == config.getApplicantServerID();
+                }
+                if (invoker.where().equals(AllowedChannel.NEGO_SERVER)){
+                    return server.getId() == config.getNegoServerID();
+                }
+            }
+        }
+        return false;
     }
 
     private boolean isStaffCommand(Command command) {
