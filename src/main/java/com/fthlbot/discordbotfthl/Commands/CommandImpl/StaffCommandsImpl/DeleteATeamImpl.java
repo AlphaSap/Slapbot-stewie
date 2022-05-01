@@ -66,7 +66,7 @@ public class DeleteATeamImpl implements DeleteATeamListener {
             };
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setDescription("Are you sure you want to delete the team " + team.getName() + "?")
-                    .setFooter("Press the <:"+ emoji.getName()+":"+emoji.getIdAsString()+"> to confirm, or <:"+emoji1.getName()+":"+emoji1.getIdAsString()+"> to cancel.").setColor(Color.RED);
+                    .setFooter("Press the ✅ to confirm, or ❌ to cancel.").setColor(Color.RED);
             response.addEmbed(embedBuilder).addComponents(ActionRow.of(lowLevelComponents)).update().thenAccept(update -> {
                update.addButtonClickListener(button -> {
                    if (button.getButtonInteraction().getCustomId().equals("Accept")) {
