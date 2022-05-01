@@ -51,6 +51,8 @@ jobs:
       with:
           host: 66.228.52.227
           username: root
-          key:  ${{ secrets.KEY }}
+          password:  ${{ secrets.PASSWORD }}
           port: 22
+          source: "build/libs/DiscordBotFTHL-0.0.1-SNAPSHOT.jar"
+          target: "/root/DiscordBotFTHL-0.0.1-SNAPSHOT.jar"
           script: "whoami"
