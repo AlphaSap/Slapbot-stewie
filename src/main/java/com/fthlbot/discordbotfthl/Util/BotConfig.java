@@ -43,6 +43,12 @@ public class BotConfig {
     private long applicantServerID;
     @Value("${server.NegotiationServer}")
     private long negoServerID;
+    @Value("${server.EmojiServer}")
+    private long emojiServerID;
+
+    public long getEmojiServerID() {
+        return emojiServerID;
+    }
 
     //Dates
     @Value("${f5.startDate}")

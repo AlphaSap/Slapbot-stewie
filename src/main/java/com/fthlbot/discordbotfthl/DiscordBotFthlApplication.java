@@ -19,9 +19,11 @@ import com.fthlbot.discordbotfthl.Handlers.CommandListener;
 import com.fthlbot.discordbotfthl.Handlers.MessageHandlers;
 import com.fthlbot.discordbotfthl.Handlers.MessageHolder;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
+import com.fthlbot.discordbotfthl.Util.SlapbotEmojis;
 import com.fthlbot.discordbotfthl.Util.SlashCommandBuilder;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
+import org.javacord.api.entity.emoji.KnownCustomEmoji;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
 import org.slf4j.Logger;
@@ -193,7 +195,7 @@ public class DiscordBotFthlApplication {
         builder.setApi(api);
         builder.createDeleteATeamCommand();
 //        builder.makeAllCommands();
-
+        SlapbotEmojis.setEmojis( api.getServerById(config.getEmojiServerID()).get().getCustomEmojis().stream().toList());
         log.info("Am I running on Docker???");
         return api;
     }
