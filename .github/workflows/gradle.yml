@@ -53,6 +53,4 @@ jobs:
           username: root
           password:  ${{ secrets.SERVER_PASSWORD }}
           port: 22
-          script: |
-            docker pull sahil2903/discord-bot-fthl:latest
-            docker run -env-file .env -d sahil2903/discord-bot-fthl:latest .
+          script: "docker run -env-file .env -d sahil2903/discord-bot-fthl:latest ."
