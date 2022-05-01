@@ -89,7 +89,9 @@ public class DiscordBotFthlApplication {
     private final SlashCommandBuilder builder;
 
     private final CreateAllDivisionsImpl createAllDivisions;
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions) {
+
+    private final DeleteATeamImpl deleteATeam;
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -112,6 +114,7 @@ public class DiscordBotFthlApplication {
         this.teamInfo = teamInfo;
         this.builder = builder;
         this.createAllDivisions = createAllDivisions;
+        this.deleteATeam = deleteATeam;
     }
 
 
@@ -172,7 +175,8 @@ public class DiscordBotFthlApplication {
                 this.player,
                 this.removeAllChannelFromACategory,
                 this.teamInfo,
-                this.createAllDivisions
+                this.createAllDivisions,
+                this.deleteATeam
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
@@ -186,7 +190,8 @@ public class DiscordBotFthlApplication {
 
         api.addListener(commandListener);
 
-//        builder.setApi(api);
+        builder.setApi(api);
+        builder.createDeleteATeamCommand();
 //        builder.makeAllCommands();
 
         log.info("Am I running on Docker???");

@@ -64,7 +64,7 @@ public class TeamService {
         ));
     }
 
-    public Team decrementRC (Team team) throws NoMoreRosterChangesLeftException {
+    private Team decrementRC (Team team) throws NoMoreRosterChangesLeftException {
         Integer changesLeft = team.getAllowRosterChangesLeft();
         if (changesLeft <= 0){
             throw new NoMoreRosterChangesLeftException(team);
@@ -115,5 +115,10 @@ public class TeamService {
 
     public Team updateTeam(Team team) {
         return repo.save(team);
+    }
+
+    //Method to delete a team
+    public void deleteTeam(Team team) {
+        repo.delete(team);
     }
 }

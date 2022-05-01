@@ -385,6 +385,28 @@ public class SlashCommandBuilder {
                 )
                 .createGlobal(getApi()).join();
     }
+
+    public void createDeleteATeamCommand(){
+        SlashCommand command = SlashCommand.with("delete-a-team", "Staff only command to delete a team")
+                .setOptions(List.of(SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
+                                "division",
+                                "choose from one of the following division",
+                                true,
+                                asList(
+                                        SlashCommandOptionChoice.create("F8", "F8"),
+                                        SlashCommandOptionChoice.create("F5", "F5"),
+                                        SlashCommandOptionChoice.create("F9", "F9"),
+                                        SlashCommandOptionChoice.create("F11", "F11"),
+                                        SlashCommandOptionChoice.create("F10", "F10"),
+                                        SlashCommandOptionChoice.create("Fmix", "Fmix")
+                                )
+                        ),
+                        SlashCommandOption.create(SlashCommandOptionType.STRING,
+                                "team-identifier",
+                                "Enter the name/alias of the team you want to delete",
+                                true)
+                )).createGlobal(getApi()).join();
+    }
     public void makeAllCommands(){
         //Make a Method array
         Method[] methods = this.getClass().getDeclaredMethods();
