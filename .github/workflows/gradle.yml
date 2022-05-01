@@ -55,4 +55,4 @@ jobs:
           port: 22
           script: |
             docker pull sahil2903/discord-bot-fthl:latest
-            docker run -d -env-file .env sahil2903/discord-bot-fthl:latest
+            docker run -d --env-file .env sahil2903/discord-bot-fthl:latest .
