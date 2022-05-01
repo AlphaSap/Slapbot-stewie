@@ -61,12 +61,12 @@ public class DeleteATeamImpl implements DeleteATeamListener {
         KnownCustomEmoji emoji1 = SlapbotEmojis.getEmojiOptional("deny").get();
         respond.thenAccept(response -> {
             LowLevelComponent[] lowLevelComponents = {
-                    Button.primary("Accept", emoji),
-                    Button.primary("Cancel", emoji1)
+                    Button.success("Accept", emoji),
+                    Button.danger("Cancel", emoji1)
             };
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setDescription("Are you sure you want to delete the team " + team.getName() + "?")
-                    .setFooter("Press the ✅ to confirm, or ❌ to cancel.").setColor(Color.RED);
+                    .setFooter("Press the <:"+ emoji.getName()+":"+emoji.getIdAsString()+"> to confirm, or <:"+emoji1.getName()+":"+emoji1.getIdAsString()+"> to cancel.").setColor(Color.RED);
             response.addEmbed(embedBuilder).addComponents(ActionRow.of(lowLevelComponents)).update().thenAccept(update -> {
                update.addButtonClickListener(button -> {
                    if (button.getButtonInteraction().getCustomId().equals("Accept")) {
