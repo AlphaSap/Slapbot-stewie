@@ -17,6 +17,7 @@ import org.javacord.api.entity.message.component.LowLevelComponent;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
+import org.javacord.api.util.logging.ExceptionLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -93,8 +94,8 @@ public class DeleteATeamImpl implements DeleteATeamListener {
                    }
                    response.removeAllComponents().update();
                });
-            });
+            }).exceptionally(ExceptionLogger.get());
 
-        });
+        }).exceptionally(ExceptionLogger.get());
     }
 }
