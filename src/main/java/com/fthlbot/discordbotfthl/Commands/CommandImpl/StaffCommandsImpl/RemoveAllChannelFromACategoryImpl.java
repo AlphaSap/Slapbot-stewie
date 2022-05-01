@@ -4,10 +4,12 @@ import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.RemoveAllChannelFromACategoryListener;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
+import com.fthlbot.discordbotfthl.Util.SlapbotEmojis;
 import org.javacord.api.entity.channel.Channel;
 import org.javacord.api.entity.channel.ChannelCategory;
 import org.javacord.api.entity.channel.RegularServerChannel;
 import org.javacord.api.entity.channel.ServerTextChannel;
+import org.javacord.api.entity.emoji.KnownCustomEmoji;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.component.ActionRow;
@@ -32,6 +34,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @Invoker(
@@ -86,9 +89,12 @@ public class RemoveAllChannelFromACategoryImpl implements RemoveAllChannelFromAC
                     .setTitle("Do you want to remove all channels from the category: %s?".formatted(category.get().getName()))
                     .setColor(Color.RED)
                     .setDescription("This action is irreversible!");
+            KnownCustomEmoji emoji = SlapbotEmojis.getEmojiOptional("check").get();
+            KnownCustomEmoji emoji1 = SlapbotEmojis.getEmojiOptional("deny").get();
+
             LowLevelComponent[] lowLevelComponents = {
-                    Button.primary("Accept", "✅"),
-                    Button.danger("Cancel", "❌")
+                    Button.primary("Accept", emoji),
+                    Button.danger("Cancel", emoji1)
             };
             res.addEmbed(embedBuilder).addComponents(ActionRow.of(lowLevelComponents)).update().thenAccept(message -> {
                 message.addButtonClickListener(button -> {
@@ -96,12 +102,15 @@ public class RemoveAllChannelFromACategoryImpl implements RemoveAllChannelFromAC
                         removeChannels(finalIsLogs, logChannel, channels);
                         event.getSlashCommandInteraction().createFollowupMessageBuilder().setContent("Removed all channels from the category: %s".formatted(category.get().getName()))
                                 .send();
-                        res.removeAllComponents().update();
                     } else if (button.getButtonInteraction().getCustomId().equals("Cancel")) {
                         event.getSlashCommandInteraction().createFollowupMessageBuilder().setContent("Cancelled!").send();
-                        res.removeAllComponents().update();
+                    } else {
+                        event.getSlashCommandInteraction().createFollowupMessageBuilder().setContent("Unknown button clicked!").send();
+                        log.error("Unknown button clicked!");
                     }
-                });
+                    button.getButtonInteraction().acknowledge();
+                    res.removeAllComponents().update();
+                }).removeAfter(3, TimeUnit.MINUTES);
             }).exceptionally(ExceptionLogger.get()).join();
         }).exceptionally(ExceptionLogger.get()).join();
     }

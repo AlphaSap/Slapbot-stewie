@@ -101,7 +101,7 @@ public class DeleteATeamImpl implements DeleteATeamListener {
                    }
                    button.getButtonInteraction().acknowledge();
                    response.removeAllComponents().update();
-               }).removeAfter(30, TimeUnit.SECONDS);
+               }).removeAfter(3, TimeUnit.MINUTES);
             }).exceptionally(ExceptionLogger.get());
 
         }).exceptionally(ExceptionLogger.get());
