@@ -2,6 +2,7 @@ package com.fthlbot.discordbotfthl.Util.Exception;
 
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.interaction.SlashCommandInteraction;
+import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.javacord.api.util.logging.ExceptionLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +16,20 @@ public class ClashExceptionHandler {
     private EmbedBuilder embedBuilder;
     private Integer statusCode;
     private SlashCommandInteraction interaction;
+
+    private InteractionOriginalResponseUpdater responder;
+
     public ClashExceptionHandler setSlashCommandInteraction(SlashCommandInteraction interaction) {
         this.interaction = interaction;
+        return this;
+    }
+
+    public InteractionOriginalResponseUpdater getResponder() {
+        return responder;
+    }
+
+    public ClashExceptionHandler setResponder(InteractionOriginalResponseUpdater responder) {
+        this.responder = responder;
         return this;
     }
 
@@ -98,10 +111,9 @@ public class ClashExceptionHandler {
     }
 
     public void respond() {
-        SlashCommandInteraction i = this.createEmbed().getSlashCommandCreateEvent();
+        //SlashCommandInteraction i = this.createEmbed().getSlashCommandCreateEvent();
 
-        i.respondLater().thenAccept(res -> {
-            res.addEmbed(this.getEmbedBuilder()).update();
-        }).exceptionally(ExceptionLogger.get());
+        InteractionOriginalResponseUpdater responseUpdater = getResponder() == null ? getSlashCommandCreateEvent().respondLater().join() : getResponder();
+        responseUpdater.addEmbed(this.createEmbed().getEmbedBuilder()).update();
     }
 }
