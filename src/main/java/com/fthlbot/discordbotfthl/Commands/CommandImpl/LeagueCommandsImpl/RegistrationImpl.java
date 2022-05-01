@@ -14,7 +14,13 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
+import org.javacord.api.entity.channel.ChannelCategory;
+import org.javacord.api.entity.channel.ServerTextChannel;
+import org.javacord.api.entity.channel.ServerTextChannelBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
+import org.javacord.api.entity.permission.PermissionType;
+import org.javacord.api.entity.permission.PermissionsBuilder;
+import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
@@ -23,7 +29,6 @@ import org.javacord.api.interaction.SlashCommandInteractionOption;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
@@ -179,22 +184,24 @@ public class RegistrationImpl implements RegistrationListener {
                 division.getAllowedRosterChanges()
         );
 
-        teamService.saveTeam(team);
+        team = teamService.saveTeam(team);
+        ServerTextChannel applicantChannel =
+                createApplicantChannel(event.getSlashCommandInteraction().getServer().get(), user, secondRep, team);
 
-
-        EmbedBuilder embedBuilder = new EmbedBuilder()
+            EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setTitle("Registration successful")
                 .setDescription("Hey there, you have successfully registered for FTHL season 6! \nHere are some commands that might be useful to you ")
-                .addInlineField("commands", "+team mr\n+team info\n+team all")
-                .addInlineField("Roster Management", "+add\n+remove")
+                .addInlineField("commands", "`/team-info`/n`/team-roster`\n`/all-team`")
+                .addInlineField("Roster Management", "`/roster-add`\n`/roster-remove`")
                 .setTimestampToNow()
                 .setColor(Color.green)
                 .setAuthor(user);
 
         //slashCommandInteraction.createImmediateResponder().addEmbeds(embedBuilder).respond();
             respond.thenAccept(res -> {
-            res.addEmbed(embedBuilder);
-            res.update();
+            res.setContent("Your application has been recorded. Head over to your private channel to see your application and to manage your roster. <#%d>".formatted(applicantChannel.getId())).update();
+
+            applicantChannel.sendMessage(embedBuilder);
         });
 
         }catch(LeagueException e){
@@ -229,6 +236,40 @@ public class RegistrationImpl implements RegistrationListener {
 
     private boolean isRegChannel(long channelID) {
         return channelID == config.getRegistrationChannelID();
+    }
+
+    public ServerTextChannel createApplicantChannel(Server server, User applicant, User applicant2, Team team) {
+        ServerTextChannelBuilder textChannelBuilder = server.createTextChannelBuilder();
+        //Set channel name to division alias + team name
+        textChannelBuilder.setName(team.getDivision().getAlias() + "-" + team.getName());
+        //Set channel topic to team id
+        textChannelBuilder.setTopic(team.getID().toString());
+
+        PermissionsBuilder everyoneElse = new PermissionsBuilder().setDenied(PermissionType.READ_MESSAGES);
+        PermissionsBuilder rep = new PermissionsBuilder().setAllowed(PermissionType.READ_MESSAGES, PermissionType.SEND_MESSAGES);
+
+        //Give applicant permissions to view channel
+        textChannelBuilder.addPermissionOverwrite(applicant, rep.build());
+        textChannelBuilder.addPermissionOverwrite(applicant2, rep.build());
+        textChannelBuilder.addPermissionOverwrite(server.getEveryoneRole(), everyoneElse.build());
+
+        //Set Category by division alias
+
+        ChannelCategory channelCategory = getChannelCategory(team.getDivision().getAlias(), server);
+
+        textChannelBuilder.setCategory(channelCategory);
+        //Create channel
+        return textChannelBuilder.create().join();
+    }
+
+    //A method that takes a string and returns a ChannelCatrgorie object when the string matches the name of a category
+    private ChannelCategory getChannelCategory(String categoryName, Server server){
+        for(ChannelCategory category : server.getChannelCategories()){
+            if(category.getName().equals(categoryName)){
+                return category;
+            }
+        }
+        return null;
     }
 
 }
