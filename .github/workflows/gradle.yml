@@ -51,6 +51,6 @@ jobs:
       with:
           host: 66.228.52.227
           username: root
-          password:  ${{ secrets.SERVER_PASSWORD }}
+          key:  ${{ secrets.KEY }}
           port: 22
           script: "whoami"
