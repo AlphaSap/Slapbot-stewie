@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -26,7 +27,7 @@ public class TeamService {
     }
     public Team saveTeam(Team team) throws EntityAlreadyExistsException {
         Optional<Team> teamByTag = repo.findTeamByTag(team.getTag());
-        if (teamByTag.isPresent()){
+        if (teamByTag.isPresent() && Objects.equals(teamByTag.get().getDivision().getId(), team.getDivision().getId())) {
             throw new EntityAlreadyExistsException(
                     teamByTag.get().getName() + " has already registered with the same clan tag. Please use a different clan tag"
             );
