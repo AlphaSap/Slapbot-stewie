@@ -59,6 +59,10 @@ public class CommandListener implements SlashCommandCreateListener {
                     event.getSlashCommandInteraction().createImmediateResponder().setContent("Sorry I do not work in DMs!").respond();
                     return;
                 }
+                if (canUserAnywhere(command, event.getSlashCommandInteraction().getServer().get())){
+                    event.getSlashCommandInteraction().createImmediateResponder().setContent("Sorry this is not the correct the server to use this command!\nPlease see my help page to find where you can use this command!").respond();
+                    return;
+                }
                 boolean staffCommand = isStaffCommand(command);
                 if (staffCommand){
                     long fthlServerID = config.getFthlServerID();
