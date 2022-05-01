@@ -26,7 +26,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Component
 @Invoker(
-        alias = "delete-team",
+        alias = "delete-a-team",
         description = "Delete a team from the database.",
         usage = "delete-team <division> <team-identifier>",
         type = CommandType.STAFF
