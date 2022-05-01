@@ -200,7 +200,7 @@ public class RegistrationImpl implements RegistrationListener {
                     .addField("Representatives", user.getDiscriminatedName() + "\n" + secondRep.getDiscriminatedName(), false)
                     .addInlineField("commands", "`/team-info`\n`/team-roster`\n`/all-team`")
                 .addInlineField("Roster Management", "`/roster-add`\n`/roster-remove`")
-                    .setThumbnail(new File("src/main/resources/fthl-logo.png"))
+                    .setThumbnail("https://media.discordapp.net/attachments/777902179771613184/970270133769633812/fthl-logo.png?width=670&height=670")
                 .setTimestampToNow()
                 .setColor(Color.green)
                 .setAuthor(user);
