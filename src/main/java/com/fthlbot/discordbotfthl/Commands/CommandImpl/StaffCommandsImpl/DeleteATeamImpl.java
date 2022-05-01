@@ -10,6 +10,7 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
 import com.fthlbot.discordbotfthl.Util.SlapbotEmojis;
+import org.javacord.api.entity.emoji.KnownCustomEmoji;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.message.component.LowLevelComponent;
@@ -56,10 +57,12 @@ public class DeleteATeamImpl implements DeleteATeamListener {
             return;
         }
 
+        KnownCustomEmoji emoji = SlapbotEmojis.getEmojiOptional("check").get();
+        KnownCustomEmoji emoji1 = SlapbotEmojis.getEmojiOptional("deny").get();
         respond.thenAccept(response -> {
             LowLevelComponent[] lowLevelComponents = {
-                    Button.primary("Accept", SlapbotEmojis.getEmojiOptional(":check:").get()),
-                    Button.primary("Cancel", SlapbotEmojis.getEmojiOptional(":deny:").get())
+                    Button.primary("Accept", emoji),
+                    Button.primary("Cancel", emoji1)
             };
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setDescription("Are you sure you want to delete the team " + team.getName() + "?")

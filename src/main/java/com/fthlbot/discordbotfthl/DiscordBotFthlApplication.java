@@ -193,7 +193,6 @@ public class DiscordBotFthlApplication {
         api.addListener(commandListener);
 
         builder.setApi(api);
-        builder.createDeleteATeamCommand();
 //        builder.makeAllCommands();
         SlapbotEmojis.setEmojis( api.getServerById(config.getEmojiServerID()).get().getCustomEmojis().stream().toList());
         log.info("Am I running on Docker???");
