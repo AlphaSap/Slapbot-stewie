@@ -26,10 +26,11 @@ public class TeamService {
         this.repo = repo;
     }
     public Team saveTeam(Team team) throws EntityAlreadyExistsException {
-        Optional<Team> teamByTag = repo.findTeamByTag(team.getTag());
-        if (teamByTag.isPresent() && Objects.equals(teamByTag.get().getDivision().getId(), team.getDivision().getId())) {
+        Optional<Team> teamByTag = repo.findTeamByTagAndDivision(team.getTag(), team.getDivision());
+        if (teamByTag.isPresent()) {
             throw new EntityAlreadyExistsException(
-                    teamByTag.get().getName() + " has already registered with the same clan tag. Please use a different clan tag"
+                    teamByTag.get().getName() + " has already registered with the same clan tag in %s. Please use a different clan tag".formatted(team.getDivision())
+
             );
         }
         Optional<Team> teamByAliasAndDivision = repo.findTeamByAliasAndDivision(team.getAlias(), team.getDivision());

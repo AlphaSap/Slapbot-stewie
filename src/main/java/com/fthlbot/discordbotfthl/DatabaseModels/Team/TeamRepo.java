@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface TeamRepo extends JpaRepository<Team, Integer> {
 
-    Optional<Team> findTeamByTag(String tag);
+    Optional<Team> findTeamByTagAndDivision(String tag, Division division);
     Optional<Team> findTeamByAliasAndDivision(String alias, Division division);
 
     Optional<Team> findTeamByDivisionAndAlias(Division division, String alias);
