@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
@@ -199,15 +200,18 @@ public class RegistrationImpl implements RegistrationListener {
                     .addField("Representatives", user.getDiscriminatedName() + "\n" + secondRep.getDiscriminatedName(), false)
                     .addInlineField("commands", "`/team-info`\n`/team-roster`\n`/all-team`")
                 .addInlineField("Roster Management", "`/roster-add`\n`/roster-remove`")
+                    .setThumbnail(new File("src/main/resources/fthl-logo.png"))
                 .setTimestampToNow()
                 .setColor(Color.green)
                 .setAuthor(user);
 
         //slashCommandInteraction.createImmediateResponder().addEmbeds(embedBuilder).respond();
+            User finalSecondRep = secondRep;
             respond.thenAccept(res -> {
             res.setContent("Your application has been recorded. Head over to your private channel to see your application and to manage your roster. <#%d>".formatted(applicantChannel.getId())).update();
 
             applicantChannel.sendMessage(embedBuilder);
+            applicantChannel.sendMessage("<@%d> \n <@%d>".formatted(user.getId(), finalSecondRep.getId()));
         });
 
         }catch(LeagueException e){
