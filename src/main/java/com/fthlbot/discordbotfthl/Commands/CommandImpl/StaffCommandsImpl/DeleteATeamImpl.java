@@ -11,9 +11,7 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
 import com.fthlbot.discordbotfthl.Util.SlapbotEmojis;
 import org.javacord.api.entity.emoji.KnownCustomEmoji;
-import org.javacord.api.entity.message.component.ActionRow;
-import org.javacord.api.entity.message.component.Button;
-import org.javacord.api.entity.message.component.LowLevelComponent;
+import org.javacord.api.entity.message.component.*;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
@@ -23,7 +21,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
+import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @Invoker(
@@ -61,14 +61,19 @@ public class DeleteATeamImpl implements DeleteATeamListener {
         KnownCustomEmoji emoji = SlapbotEmojis.getEmojiOptional("check").get();
         KnownCustomEmoji emoji1 = SlapbotEmojis.getEmojiOptional("deny").get();
         respond.thenAccept(response -> {
-            LowLevelComponent[] lowLevelComponents = {
-                    Button.success("Accept", emoji),
-                    Button.danger("Cancel", emoji1)
-            };
+
+            ButtonBuilder s = new ButtonBuilder()
+                    .setStyle(ButtonStyle.SUCCESS)
+                    .setCustomId("Accept")
+                    .setEmoji(emoji);
+            ButtonBuilder d = new ButtonBuilder()
+                    .setStyle(ButtonStyle.DANGER)
+                    .setCustomId("Cancel")
+                    .setEmoji(emoji1);
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setDescription("Are you sure you want to delete the team " + team.getName() + "?")
                     .setFooter("Press the ✅ to confirm, or ❌ to cancel.").setColor(Color.RED);
-            response.addEmbed(embedBuilder).addComponents(ActionRow.of(lowLevelComponents)).update().thenAccept(update -> {
+            response.addEmbed(embedBuilder).addComponents(ActionRow.of(s.build(), d.build())).update().thenAccept(update -> {
                update.addButtonClickListener(button -> {
                    if (button.getButtonInteraction().getCustomId().equals("Accept")) {
                        teamService.deleteTeam(team);
@@ -78,7 +83,7 @@ public class DeleteATeamImpl implements DeleteATeamListener {
                        event.getSlashCommandInteraction().createFollowupMessageBuilder()
                                .addEmbed(embedBuilder1).send();
                         log.info("Team " + team.getName() + " has been deleted from the division " + division.getName() + ".");
-                   }else if (button.getButtonInteraction().getCustomId().equals("Cancel")){
+                   }else if (button.getButtonInteraction().getCustomId().equals("cancel")){
                        EmbedBuilder embedBuilder1 = new EmbedBuilder()
                                .setDescription("Team deletion cancelled.")
                                .setColor(Color.RED);
@@ -90,10 +95,13 @@ public class DeleteATeamImpl implements DeleteATeamListener {
                                .setColor(Color.RED);
                        event.getSlashCommandInteraction().createFollowupMessageBuilder()
                                .addEmbed(embedBuilder1).send();
-                       log.info("Something went wrong with the button click listener.");
+                       log.error("Something went wrong with the button click listener.");
+                       s.setDisabled(true).build();
+                       d.setDisabled(true).build();
                    }
+                   button.getButtonInteraction().acknowledge();
                    response.removeAllComponents().update();
-               });
+               }).removeAfter(30, TimeUnit.SECONDS);
             }).exceptionally(ExceptionLogger.get());
 
         }).exceptionally(ExceptionLogger.get());
