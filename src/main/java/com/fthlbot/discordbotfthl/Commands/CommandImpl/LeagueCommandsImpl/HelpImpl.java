@@ -24,7 +24,7 @@ import static com.fthlbot.discordbotfthl.Annotation.CommandType.IGNORE;
         alias = "help",
         description = "You need help with \"help\" for `help` command",
         usage = "/help",
-        type = IGNORE
+        type = UNSUPPORTED
 )
 public class HelpImpl implements HelpListener {
     private final List<Command> commands;
@@ -47,7 +47,9 @@ public class HelpImpl implements HelpListener {
             return;
         }
         Pagination pagination = new Pagination();
-        pagination.buttonPaginate(createHelpEmbeds(), event);
+        List<EmbedBuilder> helpEmbeds = createHelpEmbeds();
+
+        pagination.buttonPaginate(helpEmbeds, event);
     }
 
     /**
@@ -94,7 +96,7 @@ public class HelpImpl implements HelpListener {
         System.out.println(commands.size());
 
         List<EmbedBuilder> embedBuilders = new ArrayList<>();
-        Map<CommandType, ArrayList<Object>> em = new LinkedHashMap<>();
+        Map<CommandType, ArrayList<String>> em = new LinkedHashMap<>();
         em.put(INFO,                new ArrayList<>());
         em.put(REGISTRATION,        new ArrayList<>());
         em.put(ROSTER_MANAGEMENT,   new ArrayList<>());
