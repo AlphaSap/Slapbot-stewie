@@ -174,7 +174,8 @@ public class SlashCommandBuilder {
                                 SlashCommandOption.create(STRING,
                                         "tag",
                                         "enter a valid clan tag",
-                                        false)
+                                        true
+                                )
                         )
                 ).createGlobal(getApi()).join();
 
@@ -345,6 +346,19 @@ public class SlashCommandBuilder {
                         SlashCommandOption.create(SlashCommandOptionType.STRING,
                                 "player-tag",
                                 "Enter the player's tag",
+                                true
+                        )
+                ))
+                .createGlobal(getApi()).join();
+    }
+
+    public void createStatsCommand(){
+        SlashCommand command = SlashCommand
+                .with("stats", "A command to view a current war for a clan")
+                .setOptions(List.of(
+                        SlashCommandOption.create(SlashCommandOptionType.STRING,
+                                "clan-tag",
+                                "Enter the clan tag",
                                 true
                         )
                 ))
