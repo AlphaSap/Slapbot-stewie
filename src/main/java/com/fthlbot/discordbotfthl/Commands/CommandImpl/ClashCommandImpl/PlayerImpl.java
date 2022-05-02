@@ -8,6 +8,7 @@ import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.ClashCommandListener.PlayerListener;
 import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterService;
+import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.MinionBotAPI.MinionBotClient;
 import com.fthlbot.discordbotfthl.MinionBotAPI.MinionBotPlayer;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
@@ -55,6 +56,9 @@ public class PlayerImpl implements PlayerListener {
             handler.respond();
         } catch (IOException e) {
             logger.error("Error getting player information", e);
+        }catch (Exception e){
+            logger.error("Error getting player information", e);
+            e.printStackTrace();
         }
     }
 
@@ -64,7 +68,7 @@ public class PlayerImpl implements PlayerListener {
         StringBuilder ban = new StringBuilder();
         if (playerBan.length == 0) {
             //No ban
-
+            ban.append("No ban");
         } else {
             for (MinionBotPlayer m_player : playerBan) {
                 ban.append(m_player.getOrgInitials().orElse(m_player.getName().orElse("League Name not found! org id: " + m_player.getOrgID()))).append("\n");
@@ -72,7 +76,7 @@ public class PlayerImpl implements PlayerListener {
         }
         String teams = rosterService.getTeamsForPlayerTag(player.getTag())
                 .stream()
-                .map(team -> team.getName()).reduce((a, b) -> a + "\n" + b)
+                .map(Team::getName).reduce((a, b) -> a + "\n" + b)
                 .orElse("No team found!");
 
         EmbedBuilder secondPage = new EmbedBuilder()
@@ -85,6 +89,7 @@ public class PlayerImpl implements PlayerListener {
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle(player.getName())
                 .addField("TownHall Level", player.getTownHallLevel() + "")
+                .addField("Player Tag", player.getTag())
                 .addField("Clan name ", player.getClan().getName())
                 .addField("Clan Tag", player.getClan().getTag())
                 .addField("Clan Role", player.getRole())
@@ -114,6 +119,7 @@ public class PlayerImpl implements PlayerListener {
                 case "Silver League II":
                 case "Silver league III":
                     leagueEmote = "<:Silver:888847990121463858>";
+                    break;
 
                 case "Gold League II":
                 case "Gold League I":
