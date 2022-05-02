@@ -1,5 +1,6 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands;
 
+import com.fthlbot.discordbotfthl.Annotation.AllowedChannel;
 import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.StaffCommandListener.NegoChannelCreationListener;
@@ -34,7 +35,9 @@ import java.util.concurrent.CompletableFuture;
 @Invoker(alias = "create-negotiation-channels",
     description = "Creates a new negotiation channel",
     usage = "create-negotiation-channel <Division WeekID>",
-    type = CommandType.STAFF)
+    type = CommandType.STAFF,
+    where = AllowedChannel.NEGO_SERVER
+)
 public class NegoChannelCreationImpl implements NegoChannelCreationListener {
     private final DivisionWeekService divisionWeekService;
     private final ScheduleWarService scheduleWarService;
