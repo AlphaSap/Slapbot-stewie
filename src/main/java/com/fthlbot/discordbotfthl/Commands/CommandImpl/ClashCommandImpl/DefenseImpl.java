@@ -1,5 +1,6 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl;
 
+import Core.Enitiy.clan.ClanModel;
 import Core.Enitiy.clanwar.Attack;
 import Core.Enitiy.clanwar.ClanWarMember;
 import Core.Enitiy.clanwar.WarInfo;
@@ -47,6 +48,13 @@ public class DefenseImpl implements AttackListener {
         JClash clash = new JClash();
 
         try {
+            ClanModel join = clash.getClan(tag).join();
+            if (!join.isWarLogPublic()){
+                respondLater.thenAccept(res -> {
+                   res.setContent("War log is not public").update();
+                });
+                return;
+            }
             clash.getCurrentWar(tag).thenAccept(c -> {
                 EmbedBuilder em = getDefEmbed(interaction, c);
                 //EmbedBuilder finalEm = em;
@@ -69,7 +77,7 @@ public class DefenseImpl implements AttackListener {
             });
         } catch (ClashAPIException | IOException e) {
             new ClashExceptionHandler()
-                    .setSlashCommandInteraction(interaction)
+                    .setResponder(respondLater.join())
                     .setStatusCode(Integer.valueOf(e.getMessage()))
                     .respond();
         }

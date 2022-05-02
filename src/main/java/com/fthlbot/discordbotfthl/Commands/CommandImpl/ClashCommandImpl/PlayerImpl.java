@@ -16,6 +16,7 @@ import com.fthlbot.discordbotfthl.Util.GeneralService;
 import com.fthlbot.discordbotfthl.Util.Pagination;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
+import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Component;
 import java.awt.*;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 @Invoker(
@@ -41,6 +43,7 @@ public class PlayerImpl implements PlayerListener {
 
     @Override
     public void execute(SlashCommandCreateEvent event) {
+        CompletableFuture<InteractionOriginalResponseUpdater> responder = event.getSlashCommandInteraction().respondLater();
         JClash clash = new JClash();
         String s = event.getSlashCommandInteraction().getArguments().get(0).getStringValue().get();
         try {
@@ -52,7 +55,7 @@ public class PlayerImpl implements PlayerListener {
             logger.error("Error getting player information", e);
             ClashExceptionHandler handler = new ClashExceptionHandler();
             handler.setStatusCode(Integer.valueOf(e.getMessage()));
-            handler.setSlashCommandInteraction(event.getSlashCommandInteraction());
+            handler.setResponder(responder.join());
             handler.respond();
         } catch (IOException e) {
             logger.error("Error getting player information", e);
