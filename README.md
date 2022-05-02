@@ -4,12 +4,11 @@ Slapbot was introduced at the start of FTHL season 4. This project aims to be th
 clash of clans leagues bot.
 
 ## Features
->Create a league
-<br />
->Register teams <br />
->Create roster <br />
->Make roster changes <br />
->Manipulate every field for a team, (Team representative, Clan tag, Clan abbreviation)
+> Create a league<br />
+> Register teams <br />
+> Create roster <br />
+> Make roster changes <br />
+> Manipulate every field for a team, (Team representative, Clan tag, Clan abbreviation)
  and much more!
 
 
