@@ -23,7 +23,6 @@ import com.fthlbot.discordbotfthl.Util.SlapbotEmojis;
 import com.fthlbot.discordbotfthl.Util.SlashCommandBuilder;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
-import org.javacord.api.entity.emoji.KnownCustomEmoji;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
 import org.slf4j.Logger;
@@ -35,7 +34,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -132,7 +130,7 @@ public class DiscordBotFthlApplication {
 
         long testID = config.getTestServerID();
 
-        //Push
+
         clash = new JClash(env.getProperty("CLASH_EMAIL"), env.getProperty("CLASH_PASS"));
 
         DiscordApi api = new DiscordApiBuilder()
@@ -149,14 +147,6 @@ public class DiscordBotFthlApplication {
                 ).login()
                 .join();
         ArrayList<Server> servers = new ArrayList<>(api.getServers());
-        log.info("Logged in as {}", api.getYourself().getDiscriminatedName());
-        log.info("Watching servers {}", servers.size());
-        try {
-            log.info(config.getF5EndDate() + "");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
 
         //Add commands to the handler
         List<Command> commandList = new ArrayList<>(List.of(
@@ -196,6 +186,8 @@ public class DiscordBotFthlApplication {
 //        builder.makeAllCommands();
         SlapbotEmojis.setEmojis( api.getServerById(config.getEmojiServerID()).get().getCustomEmojis().stream().toList());
         log.info("Am I running on Docker???");
+        log.info("Logged in as {}", api.getYourself().getDiscriminatedName());
+        log.info("Watching servers {}", servers.size());
         return api;
     }
 
