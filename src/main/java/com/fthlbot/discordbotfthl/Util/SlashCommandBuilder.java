@@ -339,7 +339,16 @@ public class SlashCommandBuilder {
     }
 
     public void createPlayerCommand(){
-        //todo
+        SlashCommand command = SlashCommand
+                .with("player", "A command to view a player's profile")
+                .setOptions(List.of(
+                        SlashCommandOption.create(SlashCommandOptionType.STRING,
+                                "player-tag",
+                                "Enter the player's tag",
+                                true
+                        )
+                ))
+                .createGlobal(getApi()).join();
     }
 
     public void createRemoveAllChannelFromACategoryCommand(){
