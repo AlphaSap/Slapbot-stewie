@@ -207,7 +207,7 @@ public class Pagination {
 
             });
             removeButton(message, 10, TimeUnit.MINUTES);
-        });
+        }).exceptionally(ExceptionLogger.get());
 
     }
 
