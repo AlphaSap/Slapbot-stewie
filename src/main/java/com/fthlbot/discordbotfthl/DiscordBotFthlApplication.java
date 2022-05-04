@@ -194,7 +194,18 @@ public class DiscordBotFthlApplication {
         log.info("Am I running on Docker???");
         log.info("Logged in as {}", api.getYourself().getDiscriminatedName());
         log.info("Watching servers {}", servers.size());
+        printMemoryUsage();
         return api;
+    }
+
+    private void printMemoryUsage(){
+        Runtime runtime = Runtime.getRuntime();
+        long maxMemory = runtime.maxMemory();
+        long allocatedMemory = runtime.totalMemory();
+        long freeMemory = runtime.freeMemory();
+        log.info("Max Memory: " + maxMemory);
+        log.info("Allocated Memory: " + allocatedMemory);
+        log.info("Free Memory: " + freeMemory);
     }
 
 
