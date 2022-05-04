@@ -112,4 +112,9 @@ public class RosterService {
                 .map(Roster::getTeam)
                 .collect(Collectors.toList());
     }
+
+    //Make a method that remove all roster from a team
+    public void removeAllRoster(Team team) {
+        repo.deleteRosterByTeam(team);
+    }
 }
