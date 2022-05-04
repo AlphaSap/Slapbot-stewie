@@ -56,7 +56,7 @@ public class ClashExceptionHandler {
         return interaction;
     }
 
-    private ClashExceptionHandler createEmbed() {
+    public ClashExceptionHandler createEmbed() {
         switch (getStatusCode()) {
             case 400 -> {
                 return this.setEmbedBuilder(
@@ -79,6 +79,57 @@ public class ClashExceptionHandler {
                 return this.setEmbedBuilder(
                         new EmbedBuilder()
                                 .setDescription("`Invalid Tag`")
+                                .setColor(Color.RED)
+                );
+            }
+            case 429 -> {
+                return this.setEmbedBuilder(
+                        new EmbedBuilder()
+                                .setDescription("`Too Many Requests`")
+                                .setColor(Color.RED)
+                );
+            }
+            case 503 -> {
+                return this.setEmbedBuilder(
+                        new EmbedBuilder()
+                                .setDescription("Clash of clans is down for maintenance! I will be back soon!")
+                                .setColor(Color.RED)
+                );
+            }
+            default -> {
+                return this.setEmbedBuilder(
+                        new EmbedBuilder()
+                                .setDescription("`Unknown Error`")
+                                .setColor(Color.RED)
+                                .setFooter("No commands related to clash of clans will work, this may include some league commands!")
+                );
+            }
+        }
+    }
+
+    public ClashExceptionHandler createEmbed(String tag) {
+        switch (getStatusCode()) {
+            case 400 -> {
+                return this.setEmbedBuilder(
+                        new EmbedBuilder()
+                                .setDescription("400 Bad Request. Please contact the developer.")
+                                .setColor(Color.RED)
+                );
+            }
+            case 403 -> {
+                //TODO add a method where this would be logged
+                log.error("Clash API key was revoked! {}", LocalDateTime.now());
+                return this.setEmbedBuilder(
+                        new EmbedBuilder()
+                                .setDescription("Invalid request! `API Key was revoked` Please contact the developer.")
+                                .setColor(Color.RED)
+                );
+            }
+            case 404 -> {
+                log.warn("404");
+                return this.setEmbedBuilder(
+                        new EmbedBuilder()
+                                .setDescription("`Invalid Tag` " + tag)
                                 .setColor(Color.RED)
                 );
             }
