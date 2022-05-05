@@ -21,17 +21,16 @@ public class TeamService {
     private final TeamRepo repo;
     private final Logger log = LoggerFactory.getLogger(TeamService.class);
 
-    private final RosterService rosterService;
+   // private final RosterService rosterService;
     @Autowired
-    public TeamService(TeamRepo repo, RosterRepo rosterRepo, RosterService rosterService) {
+    public TeamService(TeamRepo repo, RosterRepo rosterRepo) {
         this.repo = repo;
-        this.rosterService = rosterService;
     }
     public Team saveTeam(Team team) throws EntityAlreadyExistsException {
         Optional<Team> teamByTag = repo.findTeamByTagAndDivision(team.getTag(), team.getDivision());
         if (teamByTag.isPresent()) {
             throw new EntityAlreadyExistsException(
-                    teamByTag.get().getName() + " has already registered with the same clan tag in %s. Please use a different clan tag".formatted(team.getDivision())
+                    teamByTag.get().getName() + " has already registered with the same clan tag in %s. Please use a different clan tag".formatted(team.getDivision().getAlias())
 
             );
         }
@@ -121,7 +120,7 @@ public class TeamService {
 
     //Method to delete a team
     public void deleteTeam(Team team) {
-        rosterService.removeAllRoster(team);
+       // rosterService.removeAllRoster(team);
         repo.delete(team);
     }
 }

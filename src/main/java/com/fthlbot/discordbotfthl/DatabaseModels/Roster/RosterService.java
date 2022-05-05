@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.util.Arrays;
@@ -114,6 +115,7 @@ public class RosterService {
     }
 
     //Make a method that remove all roster from a team
+    @Transactional
     public void removeAllRoster(Team team) {
         repo.deleteRosterByTeam(team);
     }
