@@ -12,8 +12,7 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.MinionBotAPI.MinionBotClient;
 import com.fthlbot.discordbotfthl.MinionBotAPI.MinionBotPlayer;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
-import com.fthlbot.discordbotfthl.Util.GeneralService;
-import com.fthlbot.discordbotfthl.Util.Pagination;
+import com.fthlbot.discordbotfthl.Util.Pagination.Pagination;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
@@ -50,7 +49,7 @@ public class PlayerImpl implements PlayerListener {
             Player player = clash.getPlayer(s).join();
             List<EmbedBuilder> embed = createEmbed(player);
             Pagination pagination = new Pagination();
-            pagination.buttonPaginate(embed, event);
+            pagination.buttonPagination(embed, responder, event.getApi());
         } catch (ClashAPIException e) {
             logger.error("Error getting player information", e);
             ClashExceptionHandler handler = new ClashExceptionHandler();
