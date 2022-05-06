@@ -6,8 +6,9 @@ import org.quartz.impl.StdSchedulerFactory;
 
 import java.util.Date;
 
-public class PaginationJobExecutor {
+public class PaginationJobScheduler {
 
+    private static final long ONE_MINUTE_IN_MILLISECONDS = 60000;
     protected void execute(InteractionOriginalResponseUpdater message) throws SchedulerException {
         JobDataMap dataMap = new JobDataMap();
         dataMap.put("message", message);
@@ -15,8 +16,8 @@ public class PaginationJobExecutor {
         JobDetail job = JobBuilder.newJob(PaginationJobs.class)
                 .setJobData(dataMap)
                 .build();
-        Trigger trigger = TriggerBuilder.newTrigger().withIdentity("SayHello")
-                .startAt(new Date(System.currentTimeMillis() + 5000)).build();
+        Trigger trigger = TriggerBuilder.newTrigger()
+                .startAt(new Date(System.currentTimeMillis() + ONE_MINUTE_IN_MILLISECONDS)).build();
 
         Scheduler s = StdSchedulerFactory.getDefaultScheduler();
 

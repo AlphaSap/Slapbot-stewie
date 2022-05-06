@@ -1,5 +1,6 @@
 package com.fthlbot.discordbotfthl.Util.Pagination;
 
+import org.javacord.api.entity.message.Message;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -7,6 +8,8 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class PaginationJobs implements Job {
@@ -21,6 +24,6 @@ public class PaginationJobs implements Job {
         }
         message = (InteractionOriginalResponseUpdater) message1;
         log.info("Pagination job started");
-        message.removeAllComponents();
+        message.removeAllComponents().update();
     }
 }
