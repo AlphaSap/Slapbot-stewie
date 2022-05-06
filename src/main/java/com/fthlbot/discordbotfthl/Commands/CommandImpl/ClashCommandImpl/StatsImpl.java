@@ -1,6 +1,7 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl;
 
 import Core.Enitiy.clan.ClanModel;
+import Core.Enitiy.clanwar.Attack;
 import Core.Enitiy.clanwar.ClanWarMember;
 import Core.Enitiy.clanwar.WarInfo;
 import Core.JClash;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -57,7 +59,7 @@ public class StatsImpl implements Command {
         }
     }
 
-    public static String stats(ClanModel clan, WarInfo war) throws ClashAPIException, ParseException {
+    public String stats(ClanModel clan, WarInfo war) throws ClashAPIException, ParseException {
         if (clan.isWarLogPublic()) {
             if (!war.getState().equalsIgnoreCase("notInWar")) {
                 int Home_2_left = 0;
@@ -109,6 +111,9 @@ public class StatsImpl implements Command {
                 List<ClanWarMember> clanWarMember = war.getClan().getWarMembers();
                 List<ClanWarMember> clanWarMember_Opponent = war.getEnemy().getWarMembers();
 
+                List<Integer> homeAvgTime = new ArrayList<>();
+                List<Integer> opponentAvgTime = new ArrayList<>();
+
                 for (int i = 0; i < clanWarMember.toArray().length; i++) {
 
                     // Counting Home 2 and 3
@@ -120,6 +125,8 @@ public class StatsImpl implements Command {
                             } else if (temp == 2) {
                                 Home2++;
                             }
+                            Integer duration = clanWarMember.get(i).getAttacks().get(j).getDuration();
+                            homeAvgTime.add(duration);
                         }
                     }
 
@@ -144,6 +151,8 @@ public class StatsImpl implements Command {
                             } else if (temp == 2) {
                                 opponent2++;
                             }
+                            Integer duration = clanWarMember_Opponent.get(i).getAttacks().get(j).getDuration();
+                            opponentAvgTime.add(duration);
                         }
                     }
 
@@ -161,6 +170,12 @@ public class StatsImpl implements Command {
 
                 String hr = Home3 + "/" + war.getClan().getAttacks() + "   " + Math.round((double) Home3 * 100 / war.getClan().getAttacks()) + "%       HR       " + Math.round((double) opponent3 * 100 / war.getEnemy().getAttacks()) + "%   " + opponent3 + "/" + war.getEnemy().getAttacks();
 
+                //Calculating Average Time
+                //Home
+                int homeTime = calculateAverageMinutes(homeAvgTime);
+                //Opponent
+                int opponentTime = calculateAverageMinutes(opponentAvgTime);
+
                 String Mes = String.format(
                         """
                                 %s   vs   %s
@@ -168,12 +183,14 @@ public class StatsImpl implements Command {
                                 %-5.2f     Percentage    %5.2f
                                 %-5d     Attacks       %5d
                                 %-5d     ***           %5d
-                                %-5d     **            %5d""",
+                                %-5d     **            %5d
+                                %-5s     Average Time  %5s""",
 
                         clan.getName(), war.getEnemy().getName(), war.getClan().getStars(), war.getEnemy().getStars(),
                         war.getClan().getDestructionPercentage(), war.getEnemy().getDestructionPercentage(),
                         war.getClan().getAttacks(), war.getEnemy().getAttacks(),
-                        Home_3_left, Opponent_3_left, Home_2_left, Opponent_2_left
+                        Home_3_left, Opponent_3_left, Home_2_left, Opponent_2_left,
+                        convertSecondsToMinutes(homeTime), convertSecondsToMinutes(opponentTime)
                 );
 
                 String stats = Mes + "\n \n" + hr + "\n" + to_join;
@@ -184,4 +201,23 @@ public class StatsImpl implements Command {
         } else
             return "Unable to fetch the current war! Reason: 'War Log not public'";
     }
+
+    //calculate average minutes from a list of seconds
+    public int calculateAverageMinutes(List<Integer> seconds) {
+        double sum = 0;
+        for (Integer second : seconds) {
+            sum += second;
+        }
+        return (int) (sum / seconds.size());
+    }
+
+    private static final int SECONDS_PER_MINUTE = 60;
+    //convert seconds into minutes and seconds
+    public String convertSecondsToMinutes(int seconds) {
+        int minutes = seconds / SECONDS_PER_MINUTE;
+        int secondsLeft = seconds % SECONDS_PER_MINUTE;
+
+        return String.format("%d:%02d", minutes, secondsLeft);
+    }
+
 }
