@@ -9,6 +9,7 @@ import Core.exception.ClashAPIException;
 import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.ClashCommandListener.AttackListener;
+import com.fthlbot.discordbotfthl.Commands.CommandListener.ClashCommandListener.DefenseListener;
 import com.fthlbot.discordbotfthl.Util.Utils;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import com.fthlbot.discordbotfthl.Util.JavacordLogger;
@@ -36,7 +37,7 @@ import java.util.concurrent.CompletableFuture;
         type = CommandType.CLASH
 )
 //TODO revist this shit ass code and fix the 2hit glitch, this thing mad annoying not gonna continue this again.
-public class DefenseImpl implements AttackListener {
+public class DefenseImpl implements DefenseListener {
     private static final Logger log = LoggerFactory.getLogger(DefenseImpl.class);
     private final static int NAME_MAX_LEN = 20, ID_MAX_LEN = 11, ALIAS_MAX_LEN = 15;
     @Override
