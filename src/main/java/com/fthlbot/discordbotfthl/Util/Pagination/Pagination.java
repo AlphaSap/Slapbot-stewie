@@ -1,4 +1,4 @@
-package com.fthlbot.discordbotfthl.Util;
+package com.fthlbot.discordbotfthl.Util.Pagination;
 
 import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.emoji.Emoji;
@@ -16,6 +16,8 @@ import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.interaction.callback.InteractionCallbackDataFlag;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.javacord.api.util.logging.ExceptionLogger;
+import org.quartz.SchedulerException;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Timer;
@@ -25,7 +27,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
+@Component
 public class Pagination {
+    @Deprecated(forRemoval = true)
     public void reactionPaginate(List<EmbedBuilder> em, MessageCreateEvent event) {
         event.getChannel().sendMessage(em.get(0)).thenAccept(message -> {
             message.addReactions("⏪", "◀", "▶", "⏩");
@@ -70,6 +74,7 @@ public class Pagination {
         }).exceptionally(ExceptionLogger.get());
     }
 
+    @Deprecated(forRemoval = true)
     public void buttonPaginate(List<EmbedBuilder> em, MessageCreateEvent event) {
         LowLevelComponent[] lowLevelComponents = {
                 Button.secondary("first", "⏪"),
@@ -139,6 +144,7 @@ public class Pagination {
             }, 10, TimeUnit.SECONDS);
     }
 
+    @Deprecated(forRemoval = true)
     public void buttonPaginate(List<EmbedBuilder> em, SlashCommandCreateEvent event) {
         Server server = event.getApi().getServerById(927210932462030860L).get();
         //todo Change this to all custom emojis when you get time lmao
@@ -206,11 +212,16 @@ public class Pagination {
                 //Delete the buttons after some time!
 
             });
-            removeButton(message, 10, TimeUnit.MINUTES);
+            try {
+                new PaginationJobExecutor().execute(message);
+            } catch (SchedulerException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
         }).exceptionally(ExceptionLogger.get());
-
     }
 
+    @Deprecated(forRemoval = true)
     private void removeButton( InteractionOriginalResponseUpdater message, int delay, TimeUnit unit ){
         Timer timer = new Timer();
         TimerTask timerTask = new TimerTask() {
@@ -220,5 +231,69 @@ public class Pagination {
             }
         };
         timer.schedule(timerTask, unit.toMillis(delay));
+    }
+
+    public void buttonPagination(List<EmbedBuilder> em, CompletableFuture<InteractionOriginalResponseUpdater> message, DiscordApi api) {
+        Server server = api.getServerById(927210932462030860L).get();
+        //todo Change this to all custom emojis when you get time lmao
+        KnownCustomEmoji emoji1 = server.getCustomEmojis().stream().filter(emoji -> emoji.getName().equals("deny")).findFirst().get();
+
+        LowLevelComponent[] lowLevelComponents = {
+                Button.secondary("first", emoji1),
+                Button.secondary("previous", "◀️"),
+                Button.secondary("next", "▶️"),
+                Button.secondary("last", "⏩")
+        };
+
+        message.thenAccept(m -> {
+            m.addEmbed(em.get(0)).addComponents(ActionRow.of(lowLevelComponents));
+            Message response = m.update().join();
+
+            AtomicInteger i = new AtomicInteger(0);
+            response.addButtonClickListener(button -> {
+                String customId = button.getButtonInteraction().getCustomId();
+                try {
+                    switch (customId) {
+                        case "first" -> {
+                            button.getButtonInteraction().acknowledge().thenAccept(a -> {
+                                m.removeAllEmbeds().addEmbed(em.get(0)).update();
+                                i.set(0);
+                            });
+                        }
+                        case "last" -> {
+                            button.getButtonInteraction().acknowledge().thenAccept(a -> {
+                                m.removeAllEmbeds().addEmbed(em.get(em.size() - 1)).update();
+                                //  message.update().thenAccept(m -> m.edit(em.get(em.size() - 1)));
+                                i.set(em.size() - 1);
+                            });
+                        }
+                        case "next" -> {
+                            button.getButtonInteraction().acknowledge().thenAccept(a -> {
+                                m.removeAllEmbeds().addEmbed(em.get(i.get() + 1)).update();
+                                //message.update().thenAccept(m -> m.edit(em.get(i.get() + 1)));
+                                i.incrementAndGet();
+                            });
+                        }
+                        case "previous" -> {
+                            button.getButtonInteraction().acknowledge().thenAccept(a -> {
+                                m.removeAllEmbeds().addEmbed(em.get(i.get() - 1)).update();
+                                // message.update().thenAccept(m -> m.edit(em.get(i.get() - 1)));
+                                i.decrementAndGet();
+                            });
+                        }
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    //
+                }
+            });
+
+            try {
+                new PaginationJobExecutor().execute(m);
+            } catch (SchedulerException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        });
+
     }
 }
