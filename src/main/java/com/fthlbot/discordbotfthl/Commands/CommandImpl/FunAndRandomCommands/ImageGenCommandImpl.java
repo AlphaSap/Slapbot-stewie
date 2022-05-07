@@ -52,7 +52,7 @@ public class ImageGenCommandImpl implements Command {
 
         g.drawImage(simpleResizeImage(avatarImage), AVATAR_X, AVATAR_Y, null);
         g.drawImage(profileImage, 259, 76, null);
-
+        g.setFont(new Font("Roboto", Font.BOLD, 12));
         g.drawString(user.getDiscriminatedName(), 270, 205);
         //296, 191
 
