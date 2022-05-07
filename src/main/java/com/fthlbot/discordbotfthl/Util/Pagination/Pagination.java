@@ -41,7 +41,13 @@ public class Pagination {
                 Button.secondary("last", "⏩")
         };
 
-        InteractionOriginalResponseUpdater m = message.join();
+        InteractionOriginalResponseUpdater m = null;
+        try {
+            m = message.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
         m.addEmbed(em.get(0)).addComponents(ActionRow.of(lowLevelComponents));
         Message response = m.update().join();
 
@@ -52,33 +58,34 @@ public class Pagination {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-            response.addButtonClickListener(button -> {
+        InteractionOriginalResponseUpdater finalM = m;
+        response.addButtonClickListener(button -> {
                 String customId = button.getButtonInteraction().getCustomId();
                 try {
                     switch (customId) {
                         case "first" -> {
                             button.getButtonInteraction().acknowledge().thenAccept(a -> {
-                                m.removeAllEmbeds().addEmbed(em.get(0)).update();
+                                finalM.removeAllEmbeds().addEmbed(em.get(0)).update();
                                 i.set(0);
                             });
                         }
                         case "last" -> {
                             button.getButtonInteraction().acknowledge().thenAccept(a -> {
-                                m.removeAllEmbeds().addEmbed(em.get(em.size() - 1)).update();
+                                finalM.removeAllEmbeds().addEmbed(em.get(em.size() - 1)).update();
                                 //  message.update().thenAccept(m -> m.edit(em.get(em.size() - 1)));
                                 i.set(em.size() - 1);
                             });
                         }
                         case "next" -> {
                             button.getButtonInteraction().acknowledge().thenAccept(a -> {
-                                m.removeAllEmbeds().addEmbed(em.get(i.get() + 1)).update();
+                                finalM.removeAllEmbeds().addEmbed(em.get(i.get() + 1)).update();
                                 //message.update().thenAccept(m -> m.edit(em.get(i.get() + 1)));
                                 i.incrementAndGet();
                             });
                         }
                         case "previous" -> {
                             button.getButtonInteraction().acknowledge().thenAccept(a -> {
-                                m.removeAllEmbeds().addEmbed(em.get(i.get() - 1)).update();
+                                finalM.removeAllEmbeds().addEmbed(em.get(i.get() - 1)).update();
                                 // message.update().thenAccept(m -> m.edit(em.get(i.get() - 1)));
                                 i.decrementAndGet();
                             });
@@ -86,6 +93,8 @@ public class Pagination {
                     }
                 } catch (IndexOutOfBoundsException e) {
                     //
+                }catch (Exception e) {
+                    e.printStackTrace();
                 }
             });
     }

@@ -26,7 +26,11 @@ public class ImageGenCommandImpl implements Command {
     @Override
     public void execute(SlashCommandCreateEvent event) {
         event.getSlashCommandInteraction().respondLater().thenAccept(res -> {
+            //Add a counter to the "Cringe Retard" text
             User user = event.getSlashCommandInteraction().getArguments().get(0).getUserValue().get();
+            if (user.isBotOwner()){
+                user = event.getInteraction().getUser();
+            }
             try {
                 res.addAttachment(getImage(user), "snitch.png").update();
             } catch (IOException e) {

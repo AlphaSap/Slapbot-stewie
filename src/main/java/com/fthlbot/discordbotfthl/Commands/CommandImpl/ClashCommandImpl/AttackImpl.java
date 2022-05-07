@@ -2,6 +2,7 @@ package com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl;
 
 import Core.Enitiy.clanwar.Attack;
 import Core.Enitiy.clanwar.ClanWarMember;
+import Core.Enitiy.clanwar.ClanWarModel;
 import Core.Enitiy.clanwar.WarInfo;
 import Core.Enitiy.player.Player;
 import Core.JClash;
@@ -46,7 +47,6 @@ public class AttackImpl implements AttackListener {
         } catch (IOException e) {
             //TODO: Handle IOException
             log.error("IOException", e);
-
             return;
         } catch (ClashAPIException e) {
             //TODO: Handle exception
@@ -57,10 +57,9 @@ public class AttackImpl implements AttackListener {
             handler.respond();
             return;
         }
-        List<Attack> allAttacks = getAllAttacks(war.getClan().getWarMembers());
         List<EmbedBuilder> embeds;
         try {
-            embeds = getEmbeds(allAttacks);
+            embeds = getAllAttacks(war.getClan().getWarMembers(), war.getClan());
         } catch (IOException e) {
             String unexpectedError = "Unexpected error occurred. Please report this to the developers.";
             log.error("IOException", e);
@@ -71,37 +70,35 @@ public class AttackImpl implements AttackListener {
     }
 
     //Get all attacks for a clan
-    private List<Attack> getAllAttacks(List<ClanWarMember> clanWarMembers) {
-        List<Attack> attacks = new ArrayList<>();
-        clanWarMembers.stream()
-                .filter(x -> x.getAttacks() != null)
-                .forEach(x -> attacks.addAll(x.getAttacks()));
+    private List<EmbedBuilder> getAllAttacks(List<ClanWarMember> clanWarMembers, ClanWarModel clan) throws IOException {
+        List<EmbedBuilder> attacks = new ArrayList<>();
+        for (ClanWarMember clanWarMember : clanWarMembers) {
+            if (clanWarMember.getAttacks() != null) {
+                for (Attack attack : clanWarMember.getAttacks()) {
+                    attacks.add(makeEmbed(clanWarMember, attack, clan));
+                }
+            }
+        }
+        int i = 0;
+        for (EmbedBuilder e : attacks) {
+            e.setFooter("Attack #" + (i + 1) + " / " + attacks.size());
+            i++;
+        }
         return attacks;
     }
 
-    private List<EmbedBuilder> getEmbeds (List<Attack> attacks) throws IOException {
-        JClash clash = new JClash();
-
-        List<EmbedBuilder> embeds = new ArrayList<>();
-
-        for (int i = 0; i < attacks.size(); i++) {
-            Attack attack = attacks.get(i);
-            Player homePlayer = clash.getPlayer(attack.getAttackerTag()).join();
-            Player enemyPlayer = clash.getPlayer(attack.getDefenderTag()).join();
-
+    private EmbedBuilder makeEmbed(ClanWarMember clanWarMember, Attack attack, ClanWarModel clan) throws IOException {
+        return new JClash().getPlayer(attack.getDefenderTag()).thenApply(player -> {
             String s = """
                     ```Stars:           %-3s
                     Destruction:     %-4s%%
                     Attack Duration: %-4s```
                     """;
-            EmbedBuilder embed = new EmbedBuilder()
-                    .setTitle("Attack for:- " + homePlayer.getClan().getName())
-                    .addField(homePlayer.getName() + " <a:BlueArrows:972242920310710343> " + enemyPlayer.getName(), String.format(s, "⭐".repeat(attack.getStars()), attack.getDestructionPercentage(), convertSecondsToMinutes(attack.getDuration())), false)
-                    .setFooter("Attack #" + (i + 1) + " / " + attacks.size())
+            return new EmbedBuilder()
+                    .setTitle("Attack for:- " + clan.getName())
+                    .addField(clanWarMember.getName() + " <a:BlueArrows:972242920310710343> " + player.getName(), String.format(s, "⭐".repeat(attack.getStars()), attack.getDestructionPercentage(), convertSecondsToMinutes(attack.getDuration())), false)
                     .setColor(Color.BLUE);
-            embeds.add(embed);
-        }
-        return embeds;
+        }).join();
     }
 
     private static final int SECONDS_PER_MINUTE = 60;
