@@ -1,11 +1,12 @@
 package com.fthlbot.discordbotfthl.DatabaseModels.Team;
 
-import Core.Enitiy.player.Player;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityAlreadyExistsException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.NoMoreRosterChangesLeftException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.NotTheRepException;
+import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterRepo;
+import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterService;
 import org.javacord.api.entity.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -21,15 +21,16 @@ public class TeamService {
     private final TeamRepo repo;
     private final Logger log = LoggerFactory.getLogger(TeamService.class);
 
+   // private final RosterService rosterService;
     @Autowired
-    public TeamService(TeamRepo repo) {
+    public TeamService(TeamRepo repo, RosterRepo rosterRepo) {
         this.repo = repo;
     }
     public Team saveTeam(Team team) throws EntityAlreadyExistsException {
         Optional<Team> teamByTag = repo.findTeamByTagAndDivision(team.getTag(), team.getDivision());
         if (teamByTag.isPresent()) {
             throw new EntityAlreadyExistsException(
-                    teamByTag.get().getName() + " has already registered with the same clan tag in %s. Please use a different clan tag".formatted(team.getDivision())
+                    teamByTag.get().getName() + " has already registered with the same clan tag in %s. Please use a different clan tag".formatted(team.getDivision().getAlias())
 
             );
         }
@@ -119,6 +120,7 @@ public class TeamService {
 
     //Method to delete a team
     public void deleteTeam(Team team) {
+       // rosterService.removeAllRoster(team);
         repo.delete(team);
     }
 }

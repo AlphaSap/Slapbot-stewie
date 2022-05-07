@@ -19,6 +19,7 @@ public class ClashExceptionHandler {
 
     private InteractionOriginalResponseUpdater responder;
 
+    @Deprecated(forRemoval = true)
     public ClashExceptionHandler setSlashCommandInteraction(SlashCommandInteraction interaction) {
         this.interaction = interaction;
         return this;
@@ -55,14 +56,13 @@ public class ClashExceptionHandler {
         return interaction;
     }
 
-    private ClashExceptionHandler createEmbed() {
+    public ClashExceptionHandler createEmbed() {
         switch (getStatusCode()) {
             case 400 -> {
                 return this.setEmbedBuilder(
                         new EmbedBuilder()
-                                .setDescription("Invalid request! `Connection Timeout`")
+                                .setDescription("400 Bad Request. Please contact the developer.")
                                 .setColor(Color.RED)
-                                .setAuthor(this.getSlashCommandCreateEvent().getUser())
                 );
             }
             case 403 -> {
@@ -70,9 +70,8 @@ public class ClashExceptionHandler {
                 log.error("Clash API key was revoked! {}", LocalDateTime.now());
                 return this.setEmbedBuilder(
                         new EmbedBuilder()
-                                .setDescription("Authorization Error!\n this error occurred, because clash of clans API has revoked my rights :( please contact Sahil to report this issue ")
+                                .setDescription("Invalid request! `API Key was revoked` Please contact the developer.")
                                 .setColor(Color.RED)
-                                .setAuthor(this.getSlashCommandCreateEvent().getUser())
                 );
             }
             case 404 -> {
@@ -86,23 +85,72 @@ public class ClashExceptionHandler {
             case 429 -> {
                 return this.setEmbedBuilder(
                         new EmbedBuilder()
-                                .setDescription("Hey I got rate limited by clash of clans! I would need some time to recover from this devastating blow")
+                                .setDescription("`Too Many Requests`")
                                 .setColor(Color.RED)
-                                .setAuthor(this.getSlashCommandCreateEvent().getUser())
                 );
             }
             case 503 -> {
                 return this.setEmbedBuilder(
                         new EmbedBuilder()
-                                .setDescription("Clash of clans is currently experiencing Maintenance, please try again once the game is up!")
+                                .setDescription("Clash of clans is down for maintenance! I will be back soon!")
                                 .setColor(Color.RED)
-                                .setAuthor(this.getSlashCommandCreateEvent().getUser())
                 );
             }
             default -> {
                 return this.setEmbedBuilder(
                         new EmbedBuilder()
-                                .setDescription("Clash of clans did not respond to this request!\nReason: Api is currently overloaded!\nOr it's dead 💀")
+                                .setDescription("`Unknown Error`")
+                                .setColor(Color.RED)
+                                .setFooter("No commands related to clash of clans will work, this may include some league commands!")
+                );
+            }
+        }
+    }
+
+    public ClashExceptionHandler createEmbed(String tag) {
+        switch (getStatusCode()) {
+            case 400 -> {
+                return this.setEmbedBuilder(
+                        new EmbedBuilder()
+                                .setDescription("400 Bad Request. Please contact the developer.")
+                                .setColor(Color.RED)
+                );
+            }
+            case 403 -> {
+                //TODO add a method where this would be logged
+                log.error("Clash API key was revoked! {}", LocalDateTime.now());
+                return this.setEmbedBuilder(
+                        new EmbedBuilder()
+                                .setDescription("Invalid request! `API Key was revoked` Please contact the developer.")
+                                .setColor(Color.RED)
+                );
+            }
+            case 404 -> {
+                log.warn("404");
+                return this.setEmbedBuilder(
+                        new EmbedBuilder()
+                                .setDescription("`Invalid Tag` " + tag)
+                                .setColor(Color.RED)
+                );
+            }
+            case 429 -> {
+                return this.setEmbedBuilder(
+                        new EmbedBuilder()
+                                .setDescription("`Too Many Requests`")
+                                .setColor(Color.RED)
+                );
+            }
+            case 503 -> {
+                return this.setEmbedBuilder(
+                        new EmbedBuilder()
+                                .setDescription("Clash of clans is down for maintenance! I will be back soon!")
+                                .setColor(Color.RED)
+                );
+            }
+            default -> {
+                return this.setEmbedBuilder(
+                        new EmbedBuilder()
+                                .setDescription("`Unknown Error`")
                                 .setColor(Color.RED)
                                 .setFooter("No commands related to clash of clans will work, this may include some league commands!")
                 );

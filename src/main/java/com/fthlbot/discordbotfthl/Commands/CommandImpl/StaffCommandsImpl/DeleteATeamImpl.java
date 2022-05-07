@@ -6,6 +6,7 @@ import com.fthlbot.discordbotfthl.Commands.CommandListener.StaffCommandListener.
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
+import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
@@ -21,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
-import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -35,11 +35,14 @@ import java.util.concurrent.TimeUnit;
 public class DeleteATeamImpl implements DeleteATeamListener {
     private final TeamService teamService;
     private final DivisionService divisionService;
+
+    private final RosterService rosterService;
     private final Logger log = LoggerFactory.getLogger(DeleteATeamImpl.class);
 
-    public DeleteATeamImpl(TeamService teamService, DivisionService divisionService) {
+    public DeleteATeamImpl(TeamService teamService, DivisionService divisionService, RosterService rosterService) {
         this.teamService = teamService;
         this.divisionService = divisionService;
+        this.rosterService = rosterService;
     }
 
     @Override
@@ -76,6 +79,13 @@ public class DeleteATeamImpl implements DeleteATeamListener {
             response.addEmbed(embedBuilder).addComponents(ActionRow.of(s.build(), d.build())).update().thenAccept(update -> {
                update.addButtonClickListener(button -> {
                    if (button.getButtonInteraction().getCustomId().equals("Accept")) {
+                       rosterService.removeAllRoster(team);
+                       EmbedBuilder embedBuilder2 = new EmbedBuilder()
+                               .setDescription("All roster entries for team " + team.getName() + " have been deleted.")
+                               .setColor(Color.GREEN);
+                       event.getSlashCommandInteraction().createFollowupMessageBuilder()
+                               .addEmbed(embedBuilder2).send();
+
                        teamService.deleteTeam(team);
                        EmbedBuilder embedBuilder1 = new EmbedBuilder()
                                .setDescription("Team " + team.getName() + " has been deleted from the division " + division.getName() + ".")

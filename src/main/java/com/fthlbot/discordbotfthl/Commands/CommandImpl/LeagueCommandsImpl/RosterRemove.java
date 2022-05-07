@@ -71,7 +71,7 @@ public class RosterRemove implements Command {
                         } catch (ClashAPIException e) {
                             ClashExceptionHandler c = new ClashExceptionHandler();
                             c.setStatusCode(Integer.valueOf(e.getMessage()));
-                            c.setSlashCommandInteraction(interaction);
+                            c.setResponder(re.join());
                             c.respond();
                         }
                     }).join();

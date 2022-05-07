@@ -1,5 +1,6 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl;
 
+import Core.Enitiy.clan.ClanModel;
 import Core.Enitiy.clanwar.Attack;
 import Core.Enitiy.clanwar.ClanWarMember;
 import Core.Enitiy.clanwar.WarInfo;
@@ -8,6 +9,7 @@ import Core.exception.ClashAPIException;
 import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.ClashCommandListener.AttackListener;
+import com.fthlbot.discordbotfthl.Commands.CommandListener.ClashCommandListener.DefenseListener;
 import com.fthlbot.discordbotfthl.Util.Utils;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import com.fthlbot.discordbotfthl.Util.JavacordLogger;
@@ -35,7 +37,7 @@ import java.util.concurrent.CompletableFuture;
         type = CommandType.CLASH
 )
 //TODO revist this shit ass code and fix the 2hit glitch, this thing mad annoying not gonna continue this again.
-public class DefenseImpl implements AttackListener {
+public class DefenseImpl implements DefenseListener {
     private static final Logger log = LoggerFactory.getLogger(DefenseImpl.class);
     private final static int NAME_MAX_LEN = 20, ID_MAX_LEN = 11, ALIAS_MAX_LEN = 15;
     @Override
@@ -47,6 +49,13 @@ public class DefenseImpl implements AttackListener {
         JClash clash = new JClash();
 
         try {
+            ClanModel join = clash.getClan(tag).join();
+            if (!join.isWarLogPublic()){
+                respondLater.thenAccept(res -> {
+                   res.setContent("War log is not public").update();
+                });
+                return;
+            }
             clash.getCurrentWar(tag).thenAccept(c -> {
                 EmbedBuilder em = getDefEmbed(interaction, c);
                 //EmbedBuilder finalEm = em;
@@ -69,7 +78,7 @@ public class DefenseImpl implements AttackListener {
             });
         } catch (ClashAPIException | IOException e) {
             new ClashExceptionHandler()
-                    .setSlashCommandInteraction(interaction)
+                    .setResponder(respondLater.join())
                     .setStatusCode(Integer.valueOf(e.getMessage()))
                     .respond();
         }

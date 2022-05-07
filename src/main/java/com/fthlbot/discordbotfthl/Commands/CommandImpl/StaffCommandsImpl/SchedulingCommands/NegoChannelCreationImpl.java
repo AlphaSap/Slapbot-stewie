@@ -99,7 +99,14 @@ public class NegoChannelCreationImpl implements NegoChannelCreationListener {
                 .append(GeneralService.dateToStringInDiscordFormat(divisionWeeks.getWeekStartDate()))
                 .append(" - ")
                 .append(GeneralService.dateToStringInDiscordFormat(divisionWeeks.getWeekEndDate()));
-        cat.setName(sb.toString());
+        StringBuilder catgoryName = new StringBuilder();
+        catgoryName.append("Week ")
+                .append(divisionWeeks.getWeekNumber())
+                .append(" - ")
+                .append(divisionWeeks.getWeekStartDate())
+                .append(" - ")
+                .append(divisionWeeks.getWeekEndDate());
+        cat.setName(catgoryName.toString());
         cat.setAuditLogReason("Negotiation category created");
         ChannelCategory join = cat.create().join();
         PermissionsBuilder everyoneElse = new PermissionsBuilder().setDenied(PermissionType.READ_MESSAGES);
@@ -143,7 +150,7 @@ public class NegoChannelCreationImpl implements NegoChannelCreationListener {
 
                 x.sendMessage(embed).join();
                 //TODO change the applicant role id with nego server role id
-                x.sendMessage("<@"+botConfig.getApplicantRoleID()+">");
+                x.sendMessage("<@&"+970652854861828096L+">");
             });
         }
         respondLater.thenAccept(x -> {

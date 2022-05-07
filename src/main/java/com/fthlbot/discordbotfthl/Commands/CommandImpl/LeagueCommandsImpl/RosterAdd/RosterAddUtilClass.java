@@ -44,10 +44,11 @@ public class RosterAddUtilClass {
                 EmbedBuilder leagueError = GeneralService.getLeagueError(e, event);
                 interaction.getChannel().get().sendMessage(leagueError);
             } catch (ClashAPIException e){
+                e.printStackTrace();
                 ClashExceptionHandler clashExceptionHandler = new ClashExceptionHandler();
                 clashExceptionHandler.setStatusCode(Integer.valueOf(e.getMessage()));
-                EmbedBuilder embedBuilder = clashExceptionHandler.getEmbedBuilder();
-                interaction.getChannel().get().sendMessage(embedBuilder);
+                EmbedBuilder embedBuilder = clashExceptionHandler.createEmbed(tag).getEmbedBuilder();
+                interaction.getChannel().get().sendMessage(embedBuilder).exceptionally(ExceptionLogger.get());
             }catch (IOException e) {
                 event.getApi().getChannelById(899282429678878801L).ifPresent(ch -> {
 

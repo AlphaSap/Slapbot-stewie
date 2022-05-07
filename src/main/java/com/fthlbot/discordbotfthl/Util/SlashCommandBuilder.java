@@ -140,7 +140,7 @@ public class SlashCommandBuilder {
 
     }
 
-    public void createTeamRosterCommand(){
+    public void createTeamRosterCommand() {
         SlashCommand command = SlashCommand
                 .with("team-roster", "A command to view the roster for a team!")
                 .setOptions(List.of(
@@ -166,7 +166,7 @@ public class SlashCommandBuilder {
                 )).createGlobal(getApi()).join();
     }
 
-    public void createDefenseCommand(){
+    public void createDefenseCommand() {
         SlashCommand command = SlashCommand.with(
                         "defense",
                         "Fetches defense from the current ongoing war of the provided clan tag")
@@ -174,13 +174,14 @@ public class SlashCommandBuilder {
                                 SlashCommandOption.create(STRING,
                                         "tag",
                                         "enter a valid clan tag",
-                                        false)
+                                        true
+                                )
                         )
                 ).createGlobal(getApi()).join();
 
     }
 
-    public void createTeamAllCommand(){
+    public void createTeamAllCommand() {
         SlashCommand command = SlashCommand.with(
                         "all-teams",
                         "Returns a list of all the teams participating in a given division")
@@ -201,7 +202,7 @@ public class SlashCommandBuilder {
                 .createGlobal(getApi()).join();
     }
 
-    public void createChangeRepCommand(){
+    public void createChangeRepCommand() {
         SlashCommand command = SlashCommand
                 .with("change-rep", "staff only command to change rep of a team")
                 .setOptions(List.of(
@@ -217,7 +218,7 @@ public class SlashCommandBuilder {
                                         SlashCommandOptionChoice.create("f10", "f10"),
                                         SlashCommandOptionChoice.create("fmix", "fmix")
                                 )
-                        ),SlashCommandOption.create(SlashCommandOptionType.STRING,
+                        ), SlashCommandOption.create(SlashCommandOptionType.STRING,
                                 "team-identifier",
                                 "Enter the name of your team or its alias",
                                 true
@@ -236,7 +237,7 @@ public class SlashCommandBuilder {
 
     }
 
-    public void createChangeClanCommand(){
+    public void createChangeClanCommand() {
         SlashCommand command = SlashCommand
                 .with("change-clan", "staff only command to change clan tag of a team")
                 .setOptions(List.of(
@@ -252,7 +253,7 @@ public class SlashCommandBuilder {
                                         SlashCommandOptionChoice.create("f10", "f10"),
                                         SlashCommandOptionChoice.create("fmix", "fmix")
                                 )
-                        ),SlashCommandOption.create(SlashCommandOptionType.STRING,
+                        ), SlashCommandOption.create(SlashCommandOptionType.STRING,
                                 "team-identifier",
                                 "Enter the name of your team or its alias",
                                 true
@@ -266,7 +267,7 @@ public class SlashCommandBuilder {
                 .createGlobal(getApi()).join();
     }
 
-    public void createAddWeeksCommand(){
+    public void createAddWeeksCommand() {
         SlashCommand command = SlashCommand
                 .with("add-weeks", "staff only command to add weeks to a specific division")
                 .setOptions(List.of(
@@ -282,7 +283,7 @@ public class SlashCommandBuilder {
                                         SlashCommandOptionChoice.create("f10", "f10"),
                                         SlashCommandOptionChoice.create("fmix", "fmix")
                                 )
-                        ),SlashCommandOption.create(SlashCommandOptionType.STRING,
+                        ), SlashCommandOption.create(SlashCommandOptionType.STRING,
                                 "json",
                                 "Enter a json array with 3 fields, `start`, `end` and `byeWeek`",
                                 true
@@ -291,7 +292,7 @@ public class SlashCommandBuilder {
                 .createGlobal(getApi()).join();
     }
 
-    public void createMatchUpsCommand(){
+    public void createMatchUpsCommand() {
         SlashCommand command = SlashCommand
                 .with("create-matchups", "A command to create matchups for a division week. restricted to staff")
                 .setOptions(List.of(
@@ -304,7 +305,7 @@ public class SlashCommandBuilder {
                 .createGlobal(getApi()).join();
     }
 
-    public void createShowDivisionWeekCommand(){
+    public void createShowDivisionWeekCommand() {
         SlashCommand command = SlashCommand
                 .with("show-divisionweek", "Commands to view weeks date for a specific division")
                 .setOptions(List.of(
@@ -325,7 +326,7 @@ public class SlashCommandBuilder {
                 .createGlobal(getApi()).join();
     }
 
-    public void createCreateNegotiationChannelsCommand(){
+    public void createCreateNegotiationChannelsCommand() {
         SlashCommand command = SlashCommand
                 .with("create-negotiation-channels", "staff only command to create negotiation channels")
                 .setOptions(List.of(
@@ -338,7 +339,7 @@ public class SlashCommandBuilder {
                 .createGlobal(getApi()).join();
     }
 
-    public void createPlayerCommand(){
+    public void createPlayerCommand() {
         SlashCommand command = SlashCommand
                 .with("player", "A command to view a player's profile")
                 .setOptions(List.of(
@@ -351,7 +352,20 @@ public class SlashCommandBuilder {
                 .createGlobal(getApi()).join();
     }
 
-    public void createRemoveAllChannelFromACategoryCommand(){
+    public void createStatsCommand() {
+        SlashCommand command = SlashCommand
+                .with("stats", "A command to view a current war for a clan")
+                .setOptions(List.of(
+                        SlashCommandOption.create(SlashCommandOptionType.STRING,
+                                "clan-tag",
+                                "Enter the clan tag",
+                                true
+                        )
+                ))
+                .createGlobal(getApi()).join();
+    }
+
+    public void createRemoveAllChannelFromACategoryCommand() {
         SlashCommand command = SlashCommand.with("remove-channels-from-category", "Staff only command to delete channels from a category with logs!")
                 .setOptions(List.of(
                         SlashCommandOption.create(SlashCommandOptionType.STRING,
@@ -365,7 +379,7 @@ public class SlashCommandBuilder {
                 )).createGlobal(getApi()).join();
     }
 
-    public void createTeamInformationCommand(){
+    public void createTeamInformationCommand() {
         SlashCommand command = SlashCommand.with("team-information", "A command get information about a team")
                 .setOptions(List.of(SlashCommandOption.createWithChoices(STRING,
                                 "division",
@@ -387,15 +401,15 @@ public class SlashCommandBuilder {
                 )).createGlobal(getApi()).join();
     }
 
-    public void createCreateAllDivisionCommand(){
+    public void createCreateAllDivisionCommand() {
         SlashCommand command = SlashCommand.with(
-                "create-all-divisions",
+                        "create-all-divisions",
                         "Staff only command to create all division channels"
                 )
                 .createGlobal(getApi()).join();
     }
 
-    public void createDeleteATeamCommand(){
+    public void createDeleteATeamCommand() {
         SlashCommand command = SlashCommand.with("delete-a-team", "Staff only command to delete a team")
                 .setOptions(List.of(SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
                                 "division",
@@ -416,11 +430,30 @@ public class SlashCommandBuilder {
                                 true)
                 )).createGlobal(getApi()).join();
     }
-    public void makeAllCommands(){
+
+    public void createAttackCommand() {
+        SlashCommand command = SlashCommand.with("attack", "Get attacks for a clan")
+                .setOptions(List.of(SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
+                        "clan-tag",
+                        "Enter the clan tag you want to get attacks for",
+                        true
+                ))).createGlobal(getApi()).join();
+    }
+
+    public void createSnitchCommand(){
+        SlashCommand command = SlashCommand.with("snitch", "Generates a snitch image.")
+                .setOptions(List.of(SlashCommandOption.createWithChoices(USER,
+                        "user",
+                        "Enter the user you want to get a snitch for",
+                        true
+                ))).createGlobal(getApi()).join();
+    }
+
+    public void makeAllCommands() {
         //Make a Method array
         Method[] methods = this.getClass().getDeclaredMethods();
-        for(Method method : methods){
-            if(method.getName().startsWith("create")){
+        for (Method method : methods) {
+            if (method.getName().startsWith("create")) {
                 try {
                     System.out.println("Creating command: " + method.getName());
                     method.invoke(this);

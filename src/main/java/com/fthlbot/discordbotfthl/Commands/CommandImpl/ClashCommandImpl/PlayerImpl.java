@@ -12,10 +12,10 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.MinionBotAPI.MinionBotClient;
 import com.fthlbot.discordbotfthl.MinionBotAPI.MinionBotPlayer;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
-import com.fthlbot.discordbotfthl.Util.GeneralService;
-import com.fthlbot.discordbotfthl.Util.Pagination;
+import com.fthlbot.discordbotfthl.Util.Pagination.Pagination;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
+import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import java.awt.*;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 @Invoker(
@@ -41,18 +42,19 @@ public class PlayerImpl implements PlayerListener {
 
     @Override
     public void execute(SlashCommandCreateEvent event) {
+        CompletableFuture<InteractionOriginalResponseUpdater> responder = event.getSlashCommandInteraction().respondLater();
         JClash clash = new JClash();
         String s = event.getSlashCommandInteraction().getArguments().get(0).getStringValue().get();
         try {
             Player player = clash.getPlayer(s).join();
             List<EmbedBuilder> embed = createEmbed(player);
             Pagination pagination = new Pagination();
-            pagination.buttonPaginate(embed, event);
+            pagination.buttonPagination(embed, responder, event.getApi());
         } catch (ClashAPIException e) {
             logger.error("Error getting player information", e);
             ClashExceptionHandler handler = new ClashExceptionHandler();
             handler.setStatusCode(Integer.valueOf(e.getMessage()));
-            handler.setSlashCommandInteraction(event.getSlashCommandInteraction());
+            handler.setResponder(responder.join());
             handler.respond();
         } catch (IOException e) {
             logger.error("Error getting player information", e);

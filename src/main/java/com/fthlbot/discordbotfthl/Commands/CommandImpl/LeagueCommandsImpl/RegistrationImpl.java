@@ -219,8 +219,7 @@ public class RegistrationImpl implements RegistrationListener {
             e.printStackTrace();
         }catch (ClashAPIException | IOException e){
             ClashExceptionHandler handler = new ClashExceptionHandler();
-            handler.setResponder(respond.join())
-                    .setStatusCode(Integer.valueOf(e.getMessage()));
+            handler.setResponder(respond.join()).setStatusCode(Integer.valueOf(e.getMessage()));
             handler.respond();
             e.printStackTrace();
         }catch (Exception e){

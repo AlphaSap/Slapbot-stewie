@@ -44,7 +44,7 @@ public class TeamRosterService {
             List<List<String>> formattedTeams = getFormattedTeams(rosterByTeam);
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setTitle("Roster for: " + team.getName())
-                    .setColor(Color.cyan)
+                    .setColor(Color.GREEN)
                     .setTimestampToNow()
                     .setAuthor(interaction.getUser());
             addField(embedBuilder, formattedTeams);
@@ -69,12 +69,12 @@ public class TeamRosterService {
         for(Roster roster: rosters){
             String tag = roster.getPlayerTag();
             String name = roster.getPlayerName();
-            String alias  = String.valueOf(roster.getTownHallLevel().intValue());
-            String id = String.valueOf(roster.getID());
+           // String alias  = String.valueOf(roster.getTownHallLevel().intValue());
+            //String id = String.valueOf(roster.getID());
 
-            String toAdd = formatRow(id, tag, alias, name, "");
+            String toAdd = formatRow(tag, name, roster.getTownHallLevel().toString());
 
-            for (int i = 0; Math.ceil((double) lineCount / 900) > strTeam.size(); i++) {
+            while (Math.ceil((double) lineCount / 900) > strTeam.size()) {
                 strTeam.add(new ArrayList<String>());
                 currentList++;
             }
@@ -85,13 +85,12 @@ public class TeamRosterService {
     private void addField(EmbedBuilder em, List<List<String>> list) {
         for (List<String> roster : list) {
             String description = String.join("\n", roster);
-            em.addField(formatRow("ID" ,"Tag", "Alias", "Name", "   "), "```" + description + "```");
+            em.addField(formatRow("Tag", "Names", "TownHall Level      "), "```" + description + "```");
         }
     }
-    final static int ID_MAX_LEN = 11,  ALIAS_MAX_LEN = 5, NAME_MAX_LEN = 2, MAXID = 4;
+    final static int TAG_MAX_LEN = 11,  TH_MAX_LEN = 2, NAME_MAX_LEN = 15, MAXID = 4;
 
-    private static String formatRow(String id, String name, String tag, String alias, String ext) {
-        return String.format("%-"+(MAXID + ext.length())+"s%-" + (ID_MAX_LEN + ext.length()) + "s%-" + (ALIAS_MAX_LEN + ext.length()) +
-                "s%-" + (NAME_MAX_LEN) + "s",id, name + ext, tag + ext, alias);
+    private static String formatRow(String tag, String name, String townHallLevel) {
+        return String.format("%-" + (3+TAG_MAX_LEN) + "s%-" + (TH_MAX_LEN+3) + "s%-" + (NAME_MAX_LEN) + "s", tag, townHallLevel, name);
     }
 }

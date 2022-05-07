@@ -9,14 +9,16 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
 import com.fthlbot.discordbotfthl.DatabaseModels.ScheduleWar.DivisonWeek.DivisionWeekService;
 import com.fthlbot.discordbotfthl.DatabaseModels.ScheduleWar.DivisonWeek.DivisionWeeks;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
-import com.fthlbot.discordbotfthl.Util.Pagination;
+import com.fthlbot.discordbotfthl.Util.Pagination.Pagination;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
+import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 @Invoker(alias = "show-divisionweek",
@@ -35,10 +37,9 @@ public class ShowDivisionWeekImpl implements ShowDivisionWeekListener {
     @Override
     public void execute(SlashCommandCreateEvent event) {
         //get slashcommand respond later object
-
+        CompletableFuture<InteractionOriginalResponseUpdater> response = event.getSlashCommandInteraction().respondLater();
         //get the division from arguments
         String division = event.getSlashCommandInteraction().getArguments().get(0).getStringValue().get();
-
         //get the division object
         Division divisionObject;
         List<DivisionWeeks> divisionWeeks;
@@ -65,6 +66,6 @@ public class ShowDivisionWeekImpl implements ShowDivisionWeekListener {
                     .setColor(Color.GREEN)
                     .setTimestampToNow());
         }
-        new Pagination().buttonPaginate(embedBuilders,event);
+        new Pagination().buttonPagination(embedBuilders, response, event.getApi());
     }
 }

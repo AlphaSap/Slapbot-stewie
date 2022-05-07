@@ -4,11 +4,12 @@ import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.HelpListener;
 import com.fthlbot.discordbotfthl.Handlers.Command;
-import com.fthlbot.discordbotfthl.Util.Pagination;
+import com.fthlbot.discordbotfthl.Util.Pagination.Pagination;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteractionOption;
+import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,7 @@ import java.awt.*;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 import static com.fthlbot.discordbotfthl.Annotation.CommandType.*;
 import static com.fthlbot.discordbotfthl.Annotation.CommandType.IGNORE;
@@ -24,7 +26,7 @@ import static com.fthlbot.discordbotfthl.Annotation.CommandType.IGNORE;
         alias = "help",
         description = "You need help with \"help\" for `help` command",
         usage = "/help",
-        type = IGNORE
+        type = UNSUPPORTED
 )
 public class HelpImpl implements HelpListener {
     private final List<Command> commands;
@@ -36,6 +38,7 @@ public class HelpImpl implements HelpListener {
 
     @Override
     public void execute(SlashCommandCreateEvent event) {
+        CompletableFuture<InteractionOriginalResponseUpdater> response = event.getSlashCommandInteraction().respondLater();
         List<SlashCommandInteractionOption> arguments = event.getSlashCommandInteraction().getArguments();
         if  (arguments.size() >= 1){
             boolean present = arguments.get(0).getStringValue().isPresent();
@@ -47,7 +50,9 @@ public class HelpImpl implements HelpListener {
             return;
         }
         Pagination pagination = new Pagination();
-        pagination.buttonPaginate(createHelpEmbeds(), event);
+        List<EmbedBuilder> helpEmbeds = createHelpEmbeds();
+
+        pagination.buttonPagination(helpEmbeds, response, event.getApi());
     }
 
     /**
@@ -94,7 +99,7 @@ public class HelpImpl implements HelpListener {
         System.out.println(commands.size());
 
         List<EmbedBuilder> embedBuilders = new ArrayList<>();
-        Map<CommandType, ArrayList<Object>> em = new LinkedHashMap<>();
+        Map<CommandType, ArrayList<String>> em = new LinkedHashMap<>();
         em.put(INFO,                new ArrayList<>());
         em.put(REGISTRATION,        new ArrayList<>());
         em.put(ROSTER_MANAGEMENT,   new ArrayList<>());

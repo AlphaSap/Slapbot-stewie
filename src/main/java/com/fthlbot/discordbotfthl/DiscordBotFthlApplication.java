@@ -2,8 +2,11 @@ package com.fthlbot.discordbotfthl;
 
 import Core.JClash;
 import Core.exception.ClashAPIException;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.AttackImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.DefenseImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.PlayerImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.StatsImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands.ImageGenCommandImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.RosterAdd.RosterAdditionImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.TeamRoster.TeamRoster;
@@ -91,7 +94,13 @@ public class DiscordBotFthlApplication {
     private final CreateAllDivisionsImpl createAllDivisions;
 
     private final DeleteATeamImpl deleteATeam;
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam) {
+
+    private final StatsImpl stats;
+
+    private final AttackImpl attackImpl;
+
+    private final ImageGenCommandImpl imageGenCommand;
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -115,6 +124,9 @@ public class DiscordBotFthlApplication {
         this.builder = builder;
         this.createAllDivisions = createAllDivisions;
         this.deleteATeam = deleteATeam;
+        this.stats = stats;
+        this.attackImpl = attackImpl;
+        this.imageGenCommand = imageGenCommand;
     }
 
 
@@ -168,8 +180,12 @@ public class DiscordBotFthlApplication {
                 this.removeAllChannelFromACategory,
                 this.teamInfo,
                 this.createAllDivisions,
-                this.deleteATeam
+                this.deleteATeam,
+                this.stats,
+                this.attackImpl,
+                this.imageGenCommand
         ));
+        log.info("Commands added Size: " + commandList.size());
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
         //Add help command
@@ -185,10 +201,20 @@ public class DiscordBotFthlApplication {
         builder.setApi(api);
 //        builder.makeAllCommands();
         SlapbotEmojis.setEmojis( api.getServerById(config.getEmojiServerID()).get().getCustomEmojis().stream().toList());
-        log.info("Am I running on Docker???");
         log.info("Logged in as {}", api.getYourself().getDiscriminatedName());
         log.info("Watching servers {}", servers.size());
+        printMemoryUsage();
         return api;
+    }
+
+    private void printMemoryUsage(){
+        Runtime runtime = Runtime.getRuntime();
+        long maxMemory = runtime.maxMemory();
+        long allocatedMemory = runtime.totalMemory();
+        long freeMemory = runtime.freeMemory();
+        log.info("Max Memory: " + maxMemory);
+        log.info("Allocated Memory: " + allocatedMemory);
+        log.info("Free Memory: " + freeMemory);
     }
 
 
