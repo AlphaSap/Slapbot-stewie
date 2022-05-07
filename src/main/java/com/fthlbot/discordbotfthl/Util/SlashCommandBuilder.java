@@ -440,6 +440,15 @@ public class SlashCommandBuilder {
                 ))).createGlobal(getApi()).join();
     }
 
+    public void createSnitchCommand(){
+        SlashCommand command = SlashCommand.with("snitch", "Generates a snitch image.")
+                .setOptions(List.of(SlashCommandOption.createWithChoices(USER,
+                        "user",
+                        "Enter the user you want to get a snitch for",
+                        true
+                ))).createGlobal(getApi()).join();
+    }
+
     public void makeAllCommands() {
         //Make a Method array
         Method[] methods = this.getClass().getDeclaredMethods();
