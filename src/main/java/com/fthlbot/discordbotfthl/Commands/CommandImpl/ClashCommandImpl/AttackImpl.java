@@ -4,7 +4,6 @@ import Core.Enitiy.clanwar.Attack;
 import Core.Enitiy.clanwar.ClanWarMember;
 import Core.Enitiy.clanwar.ClanWarModel;
 import Core.Enitiy.clanwar.WarInfo;
-import Core.Enitiy.player.Player;
 import Core.JClash;
 import Core.exception.ClashAPIException;
 import com.fthlbot.discordbotfthl.Annotation.CommandType;
