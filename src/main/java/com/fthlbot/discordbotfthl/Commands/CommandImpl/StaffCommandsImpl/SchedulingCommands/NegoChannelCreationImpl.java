@@ -137,6 +137,7 @@ public class NegoChannelCreationImpl implements NegoChannelCreationListener {
                     .addPermissionOverwrite(rep2, applicant.build())
                     .addPermissionOverwrite(rep3, applicant.build())
                     .addPermissionOverwrite(rep4, applicant.build());
+            channel.setTopic("Schedule ID: "+war.getID());
             channel.create().thenAccept(x ->{
                 //send a message to the channel
                 String content = "Welcome to the negotiation channel for " + sb2.toString() + "!";
