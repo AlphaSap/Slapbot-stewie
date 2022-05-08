@@ -449,6 +449,15 @@ public class SlashCommandBuilder {
                 ))).createGlobal(getApi()).join();
     }
 
+    public void createCheckLineUpCommand(){
+        SlashCommand.with("check-lineup", "Checks the line up for a FTHL war")
+                .setOptions(List.of(SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
+                        "schedule-id",
+                        "Enter the schedule ID you want to check, it can be found in your negotiation channel topic",
+                        true
+                ))).createGlobal(getApi()).join();
+    }
+
     public void makeAllCommands() {
         //Make a Method array
         Method[] methods = this.getClass().getDeclaredMethods();

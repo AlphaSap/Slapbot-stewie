@@ -30,4 +30,10 @@ public class ScheduleWarService {
         }
         return byDivisionWeeks;
     }
+
+    //get schedule by id
+    public ScheduledWar getScheduleById(int id) throws EntityNotFoundException {
+        //throw an error if findById is null
+        return repo.findById(id).orElseThrow(() -> new EntityNotFoundException("No schedule found for this id"));
+    }
 }

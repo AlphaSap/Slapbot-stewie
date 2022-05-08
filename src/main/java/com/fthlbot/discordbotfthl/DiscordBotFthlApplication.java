@@ -100,7 +100,9 @@ public class DiscordBotFthlApplication {
     private final AttackImpl attackImpl;
 
     private final ImageGenCommandImpl imageGenCommand;
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand) {
+
+    private final CheckLineUpImpl checkLineUp;
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, CheckLineUpImpl checkLineUp) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -127,6 +129,7 @@ public class DiscordBotFthlApplication {
         this.stats = stats;
         this.attackImpl = attackImpl;
         this.imageGenCommand = imageGenCommand;
+        this.checkLineUp = checkLineUp;
     }
 
 
@@ -183,7 +186,8 @@ public class DiscordBotFthlApplication {
                 this.deleteATeam,
                 this.stats,
                 this.attackImpl,
-                this.imageGenCommand
+                this.imageGenCommand,
+                this.checkLineUp
         ));
         log.info("Commands added Size: " + commandList.size());
         //Making help command
