@@ -5,6 +5,7 @@ import Core.Enitiy.clanwar.ClanWarMember;
 import Core.Enitiy.clanwar.WarInfo;
 import Core.JClash;
 import Core.exception.ClashAPIException;
+import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.CheckLineUpListener;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;
@@ -34,7 +35,8 @@ import java.util.concurrent.CompletableFuture;
 @Invoker(
         alias = "check-lineup",
         description = "Check the line up of a war between two teams",
-        usage = "/checklineup <Schedule ID>"
+        usage = "/check-lineup <Schedule ID>",
+        type = CommandType.ROSTER_MANAGEMENT
 )
 public class CheckLineUpImpl implements CheckLineUpListener {
     private final ScheduleWarService scheduledWarService;
