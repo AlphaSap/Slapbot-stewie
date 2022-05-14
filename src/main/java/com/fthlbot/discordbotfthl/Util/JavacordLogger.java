@@ -5,17 +5,24 @@ import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 //TODO
+@Component
 public class JavacordLogger {
 
     private Class<?> clazz;
     private ServerTextChannel channel;
     private User user;
     private Logger log;
+
+    private  static  final  Logger innerLogger = LoggerFactory.getLogger(JavacordLogger.class);
+    public JavacordLogger (){
+        innerLogger.info("Javacord Logger initialed");
+    }
 
     /**
      * https://stackoverflow.com/questions/5762491/how-to-print-color-in-console-using-system-out-println

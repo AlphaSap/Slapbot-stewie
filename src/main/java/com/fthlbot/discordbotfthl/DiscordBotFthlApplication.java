@@ -7,6 +7,7 @@ import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.DefenseI
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.PlayerImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.StatsImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands.ImageGenCommandImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands.PingImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.RosterAdd.RosterAdditionImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.TeamRoster.TeamRoster;

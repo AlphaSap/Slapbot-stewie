@@ -1,4 +1,4 @@
-package com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl;
+package com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands;
 
 import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;

@@ -1,10 +1,7 @@
 package com.fthlbot.discordbotfthl.Util;
 
 import org.javacord.api.DiscordApi;
-import org.javacord.api.interaction.SlashCommand;
-import org.javacord.api.interaction.SlashCommandOption;
-import org.javacord.api.interaction.SlashCommandOptionChoice;
-import org.javacord.api.interaction.SlashCommandOptionType;
+import org.javacord.api.interaction.*;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
@@ -352,6 +349,21 @@ public class SlashCommandBuilder {
                 .createGlobal(getApi()).join();
     }
 
+    //TODO: Add auto-complete for teams name;
+    public void createClanCommand() {
+        SlashCommandOption e1 = SlashCommandOption.create(STRING,
+                    "clan-tag",
+                    "Enter the clan's tag",
+                    true
+        );
+        SlashCommandOptionBuilder builder = new SlashCommandOptionBuilder().setAutocompletable(true).setOptions(List.of(e1));
+        SlashCommand command = SlashCommand
+                 .with("clan", "A command to view a player's profile")
+                 .setOptions(List.of(
+                       builder.build()
+                 ))
+                 .createGlobal(getApi()).join();
+    }
     public void createStatsCommand() {
         SlashCommand command = SlashCommand
                 .with("stats", "A command to view a current war for a clan")
@@ -440,7 +452,7 @@ public class SlashCommandBuilder {
                 ))).createGlobal(getApi()).join();
     }
 
-    public void createSnitchCommand(){
+    public void createSnitchCommand() {
         SlashCommand command = SlashCommand.with("snitch", "Generates a snitch image.")
                 .setOptions(List.of(SlashCommandOption.createWithChoices(USER,
                         "user",
@@ -449,7 +461,7 @@ public class SlashCommandBuilder {
                 ))).createGlobal(getApi()).join();
     }
 
-    public void createCheckLineUpCommand(){
+    public void createCheckLineUpCommand() {
         SlashCommand.with("check-lineup", "Checks the line up for a FTHL war")
                 .setOptions(List.of(SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
                         "schedule-id",
