@@ -3,6 +3,8 @@ package com.fthlbot.discordbotfthl.DatabaseModels.Roster;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.*;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
+import com.fthlbot.discordbotfthl.MinionBotAPI.MinionBotClient;
+import com.fthlbot.discordbotfthl.MinionBotAPI.MinionBotPlayer;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import org.javacord.api.entity.user.User;
 import org.slf4j.Logger;

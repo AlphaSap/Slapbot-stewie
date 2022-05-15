@@ -10,6 +10,7 @@ import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.ClashCommandListener.AttackListener;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
+import com.fthlbot.discordbotfthl.Util.GeneralService;
 import com.fthlbot.discordbotfthl.Util.Pagination.Pagination;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
@@ -44,11 +45,10 @@ public class AttackImpl implements AttackListener {
         try {
             war = clash.getCurrentWar(tag).join();
         } catch (IOException e) {
-            //TODO: Handle IOException
+            GeneralService.leagueSlashErrorMessage(respond, "Error getting war info");
             log.error("IOException", e);
             return;
         } catch (ClashAPIException e) {
-            //TODO: Handle exception
             log.error("ClashAPIException", e);
             ClashExceptionHandler handler = new ClashExceptionHandler();
             handler.setStatusCode(Integer.valueOf(e.getMessage()));

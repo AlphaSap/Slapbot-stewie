@@ -54,8 +54,6 @@ public class AddDivisionWeeksImpl implements AddDivisionWeekListener {
         JavacordLogger j = new JavacordLogger();
         j.setChannel(event.getApi().getServerTextChannelById(config.getErrorLogChannelID()).get());
         j.setLogger(this.getClass());
-        //TODO replace with user input
-        //TODO regex for discord attachment link https://cdn.discordapp.com/attachments/[0-9]+/[0-9]+/[a-zA-Z\.]+
         if (!event.getSlashCommandInteraction().getUser().isBotOwner()){
             event.getSlashCommandInteraction()
                     .createImmediateResponder()

@@ -470,6 +470,23 @@ public class SlashCommandBuilder {
                 ))).createGlobal(getApi()).join();
     }
 
+    public void createFPcheckCommand(){
+        SlashCommand command = SlashCommand.with("fp-check", "Checks the FP for a clan")
+                .setOptions(List.of(SlashCommandOption.createWithChoices(
+                        SlashCommandOptionType.STRING,
+                        "division",
+                        "Enter the division you want to check, it can be found in your negotiation channel topic",
+                        true,
+                        asList(
+                                SlashCommandOptionChoice.create("F8", "F8"),
+                                SlashCommandOptionChoice.create("F5", "F5"),
+                                SlashCommandOptionChoice.create("F9", "F9"),
+                                SlashCommandOptionChoice.create("F11", "F11"),
+                                SlashCommandOptionChoice.create("F10", "F10"),
+                                SlashCommandOptionChoice.create("Fmix", "Fmix")
+                        )
+                ))).createGlobal(getApi()).join();
+    }
     public void makeAllCommands() {
         //Make a Method array
         Method[] methods = this.getClass().getDeclaredMethods();

@@ -67,7 +67,6 @@ import static com.fthlbot.discordbotfthl.Util.GeneralService.*;
  * SQL exceptions too
  */
 
-//TODO ADD THE PREDICT MESSAGE DELETE THING FROM THE MAIN PROJECT
 
 //Make slash commands, /register <clan tag> <div alias> <team alias> <optional @second rep>
 public class RegistrationImpl implements RegistrationListener {
@@ -83,64 +82,6 @@ public class RegistrationImpl implements RegistrationListener {
         this.divisionService = divisionService;
         this.teamService = teamService;
         this.config = config;
-    }
-
-    @Deprecated(since = "2022/March/12")
-    public void execute1(MessageCreateEvent event) {
-        try {
-
-            String[] args = event.getMessageContent().split("\\s+");
-            JClash clash = new JClash();
-            String tag = args[1];
-            String divAlias = args[2];
-            String teamAlias = args[3];
-
-            User firstRep = event.getMessageAuthor().asUser().get();
-
-            User secondRep = event.getMessage().getMentionedUsers().isEmpty() ?
-                    event.getMessageAuthor().asUser().get() :
-                    event.getMessage().getMentionedUsers().get(0);
-
-            Division division = divisionService.getDivisionByAlias(divAlias);
-            ClanModel clan = clash.getClan(tag).join();
-
-            //Make team
-            Team team = new Team(
-                    clan.getName(),
-                    clan.getTag(),
-                    teamAlias,
-                    division,
-                    firstRep.getId(),
-                    secondRep.getId(),
-                    division.getAllowedRosterChanges()
-            );
-
-            teamService.saveTeam(team);
-
-
-            EmbedBuilder embedBuilder = new EmbedBuilder()
-                    .setTitle("Registration successful")
-                    .setDescription("Hey there, you have successfully registered for FTHL season 6! \nHere are some commands that might be useful to you ")
-                    .addInlineField("commands", "+team mr\n+team info\n+team all")
-                    .addInlineField("Roster Management", "+add\n+remove" )
-                    .setTimestampToNow()
-                    .setColor(Color.green)
-                    .setAuthor(event.getMessageAuthor());
-            event.getChannel().sendMessage(embedBuilder);
-            //TODO make channel
-
-
-        } catch (IndexOutOfBoundsException e) {
-            EmbedBuilder embedBuilder = GeneralService.notEnoughArgument();
-            event.getChannel().sendMessage(embedBuilder);
-        } catch (ClashAPIException | IOException e) {
-            e.printStackTrace();
-        }catch (LeagueException e){
-            getLeagueError(e, event);
-            e.printStackTrace();
-        }
-
-
     }
 
     @Override

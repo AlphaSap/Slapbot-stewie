@@ -36,7 +36,6 @@ import java.util.concurrent.CompletableFuture;
         usage = "/defense <TAG>",
         type = CommandType.CLASH
 )
-//TODO revisit this shit ass code and fix the 2hit glitch, this thing mad annoying not gonna continue this again.
 public class DefenseImpl implements DefenseListener {
     private static final Logger log = LoggerFactory.getLogger(DefenseImpl.class);
     private final static int NAME_MAX_LEN = 20, ID_MAX_LEN = 11, ALIAS_MAX_LEN = 15;
