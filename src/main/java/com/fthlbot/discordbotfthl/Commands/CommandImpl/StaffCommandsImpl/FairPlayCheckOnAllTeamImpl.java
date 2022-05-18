@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 import java.awt.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @Invoker(
@@ -127,7 +128,7 @@ public class FairPlayCheckOnAllTeamImpl implements Command {
                             rosterService.removeRoster(roster);
                             buttonClickEvent.getButtonInteraction().createImmediateResponder().setContent("Removed player from roster").respond();
                         }
-                    });
+                    }).removeAfter(11, TimeUnit.MINUTES);
                 });
             }
         }
