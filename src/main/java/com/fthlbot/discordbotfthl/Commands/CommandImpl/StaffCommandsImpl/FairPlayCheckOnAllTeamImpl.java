@@ -13,10 +13,14 @@ import com.fthlbot.discordbotfthl.Handlers.Command;
 import com.fthlbot.discordbotfthl.MinionBotAPI.MinionBotClient;
 import com.fthlbot.discordbotfthl.MinionBotAPI.MinionBotPlayer;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
-import org.javacord.api.entity.message.embed.Embed;
+import com.fthlbot.discordbotfthl.Util.Pagination.PaginationJobScheduler;
+import com.fthlbot.discordbotfthl.Util.Pagination.PaginationJobs;
+import org.javacord.api.entity.message.component.ActionRow;
+import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
+import org.quartz.SchedulerException;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
@@ -34,7 +38,6 @@ public class FairPlayCheckOnAllTeamImpl implements Command {
     private final DivisionService divisionService;
     private final TeamService teamService;
     private final RosterService rosterService;
-
     public FairPlayCheckOnAllTeamImpl(DivisionService divisionService, TeamService teamService, RosterService rosterService) {
         this.divisionService = divisionService;
         this.teamService = teamService;
@@ -57,39 +60,75 @@ public class FairPlayCheckOnAllTeamImpl implements Command {
         respond.thenAccept(updater -> {
             updater.setContent("This task may take a while, please wait...").update();
         });
-
+        int count = 0;
+        MinionBotClient client = new MinionBotClient();
         for (Team t : team) {
+            count++;
+            List<Roster> rosterForATeam;
             try {
-                List<Roster> rosterForATeam = rosterService.getRosterForATeam(t);
-                MinionBotClient client = new MinionBotClient();
-
-                for (Roster roster : rosterForATeam) {
-                    MinionBotPlayer[] playerBan = client.getPlayerBan(roster.getPlayerTag());
-                    if (playerBan.length == 0) {
-                        continue;
-                    }
-                    for (MinionBotPlayer minionBotPlayer : playerBan) {
-                        if (minionBotPlayer.getOrgID() == 55L){
-                            event.getSlashCommandInteraction()
-                                    .createFollowupMessageBuilder()
-                                    .addEmbed(
-                                            new EmbedBuilder()
-                                                    .setTitle("Fair Play Violation")
-                                                    .setFooter("Report to the League Admin")
-                                                    .addField("Team", t.getName(), false)
-                                                    .addField("Player", "Name: %s\nTag: %s".formatted(roster.getPlayerName(), roster.getPlayerTag()), false)
-                                    ).send();
-                        }
-                    }
-                }
-
+                rosterForATeam = rosterService.getRosterForATeam(t);
             } catch (EntityNotFoundException e) {
-                //TODO handle this
                 EmbedBuilder embedBuilder = new EmbedBuilder()
                         .setTitle("Error!")
                         .setDescription("Something went wrong, please try again later, Team: %s not found ".formatted(t.getName()))
                         .setColor(Color.RED);
                 event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(embedBuilder).send();
+                return;
+            }
+
+            CompletableFuture.runAsync(() -> {
+                run(event, client, t, rosterForATeam, respond.join());
+            });
+
+        }
+        respond.join().setContent("Finished checking %s teams".formatted(count)).update();
+    }
+
+    private void run(SlashCommandCreateEvent event, MinionBotClient client, Team t, List<Roster> rosterForATeam, InteractionOriginalResponseUpdater updater) {
+        for (Roster roster : rosterForATeam) {
+            MinionBotPlayer[] playerBan = client.getPlayerBan(roster.getPlayerTag());
+            if (playerBan.length == 0) {
+                continue;
+            }
+            for (MinionBotPlayer minionBotPlayer : playerBan) {
+                if (minionBotPlayer.getOrgInitials().isEmpty()) {
+                    continue;
+                }
+                if (!minionBotPlayer.getOrgInitials().get().equalsIgnoreCase("FTHL")) {
+                    continue;
+                }
+                EmbedBuilder embed = new EmbedBuilder()
+                        .setTitle("Fair Play Violation")
+                        .setColor(Color.RED)
+                        .setFooter("Click the button to remove the player form the roster!")
+                        .addField("Team", t.getName(), false)
+                        .addField("Player", "Name: %s\nTag: %s".formatted(roster.getPlayerName(), roster.getPlayerTag()), false);
+                ActionRow actionRow = ActionRow.of(
+                        Button.primary("remove", "Remove Player")
+
+                );
+                var d = event.getSlashCommandInteraction()
+                        .createFollowupMessageBuilder()
+                        .addComponents(actionRow)
+                        .addEmbed(embed).send();
+                d.thenAccept(message -> {
+                    try {
+                        new PaginationJobScheduler().execute(updater);
+                    } catch (SchedulerException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException(e);
+                    }
+                    message.addButtonClickListener(buttonClickEvent -> {
+                        if (!buttonClickEvent.getButtonInteraction().getCustomId().equals("remove")) {
+                            return;
+                        }
+                        if (buttonClickEvent.getButtonInteraction().getUser().getId() == event.getSlashCommandInteraction().getUser().getId() || buttonClickEvent.getButtonInteraction().getUser().isBotOwner()) {
+                            //remove player from roster
+                            rosterService.removeRoster(roster);
+                            buttonClickEvent.getButtonInteraction().createImmediateResponder().setContent("Removed player from roster").respond();
+                        }
+                    });
+                });
             }
         }
     }
