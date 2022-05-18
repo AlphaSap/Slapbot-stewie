@@ -208,6 +208,7 @@ public class DiscordBotFthlApplication {
 
         builder.setApi(api);
 //        builder.makeAllCommands();
+        builder.createFPcheckCommand();
         SlapbotEmojis.setEmojis( api.getServerById(config.getEmojiServerID()).get().getCustomEmojis().stream().toList());
         log.info("Logged in as {}", api.getYourself().getDiscriminatedName());
         log.info("Watching servers {}", servers.size());

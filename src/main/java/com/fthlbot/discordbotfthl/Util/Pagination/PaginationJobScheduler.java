@@ -1,5 +1,6 @@
 package com.fthlbot.discordbotfthl.Util.Pagination;
 
+import org.javacord.api.entity.message.Message;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
@@ -9,7 +10,7 @@ import java.util.Date;
 public class PaginationJobScheduler {
 
     private static final long ONE_MINUTE_IN_MILLISECONDS = 60000;
-    protected void execute(InteractionOriginalResponseUpdater message) throws SchedulerException {
+    public void execute(InteractionOriginalResponseUpdater message) throws SchedulerException {
         JobDataMap dataMap = new JobDataMap();
         dataMap.put("message", message);
 
