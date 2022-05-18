@@ -116,6 +116,10 @@ public class RosterService {
                 .collect(Collectors.toList());
     }
 
+    public void removeRoster(Roster roster) {
+        repo.delete(roster);
+    }
+
     //Make a method that remove all roster from a team
     @Transactional
     public void removeAllRoster(Team team) {
