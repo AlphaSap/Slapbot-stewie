@@ -113,12 +113,13 @@ public class FairPlayCheckOnAllTeamImpl implements Command {
                         .addComponents(actionRow)
                         .addEmbed(embed).send();
                 d.thenAccept(message -> {
-                    try {
-                        new PaginationJobScheduler().execute(updater);
-                    } catch (SchedulerException e) {
-                        e.printStackTrace();
-                        throw new RuntimeException(e);
-                    }
+                    //TODO: fix this, need to add a method that takes a message instead of InteractionOriginalResponseUpdater
+//                    try {
+//                        new PaginationJobScheduler().execute(updater);
+//                    } catch (SchedulerException e) {
+//                        e.printStackTrace();
+//                        throw new RuntimeException(e);
+//                    }
                     message.addButtonClickListener(buttonClickEvent -> {
                         if (!buttonClickEvent.getButtonInteraction().getCustomId().equals("remove")) {
                             return;
