@@ -55,10 +55,10 @@ public class RosterAdditionImpl extends RosterAddUtilClass implements RosterAddL
 
             Division division = divisionService.getDivisionByAlias(divisionAlias);
             Team team = teamService.getTeamByDivisionAndAlias(teamAlias, division);
-            int i = addPlayers(event, slashCommandInteraction, tags, team, rosterService);
+            addPlayers(event, slashCommandInteraction, tags, team, rosterService);
 
             res.thenAccept(r -> {
-                r.setContent("Successfully added: `" + i + "` accounts!").update();
+                r.setContent("Roster Addition requested!").update();
             }).exceptionally(ExceptionLogger.get());
 
         }catch (LeagueException e){
