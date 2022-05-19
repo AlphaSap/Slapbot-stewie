@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class RosterAddUtilClass {
+    //TODO: https://stackoverflow.com/questions/22561110/equivalent-of-go-channel-in-java
     private final static Logger log = LoggerFactory.getLogger(RosterAddUtilClass.class);
     public int addPlayers(SlashCommandCreateEvent event, SlashCommandInteraction interaction, String[] tags, Team team, RosterService service) {
         int success = 0;
