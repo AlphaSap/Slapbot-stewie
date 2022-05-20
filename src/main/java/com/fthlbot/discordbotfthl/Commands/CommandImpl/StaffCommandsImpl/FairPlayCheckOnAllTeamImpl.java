@@ -13,8 +13,7 @@ import com.fthlbot.discordbotfthl.Handlers.Command;
 import com.fthlbot.discordbotfthl.MinionBotAPI.MinionBotClient;
 import com.fthlbot.discordbotfthl.MinionBotAPI.MinionBotPlayer;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
-import com.fthlbot.discordbotfthl.Util.Pagination.PaginationJobScheduler;
-import com.fthlbot.discordbotfthl.Util.Pagination.PaginationJobs;
+import com.fthlbot.discordbotfthl.Util.Pagination.ButtonRemoveJobScheduler;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
@@ -113,13 +112,12 @@ public class FairPlayCheckOnAllTeamImpl implements Command {
                         .addComponents(actionRow)
                         .addEmbed(embed).send();
                 d.thenAccept(message -> {
-                    //TODO: fix this, need to add a method that takes a message instead of InteractionOriginalResponseUpdater
-//                    try {
-//                        new PaginationJobScheduler().execute(updater);
-//                    } catch (SchedulerException e) {
-//                        e.printStackTrace();
-//                        throw new RuntimeException(e);
-//                    }
+                    try {
+                        new ButtonRemoveJobScheduler().execute(message);
+                    } catch (SchedulerException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException(e);
+                    }
                     message.addButtonClickListener(buttonClickEvent -> {
                         if (!buttonClickEvent.getButtonInteraction().getCustomId().equals("remove")) {
                             return;

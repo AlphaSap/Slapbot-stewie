@@ -9,21 +9,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
-public class PaginationJobs implements Job {
+public class ButtonRemoveJobs implements Job {
 
-    private InteractionOriginalResponseUpdater message;
-    private final Logger log = LoggerFactory.getLogger(PaginationJobs.class);
+    private final Logger log = LoggerFactory.getLogger(ButtonRemoveJobs.class);
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        Object message1 = context.getMergedJobDataMap().get("message");
-        if (!(message1 instanceof InteractionOriginalResponseUpdater)) {
+        Object message = context.getMergedJobDataMap().get("message");
+        if (message instanceof InteractionOriginalResponseUpdater message1) {
+            log.info("Pagination job started");
+            message1.removeAllComponents().update();
+        }else if (message instanceof Message message2) {
+            log.info("Pagination job started");
+            message2.createUpdater().removeAllComponents().applyChanges();
+        }else {
             throw new IllegalArgumentException("Message is not of type InteractionOriginalResponseUpdater");
         }
-        message = (InteractionOriginalResponseUpdater) message1;
-        log.info("Pagination job started");
-        message.removeAllComponents().update();
+
     }
 }
