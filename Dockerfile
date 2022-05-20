@@ -1,6 +1,8 @@
 FROM openjdk:17
 
-COPY build/libs/DiscordBotFTHL-0.0.1-SNAPSHOT.jar discordbot.jar
+COPY build/distributions/DiscordBotFTHL-0.0.1-SNAPSHOT DiscordBotFTHL
 
-ENTRYPOINT ["java", "-jar", "discordbot.jar"]
+WORKDIR /DiscordBotFTHL/bin
+
+ENTRYPOINT ["./DiscordBotFTHL"]
 
