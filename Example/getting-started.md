@@ -52,9 +52,31 @@ public void createBanCommand(){
                 ))).createGlobal(getApi()).join();
 }
 ```
-The naming convention is very important, as when we want to make all the command at once, it would quite time consuming to call each method individually,
+The naming convention is very important, as when we want to make all the command at once, it would quite time-consuming to call each method individually,
 instead we can use the `createAllCommand` method, which you probably saw the main file which was commented out, this method will run every method in the 
 `SlashCommandBuilder` class with the name that starts with `create`. <br />
 
+## Adding a listener
+Once you have registered the command at discord, we need to make a listener for command itself else the bot will simply respond with "Command not found", 
+now make a new instance of `BanCommandImpl` inside the `DiscordBotFthlApplication.java` and annotate it with `@Autowired` and add the field in constructor.
+
+```java
+class DiscordBotFthlApplication {
+    @Autowired
+    private final BanCommandImpl ban;
+    
+    public DiscordBotFthlApplication (BanCommandImpl ban){
+        this.ban = ban;
+    }   
+}
+```
+then inside the `DiscordBotFthlApplication#api` look for a `commandList` and add the `ban` command to it.
+
+```java
+List<Command> commandList = new ArrayList<>(List.of(
+    this.ban
+));
+```
+That is all, the command is now registered and ready to be used!
 
 
