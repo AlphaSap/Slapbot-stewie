@@ -8,96 +8,94 @@ import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;
-import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
 import com.fthlbot.discordbotfthl.Handlers.Command;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
-import org.javacord.api.entity.channel.TextChannel;
-import org.javacord.api.entity.message.Message;
-import org.javacord.api.entity.message.MessageBuilder;
+import com.fthlbot.discordbotfthl.Util.GeneralService;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
-import org.javacord.api.interaction.SlashCommandInteraction;
-import org.javacord.api.interaction.callback.InteractionCallbackDataFlag;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
-import static com.fthlbot.discordbotfthl.Util.GeneralService.leagueSlashErrorMessage;
-
+@Component
 @Invoker(
         alias = "roster-remove",
         description = "A command to remove accounts from your master roster. Add multiple tags seperated by tags",
         usage = "/roster-remove <DIVISION ALIAS> <TEAM ALIAS> <TAGs ...>",
         type = CommandType.ROSTER_MANAGEMENT
 )
-@Component
 public class RosterRemove implements Command {
     private final TeamService teamService;
-    private final DivisionService divisionService;
     private final RosterService rosterService;
 
-    public RosterRemove(DivisionService divisionService, TeamService teamService, RosterService rosterService) {
-        this.divisionService = divisionService;
+    private final DivisionService divisionService;
+
+    public RosterRemove(TeamService teamService, RosterService rosterService, DivisionService divisionService) {
         this.teamService = teamService;
         this.rosterService = rosterService;
+        this.divisionService = divisionService;
     }
 
     @Override
     public void execute(SlashCommandCreateEvent event) {
-        SlashCommandInteraction interaction = event.getSlashCommandInteraction();
-        CompletableFuture<InteractionOriginalResponseUpdater> re = interaction.respondLater();
+        CompletableFuture<InteractionOriginalResponseUpdater> respondLater = event.getSlashCommandInteraction().respondLater();
+        String divisionAlias = event.getSlashCommandInteraction().getArguments().get(0).getStringValue().get();
+        String teamAlias = event.getSlashCommandInteraction().getArguments().get(1).getStringValue().get();
+        String[] tags = event.getSlashCommandInteraction().getArguments().get(2).getStringValue().get().split("\\s+");
+
+        Division division;
+        Team team;
         try {
-            String divAlias = interaction.getArguments().get(0).getStringValue().get();
-            String teamAlias = interaction.getArguments().get(1).getStringValue().get();
-            String[] tags = interaction.getArguments().get(2).getStringValue().get().split("\\s+");
-
-            Division divisionByAlias = divisionService.getDivisionByAlias(divAlias);
-            Team teamByDivisionAndAlias = teamService.getTeamByDivisionAndAlias(teamAlias, divisionByAlias);
-
-            for (String tag : tags) {
-                    JClash clash = new JClash();
-                    clash.getPlayer(tag).thenAccept(player -> {
-                        try {
-                            removeAcc(teamByDivisionAndAlias, player, re);
-                            //success message
-                            sendMessage(player.getTag(), interaction.getChannel().get());
-                        } catch (ClashAPIException e) {
-                            ClashExceptionHandler c = new ClashExceptionHandler();
-                            c.setStatusCode(Integer.valueOf(e.getMessage()));
-                            c.setResponder(re.join());
-                            c.respond();
-                        }
-                    }).join();
-            }
-            re.thenAccept(res -> res.setContent("Accounts Removed!").update());
-        } catch (LeagueException e) {
-            leagueSlashErrorMessage(re, e);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    private void removeAcc(Team teamByDivisionAndAlias, Player player, CompletableFuture<InteractionOriginalResponseUpdater> event) {
-        try {
-            rosterService.removeFromRoster(teamByDivisionAndAlias, player.getTag());
+            division = divisionService.getDivisionByAlias(divisionAlias);
+            team = teamService.getTeamByDivisionAndAlias(teamAlias, division);
         } catch (EntityNotFoundException e) {
-            leagueSlashErrorMessage(event, e);
+            GeneralService.getLeagueError(e, event);
+            return;
         }
-    }
+        respondLater.thenAccept(res -> {
+            res.setContent("Removing " + tags.length + " accounts from " + team.getName() + "...");
+            res.update();
+        });
+        JClash jClash = new JClash();
+        for (String tag : tags) {
+            try {
+                Player join = jClash.getPlayer(tag).join();
+                rosterService.removeFromRoster(team, join.getTag());
+                EmbedBuilder embedBuilder = new EmbedBuilder()
+                        .setTitle("Removed " + join.getName() + " from " + team.getName())
+                        .setTimestampToNow()
+                        .setDescription("Tag: " + join.getTag() + "\n" +
+                                "Name: " + join.getName() + "\n" +
+                                "Level: " + join.getTownHallLevel()
+                        ).setColor(Color.GREEN).setAuthor(event.getSlashCommandInteraction().getUser());
+                event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(embedBuilder).send();
+            } catch (IOException e) {
+                EmbedBuilder embedBuilder = new EmbedBuilder()
+                        .setTitle("Failed to remove " + tag + " from " + team.getName())
+                        .setTimestampToNow()
+                        .addField("Reason", e.getMessage(), false)
+                        .setFooter("Contact the developer if this persists")
+                        .setDescription("Tag: " + tag + "\n" +
+                                "Name: " + tag + "\n" +
+                                "Level: " + tag
+                        ).setColor(Color.RED).setAuthor(event.getSlashCommandInteraction().getUser());
+                event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(embedBuilder).send();
 
-    private CompletableFuture<Message> sendMessage(String tag, TextChannel textChannel){
-        return new MessageBuilder()
-                .setEmbed(
-                        new EmbedBuilder()
-                                .setDescription(String.format("Successfully removed `%s` from your roster", tag)
-                ).setColor(Color.GREEN)
-                                .setTimestampToNow()).send(textChannel);
+            }catch (ClashAPIException e) {
+                ClashExceptionHandler clashExceptionHandler = new ClashExceptionHandler();
+                clashExceptionHandler.setStatusCode(Integer.valueOf(e.getMessage()));
+                EmbedBuilder embedBuilder = clashExceptionHandler.createEmbed(tag).getEmbedBuilder();
+                event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(embedBuilder).send();
+            } catch (EntityNotFoundException e) {
+                EmbedBuilder embedBuilder = GeneralService.getLeagueError(e, event);
+                event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(embedBuilder).send();
+            }
+        }
     }
 }
