@@ -13,6 +13,7 @@ import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.Roster
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.TeamRoster.TeamRoster;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.UtilCommands.ShowDivisionWeekImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.UtilCommands.TeamInfoImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.RosterRemove;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.AddDivisionWeeksImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.CreateMatchUps;
