@@ -52,7 +52,7 @@ public class ClanInfoImpl implements ClanInfoListener {
         } catch (IOException ioe) {
             logger.error("Error getting clan info {}",ioe.getMessage());
         } catch (Exception e){
-            logger.error("Unexpected error in ClanInfoImpl {}",e.getMessage{});
+            logger.error("Unexpected error in ClanInfoImpl {}",e.getMessage());
         }
     }
 
