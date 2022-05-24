@@ -487,6 +487,19 @@ public class SlashCommandBuilder {
                         )
                 ))).createGlobal(getApi()).join();
     }
+
+    public void createClanInfoCommand(){
+        SlashCommand command = SlashCommand.with("clan-info","Get clan information")
+                .setOptions(List.of(
+                        SlashCommandOption.create(
+                                STRING,
+                                "clan-tag",
+                                "Enter a clan tag.  ex: #2PP",
+                                true
+                        )
+                )).createGlobal(getApi()).join();
+    }
+
     public void makeAllCommands() {
         //Make a Method array
         Method[] methods = this.getClass().getDeclaredMethods();
