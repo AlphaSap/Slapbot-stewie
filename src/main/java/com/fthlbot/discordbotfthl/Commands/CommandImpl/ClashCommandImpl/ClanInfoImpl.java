@@ -20,8 +20,6 @@ import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.concurrent.CompletableFuture;
 
 @Component
@@ -63,9 +61,6 @@ public class ClanInfoImpl implements ClanInfoListener {
             SlashCommandInteraction slashInter,
             InteractionOriginalResponseUpdater responseUpdater){
 
-        LocalDateTime dateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy HH:mm");
-        String dateTimeStr = dateTime.format(formatter);
         User invokedUser = slashInter.getUser();
 
         EmbedBuilder emb = new EmbedBuilder()
@@ -79,7 +74,7 @@ public class ClanInfoImpl implements ClanInfoListener {
                 .addField("Public War Log",clan.isWarLogPublic().toString(),false)
                 .addField("War League",clan.getWarLeague().getName(),false)
                 .addField("Location",clan.getLocation().getName(),false)
-                .setFooter(dateTimeStr)
+                .setTimestampToNow()
                 .setColor(Color.ORANGE);
 
         responseUpdater

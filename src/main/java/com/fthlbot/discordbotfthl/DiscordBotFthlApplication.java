@@ -2,10 +2,7 @@ package com.fthlbot.discordbotfthl;
 
 import Core.JClash;
 import Core.exception.ClashAPIException;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.AttackImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.DefenseImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.PlayerImpl;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.StatsImpl;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands.ImageGenCommandImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands.PingImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.*;
@@ -19,10 +16,10 @@ import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.Schedul
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.CreateMatchUps;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.NegoChannelCreationImpl;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
-import com.fthlbot.discordbotfthl.Handlers.Command;
-import com.fthlbot.discordbotfthl.Handlers.CommandListener;
-import com.fthlbot.discordbotfthl.Handlers.MessageHandlers;
-import com.fthlbot.discordbotfthl.Handlers.MessageHolder;
+import com.fthlbot.discordbotfthl.Util.Handlers.Command;
+import com.fthlbot.discordbotfthl.Util.Handlers.CommandListener;
+import com.fthlbot.discordbotfthl.Util.Handlers.MessageHandlers;
+import com.fthlbot.discordbotfthl.Util.Handlers.MessageHolder;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import com.fthlbot.discordbotfthl.Util.SlapbotEmojis;
 import com.fthlbot.discordbotfthl.Util.SlashCommandBuilder;
@@ -105,7 +102,10 @@ public class DiscordBotFthlApplication {
 
     private final FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam;
     private final CheckLineUpImpl checkLineUp;
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp) {
+
+    private final ClanInfoImpl clanInfo;
+
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -134,6 +134,7 @@ public class DiscordBotFthlApplication {
         this.imageGenCommand = imageGenCommand;
         this.fairPlayCheckOnAllTeam = fairPlayCheckOnAllTeam;
         this.checkLineUp = checkLineUp;
+        this.clanInfo = clanInfo;
     }
 
 
@@ -192,7 +193,8 @@ public class DiscordBotFthlApplication {
                 this.attackImpl,
                 this.imageGenCommand,
                 this.checkLineUp,
-                this.fairPlayCheckOnAllTeam
+                this.fairPlayCheckOnAllTeam,
+                this.clanInfo
         ));
         log.info("Commands added Size: " + commandList.size());
         //Making help command
