@@ -16,10 +16,10 @@ import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.Schedul
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.CreateMatchUps;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.NegoChannelCreationImpl;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
-import com.fthlbot.discordbotfthl.Util.Handlers.Command;
-import com.fthlbot.discordbotfthl.Util.Handlers.CommandListener;
-import com.fthlbot.discordbotfthl.Util.Handlers.MessageHandlers;
-import com.fthlbot.discordbotfthl.Util.Handlers.MessageHolder;
+import com.fthlbot.discordbotfthl.Handlers.Command;
+import com.fthlbot.discordbotfthl.Handlers.CommandListener;
+import com.fthlbot.discordbotfthl.Handlers.MessageHandlers;
+import com.fthlbot.discordbotfthl.Handlers.MessageHolder;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import com.fthlbot.discordbotfthl.Util.SlapbotEmojis;
 import com.fthlbot.discordbotfthl.Util.SlashCommandBuilder;
@@ -211,7 +211,7 @@ public class DiscordBotFthlApplication {
 
         builder.setApi(api);
 //        builder.makeAllCommands();
-        builder.createFPcheckCommand();
+
         SlapbotEmojis.setEmojis( api.getServerById(config.getEmojiServerID()).get().getCustomEmojis().stream().toList());
         log.info("Logged in as {}", api.getYourself().getDiscriminatedName());
         log.info("Watching servers {}", servers.size());
