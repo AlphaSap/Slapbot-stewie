@@ -155,7 +155,7 @@ public class DiscordBotFthlApplication {
 
         DiscordApi api = new DiscordApiBuilder()
                 .setToken(env.getProperty("TOKEN_TEST_BOT"))
-                .setUserCacheEnabled(true)
+                .setUserCacheEnabled(false)
                 .setAllIntentsExcept(
                         Intent.GUILD_WEBHOOKS,
                         Intent.GUILD_INTEGRATIONS,
