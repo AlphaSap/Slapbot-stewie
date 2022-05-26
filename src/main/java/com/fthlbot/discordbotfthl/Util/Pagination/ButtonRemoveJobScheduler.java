@@ -8,7 +8,7 @@ import org.quartz.impl.StdSchedulerFactory;
 import java.util.Date;
 
 public class ButtonRemoveJobScheduler {
-    private static final long FIVE_MINUTE_IN_MILLISECONDS = 6000 * 5;
+    private static final long FIVE_MINUTE_IN_MILLISECONDS = 60000 * 5;
     public void execute(Object message) throws SchedulerException {
         JobDataMap dataMap = new JobDataMap();
         dataMap.put("message", message);
