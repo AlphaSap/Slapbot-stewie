@@ -23,6 +23,16 @@ public class Statistic implements Command {
         }
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Statistics");
+        printMemoryUsage(embedBuilder);
 
+    }
+
+    private void printMemoryUsage(EmbedBuilder embedBuilder) {
+        Runtime runtime = Runtime.getRuntime();
+        long maxMemory = runtime.maxMemory();
+        long allocatedMemory = runtime.totalMemory();
+        long freeMemory = runtime.freeMemory();
+        long usedMemory = allocatedMemory - freeMemory;
+        embedBuilder.addField("Memory usage", String.format("%.2f/%.2f MB", usedMemory / 1024.0 / 1024.0, maxMemory / 1024.0 / 1024.0), false);
     }
 }
