@@ -43,7 +43,7 @@ public class Pagination {
 
         AtomicInteger i = new AtomicInteger(0);
         try {
-            new ButtonRemoveJobScheduler().execute(response);
+            new ButtonRemoveJobScheduler().execute(m);
         } catch (SchedulerException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
