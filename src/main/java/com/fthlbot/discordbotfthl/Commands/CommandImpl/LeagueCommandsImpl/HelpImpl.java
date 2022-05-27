@@ -26,7 +26,7 @@ import static com.fthlbot.discordbotfthl.Annotation.CommandType.IGNORE;
         alias = "help",
         description = "You need help with \"help\" for `help` command",
         usage = "/help",
-        type = UNSUPPORTED
+        type = IGNORE
 )
 public class HelpImpl implements HelpListener {
     private final List<Command> commands;
@@ -40,122 +40,99 @@ public class HelpImpl implements HelpListener {
     public void execute(SlashCommandCreateEvent event) {
         CompletableFuture<InteractionOriginalResponseUpdater> response = event.getSlashCommandInteraction().respondLater();
         List<SlashCommandInteractionOption> arguments = event.getSlashCommandInteraction().getArguments();
-        if  (arguments.size() >= 1){
-            boolean present = arguments.get(0).getStringValue().isPresent();
-            if (present){
-                String s = arguments.get(0).getStringValue().get();
-                EmbedBuilder embedBuilder = findCommand(s, event.getSlashCommandInteraction().getUser());
-                event.getSlashCommandInteraction().createImmediateResponder().addEmbeds(embedBuilder).respond();
+        if (arguments.size() >= 1) {
+            String commandName = arguments.get(0).getStringValue().get();
+            Optional<Invoker> commandFromInvoker = findCommandFromInvoker(commandName);
+            if (commandFromInvoker.isEmpty()) {
+                response.thenAccept(
+                        res -> {
+                            res.addEmbed(
+                                    new EmbedBuilder()
+                                            .setDescription("Command not found")
+                                            .setColor(Color.RED)
+                            ).update();
+                        }
+                );
+                return;
             }
+            Invoker command = commandFromInvoker.get();
+            EmbedBuilder embedBuilder = makeEmbed(command);
+            response.thenAccept(
+                    res -> {
+                        res.addEmbed(embedBuilder).update();
+                    }
+            );
             return;
         }
+
         Pagination pagination = new Pagination();
-        List<EmbedBuilder> helpEmbeds = createHelpEmbeds();
+        List<EmbedBuilder> helpEmbeds = getHelpEmbeds();
 
         pagination.buttonPagination(helpEmbeds, response, event.getApi());
     }
 
-    /**
-     *
-     * @param name: takes the name of the command
-     * @param user: Take the user who invoked the command
-     * @return EmbedBuilder: returns an embedBuilder which will be sent to the user once they find the command they were looking for!
-     */
-    private EmbedBuilder findCommand(String name, User user) {
+    private Optional<Invoker> findCommandFromInvoker(String commandName) {
+        for (Command command : commands) {
+            for (Annotation annotation : command.getClass().getAnnotations()) {
+                if (annotation instanceof Invoker invoker) {
+                    if (invoker.alias().equalsIgnoreCase(commandName)) {
+                        return Optional.of(invoker);
+                    }
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    private EmbedBuilder makeEmbed(Invoker invoker) {
+        EmbedBuilder embedBuilder = new EmbedBuilder()
+                .setTitle(invoker.alias())
+                .setDescription(invoker.description())
+                .setTimestampToNow()
+                .setColor(Color.GREEN)
+                .addField("Usage", invoker.usage(), false)
+                .addField("Type", invoker.type().toString(), false);
+
+        if (invoker.type() == UNSUPPORTED) {
+            embedBuilder.setFooter("Note: This command is not supported");
+        }
+        return embedBuilder;
+    }
+    private List<EmbedBuilder> getHelpEmbeds() {
+        Map<CommandType, ArrayList<Invoker>> em = new HashMap<>();
+        em.put(INFO, new ArrayList<>());
+        em.put(REGISTRATION, new ArrayList<>());
+        em.put(ROSTER_MANAGEMENT, new ArrayList<>());
+        em.put(SCHEDULE, new ArrayList<>());
+        em.put(MISC, new ArrayList<>());
+        em.put(STAFF, new ArrayList<>());
+
         for (Command command : commands) {
             Annotation[] annotations = command.getClass().getAnnotations();
             for (Annotation annotation : annotations) {
-                if (annotation instanceof Invoker invoker){
-                    if (invoker.alias().equalsIgnoreCase(name)) {
-                        EmbedBuilder em = new EmbedBuilder()
-                                .setTitle(invoker.alias())
-                                .setDescription(invoker.description())
-                                .setTimestampToNow()
-                                .setColor(Color.cyan)
-                                .setAuthor(user);
-                        if (invoker.type() == UNSUPPORTED) {
-                            return new EmbedBuilder()
-                                    .setTitle(invoker.alias())
-                                    .setDescription(invoker.description())
-                                    .setTimestampToNow()
-                                    .setAuthor(user)
-                                    .setColor(Color.red)
-                                    .setFooter("Note - this command is deprecated, find an alternative command!");
-                        }
-                        return em;
+                if (annotation instanceof Invoker invoker) {
+                    if (!em.containsKey(invoker.type())) {
+                        continue;
                     }
+                    em.get(invoker.type()).add(invoker);
                 }
             }
         }
-        return new EmbedBuilder()
-                .setTitle("Command Not found!")
-                .setDescription("Use `/help` command to view a list of all the available commands!")
-                .setColor(Color.RED)
-                .setTimestampToNow();
-    }
-
-    private List<EmbedBuilder> createHelpEmbeds(){
-
-        System.out.println(commands.size());
-
         List<EmbedBuilder> embedBuilders = new ArrayList<>();
-        Map<CommandType, ArrayList<String>> em = new LinkedHashMap<>();
-        em.put(INFO,                new ArrayList<>());
-        em.put(REGISTRATION,        new ArrayList<>());
-        em.put(ROSTER_MANAGEMENT,   new ArrayList<>());
-        em.put(SCHEDULE,            new ArrayList<>());
-        em.put(MISC,                new ArrayList<>());
-        em.put(STAFF,               new ArrayList<>());
-        em.put(UNSUPPORTED,         new ArrayList<>());
-
-        for(Command MCL : commands){
-            Arrays.stream(MCL.getClass().getAnnotations()).forEach(annotation -> {
-                //System.out.println(Arrays.toString(annotation.annotationType().getAnnotations()));
-                if (annotation instanceof Invoker){
-                    //log.info(((Invoker) annotation).type().name());
-                    switch (((Invoker) annotation).type()){
-                        case INFO -> {
-                            em.get(INFO).add(((Invoker) annotation).alias());
-                        }case TEAM -> {
-                            em.get(TEAM).add(((Invoker) annotation).alias());
-                        }case MISC -> {
-                            em.get(MISC).add(((Invoker) annotation).alias());
-                        }case REGISTRATION -> {
-                            em.get(REGISTRATION).add(((Invoker) annotation).alias());
-                        }case ROSTER_MANAGEMENT -> {
-                            em.get(ROSTER_MANAGEMENT).add(((Invoker) annotation).alias());
-                        }case SCHEDULE -> {
-                            em.get(SCHEDULE).add(((Invoker) annotation).alias());
-                        }case STAFF -> {
-                            em.get(STAFF).add(((Invoker) annotation).alias());
-                        }case UNSUPPORTED -> {
-                            em.get(UNSUPPORTED).add(((Invoker) annotation).alias());
-                        }default -> {
-                            // do nothing...
-                        }
-                    }
-                }
-            });
-        }
-
-        //If the character count goes up to 4000 chars make a new enum called 2.0 or something
-        em.forEach((commandType, strings) -> {
-            if (commandType.equals(IGNORE)){
-                return;
+        em.forEach((key, value) -> {
+            StringBuilder sb = new StringBuilder();
+            for (Invoker invoker : value) {
+                sb.append("`").append(invoker.alias()).append("`").append("\n");
             }
-            StringBuilder str = new StringBuilder();
-            strings.forEach(string -> {
-                str.append("`").append(string).append("`\n");
-            });
-
-            embedBuilders.add(new EmbedBuilder()
-                    .setTitle(commandType.name().replace("_", " "))
-                    .setDescription(str.toString())
-                    .setTimestampToNow()
-                    .setFooter("type the name of the command after `/help` to get command specific help")
-                    .setColor(Color.DARK_GRAY));
+            embedBuilders.add(
+                    new EmbedBuilder()
+                            .setTitle(key.toString())
+                            .setDescription(sb.toString())
+                            .setColor(Color.GREEN)
+            );
         });
         return embedBuilders;
-
     }
+
+
 }
