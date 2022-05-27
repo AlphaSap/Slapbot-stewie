@@ -500,6 +500,10 @@ public class SlashCommandBuilder {
                 )).createGlobal(getApi()).join();
     }
 
+    public void createSuggestionCommnad(){
+        SlashCommand command = SlashCommand.with("suggestion", "Suggest a new feature").createGlobal(getApi()).join();
+    }
+
     public void makeAllCommands() {
         //Make a Method array
         Method[] methods = this.getClass().getDeclaredMethods();

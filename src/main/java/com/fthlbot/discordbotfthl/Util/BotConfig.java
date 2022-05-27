@@ -19,7 +19,8 @@ public class BotConfig {
     private long transactionChannelID;
     @Value("${channel.errorLogsAndInfo}")
     private long errorLogChannelID;
-
+    @Value("${channel.suggestionChannel}")
+    private long suggestionChannelID;
 
 
     //Role IDs
@@ -217,5 +218,9 @@ public class BotConfig {
     }
     public Date getRegistrationDate() throws ParseException {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(leagueRegistrationStartDate);
+    }
+
+    public long getSuggestionChannelID() {
+        return suggestionChannelID;
     }
 }
