@@ -123,4 +123,11 @@ public class TeamService {
        // rosterService.removeAllRoster(team);
         repo.delete(team);
     }
+    /**
+     * @param userID - the user id
+     * @return Will return a list of team for the rep, if the rep is not found, will return an empty list
+     */
+    public List<Team> getTeamByRep(long userID){
+        return repo.findTeamByRep1OrRep2ID(userID, userID);
+    }
 }
