@@ -29,7 +29,7 @@ public class ServerMemeberJoinImpl implements ServerMemberJoinListener {
     public void onServerMemberJoin(ServerMemberJoinEvent event) {
         Server negoServer = event.getApi().getServerById(botConfig.getNegoServerID()).get();
 
-        if(!event.getServer().equals(applicationServer) || !event.getServer().equals(negoServer)){ return; }
+        if(!event.getServer().equals(negoServer)){ return; }
 
         User user = event.getUser();
         List<Team> teams = teamService.getTeamByRep(user.getId());
