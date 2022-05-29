@@ -6,7 +6,6 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundExcepti
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.NoMoreRosterChangesLeftException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.NotTheRepException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterRepo;
-import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterService;
 import org.javacord.api.entity.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,7 +126,7 @@ public class TeamService {
      * @param userID - the user id
      * @return Will return a list of team for the rep, if the rep is not found, will return an empty list
      */
-    public List<Team> getTeamByRep(long userID){
-        return repo.findTeamByRep1OrRep2ID(userID, userID);
+    public List<Team> getTeamByRep(long userID) {
+        return repo.findTeamByRep1IDOrRep2ID(userID, userID);
     }
 }
