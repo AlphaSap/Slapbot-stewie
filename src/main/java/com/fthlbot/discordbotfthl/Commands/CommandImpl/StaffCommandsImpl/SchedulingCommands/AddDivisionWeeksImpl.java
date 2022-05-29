@@ -12,9 +12,9 @@ import com.fthlbot.discordbotfthl.Util.BotConfig;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
 import com.fthlbot.discordbotfthl.Util.JavacordLogger;
 import com.fthlbot.discordbotfthl.Util.Utils;
+import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteractionOption;
-import org.javacord.api.interaction.callback.InteractionCallbackDataFlag;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.json.JSONArray;
 import org.slf4j.Logger;
@@ -57,7 +57,7 @@ public class AddDivisionWeeksImpl implements AddDivisionWeekListener {
         if (!event.getSlashCommandInteraction().getUser().isBotOwner()){
             event.getSlashCommandInteraction()
                     .createImmediateResponder()
-                    .setFlags(InteractionCallbackDataFlag.EPHEMERAL)
+                    .setFlags(MessageFlag.EPHEMERAL)
                     .setContent("This command can only be used bot owner")
                     .respond();
             return;

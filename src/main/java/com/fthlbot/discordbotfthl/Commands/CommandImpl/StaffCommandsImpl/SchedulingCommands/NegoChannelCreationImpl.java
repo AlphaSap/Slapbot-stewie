@@ -15,13 +15,13 @@ import com.fthlbot.discordbotfthl.Util.GeneralService;
 import org.javacord.api.entity.channel.ChannelCategory;
 import org.javacord.api.entity.channel.ChannelCategoryBuilder;
 import org.javacord.api.entity.channel.ServerTextChannelBuilder;
+import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.entity.permission.PermissionsBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
-import org.javacord.api.interaction.callback.InteractionCallbackDataFlag;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.springframework.stereotype.Component;
 
@@ -57,7 +57,7 @@ public class NegoChannelCreationImpl implements NegoChannelCreationListener {
             event.getSlashCommandInteraction()
                     .createImmediateResponder()
                     .setContent("Sorry sahil is mean and will not let you use this command :(")
-                    .setFlags(InteractionCallbackDataFlag.EPHEMERAL)
+                    .setFlags(MessageFlag.EPHEMERAL)
                     .respond();
         }
         CompletableFuture<InteractionOriginalResponseUpdater> respondLater = event.getSlashCommandInteraction().respondLater();
@@ -109,8 +109,8 @@ public class NegoChannelCreationImpl implements NegoChannelCreationListener {
         cat.setName(catgoryName.toString());
         cat.setAuditLogReason("Negotiation category created");
         ChannelCategory join = cat.create().join();
-        PermissionsBuilder everyoneElse = new PermissionsBuilder().setDenied(PermissionType.READ_MESSAGES);
-        PermissionsBuilder applicant = new PermissionsBuilder().setAllowed(PermissionType.READ_MESSAGES, PermissionType.SEND_MESSAGES);
+        PermissionsBuilder everyoneElse = new PermissionsBuilder().setDenied(PermissionType.VIEW_CHANNEL);
+        PermissionsBuilder applicant = new PermissionsBuilder().setAllowed(PermissionType.VIEW_CHANNEL, PermissionType.SEND_MESSAGES);
 
         for (ScheduledWar war : scheduledWar) {
             //make a string that has division name and both teams aliases

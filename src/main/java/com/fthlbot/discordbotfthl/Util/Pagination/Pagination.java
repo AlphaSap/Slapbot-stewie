@@ -1,31 +1,21 @@
 package com.fthlbot.discordbotfthl.Util.Pagination;
 
 import org.javacord.api.DiscordApi;
-import org.javacord.api.entity.emoji.Emoji;
 import org.javacord.api.entity.emoji.KnownCustomEmoji;
 import org.javacord.api.entity.message.Message;
-import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.message.component.LowLevelComponent;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
-import org.javacord.api.entity.user.User;
-import org.javacord.api.event.interaction.SlashCommandCreateEvent;
-import org.javacord.api.event.message.MessageCreateEvent;
-import org.javacord.api.interaction.callback.InteractionCallbackDataFlag;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
-import org.javacord.api.util.logging.ExceptionLogger;
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
 
 @Component
 public class Pagination {
@@ -51,7 +41,7 @@ public class Pagination {
         m.addEmbed(em.get(0)).addComponents(ActionRow.of(lowLevelComponents));
         Message response = m.update().join();
 
-            AtomicInteger i = new AtomicInteger(0);
+        AtomicInteger i = new AtomicInteger(0);
         try {
             new ButtonRemoveJobScheduler().execute(m);
         } catch (SchedulerException e) {
@@ -96,6 +86,6 @@ public class Pagination {
                 }catch (Exception e) {
                     e.printStackTrace();
                 }
-            });
+            }).removeAfter(10, TimeUnit.MINUTES);
     }
 }

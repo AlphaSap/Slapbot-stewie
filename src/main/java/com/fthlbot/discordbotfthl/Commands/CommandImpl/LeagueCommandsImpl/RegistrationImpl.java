@@ -195,8 +195,8 @@ public class RegistrationImpl implements RegistrationListener {
         //Set channel topic to team id
         textChannelBuilder.setTopic(team.getID().toString());
 
-        PermissionsBuilder everyoneElse = new PermissionsBuilder().setDenied(PermissionType.READ_MESSAGES);
-        PermissionsBuilder rep = new PermissionsBuilder().setAllowed(PermissionType.READ_MESSAGES, PermissionType.SEND_MESSAGES);
+        PermissionsBuilder everyoneElse = new PermissionsBuilder().setDenied(PermissionType.VIEW_CHANNEL);
+        PermissionsBuilder rep = new PermissionsBuilder().setAllowed(PermissionType.VIEW_CHANNEL, PermissionType.SEND_MESSAGES);
 
         //Give applicant permissions to view channel
         textChannelBuilder.addPermissionOverwrite(applicant, rep.build());

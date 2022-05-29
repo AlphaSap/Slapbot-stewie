@@ -22,4 +22,5 @@ public interface TeamRepo extends JpaRepository<Team, Integer> {
 
     List<Team> findTeamByDivision(Division division);
 
+    List<Team> findTeamByRep1OrRep2ID(long id, long id2);
 }
