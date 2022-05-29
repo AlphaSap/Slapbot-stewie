@@ -2,9 +2,6 @@ package com.fthlbot.discordbotfthl.DatabaseModels.Team;
 
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,5 +19,5 @@ public interface TeamRepo extends JpaRepository<Team, Integer> {
 
     List<Team> findTeamByDivision(Division division);
 
-    List<Team> findTeamByRep1OrRep2ID(long id, long id2);
+    List<Team> findTeamByRep1IDOrRep2ID(long id, long id2);
 }
