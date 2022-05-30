@@ -10,26 +10,38 @@ import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.server.member.ServerMemberJoinEvent;
 import org.javacord.api.listener.server.member.ServerMemberJoinListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Optional;
 
+@Component
 public class ServerMemeberJoinImpl implements ServerMemberJoinListener {
-
-    private final BotConfig botConfig;
 
     public ServerMemeberJoinImpl(BotConfig botConfig, TeamService teamService) {
         this.botConfig = botConfig;
         this.teamService = teamService;
     }
 
+    private final BotConfig botConfig;
     private final TeamService teamService;
+    private final Logger logger = LoggerFactory.getLogger(ServerMemeberJoinImpl.class);
 
     @Override
     public void onServerMemberJoin(ServerMemberJoinEvent event) {
-        Server negoServer = event.getApi().getServerById(botConfig.getNegoServerID()).get();
+        if(event.getServer().getId() != botConfig.getNegoServerID()){ return; };
 
-        if(!event.getServer().equals(negoServer)){ return; }
+        Server negoServer;
+
+        try {
+            negoServer = event.getApi().getServerById(botConfig.getNegoServerID()).orElseThrow(NullPointerException::new);
+        }catch (NullPointerException npe){
+            logger.error("Error getting negotiation server {}",npe.getMessage());
+            return;
+        }
 
         User user = event.getUser();
         List<Team> teams = teamService.getTeamByRep(user.getId());
@@ -52,7 +64,7 @@ public class ServerMemeberJoinImpl implements ServerMemberJoinListener {
         user.addRole(repRole);
 
         for(Team team : teams){
-            Role divRole = negoServer.getRolesByName(team.getDivision().getName()).get(0);
+            Role divRole = negoServer.getRolesByName(team.getDivision().getAlias()).get(0);
             user.addRole(divRole);
         }
 
