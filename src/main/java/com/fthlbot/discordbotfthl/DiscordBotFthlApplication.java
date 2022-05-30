@@ -21,6 +21,7 @@ import com.fthlbot.discordbotfthl.Handlers.Command;
 import com.fthlbot.discordbotfthl.Handlers.CommandListener;
 import com.fthlbot.discordbotfthl.Handlers.MessageHandlers;
 import com.fthlbot.discordbotfthl.Handlers.MessageHolder;
+import com.fthlbot.discordbotfthl.RandomEvents.ServerMemeberJoinImpl;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import com.fthlbot.discordbotfthl.Util.SlapbotEmojis;
 import com.fthlbot.discordbotfthl.Util.SlashCommandBuilder;
@@ -108,7 +109,9 @@ public class DiscordBotFthlApplication {
 
     private final SuggestionImpl suggestionImpl;
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl) {
+    private final ServerMemeberJoinImpl serverMemeberJoin;
+
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, ServerMemeberJoinImpl serverMemeberJoin) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -139,6 +142,7 @@ public class DiscordBotFthlApplication {
         this.checkLineUp = checkLineUp;
         this.clanInfo = clanInfo;
         this.suggestionImpl = suggestionImpl;
+        this.serverMemeberJoin = serverMemeberJoin;
     }
 
 
@@ -156,7 +160,6 @@ public class DiscordBotFthlApplication {
 
 
         clash = new JClash(env.getProperty("CLASH_EMAIL"), env.getProperty("CLASH_PASS"));
-
         DiscordApi api = new DiscordApiBuilder()
                 .setToken(env.getProperty("TOKEN_TEST_BOT"))
                 .setUserCacheEnabled(false)
@@ -213,6 +216,8 @@ public class DiscordBotFthlApplication {
         CommandListener commandListener = new CommandListener(messageHolder, loggerService, config);
 
         api.addListener(commandListener);
+
+        api.addListener(serverMemeberJoin);
 
         builder.setApi(api);
 //        builder.makeAllCommands();
