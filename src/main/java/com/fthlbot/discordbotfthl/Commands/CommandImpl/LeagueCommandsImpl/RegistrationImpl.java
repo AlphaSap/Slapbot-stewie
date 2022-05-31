@@ -207,7 +207,7 @@ public class RegistrationImpl implements RegistrationListener {
     //A method that takes a string and returns a ChannelCatrgorie object when the string matches the name of a category
     private ChannelCategory getChannelCategory(String categoryName, Server server){
         for(ChannelCategory category : server.getChannelCategories()){
-            if(category.getName().equals(categoryName)){
+            if(category.getName().equalsIgnoreCase(categoryName)){
                 return category;
             }
         }
