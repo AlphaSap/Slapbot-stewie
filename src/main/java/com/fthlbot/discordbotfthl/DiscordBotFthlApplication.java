@@ -21,7 +21,7 @@ import com.fthlbot.discordbotfthl.Handlers.Command;
 import com.fthlbot.discordbotfthl.Handlers.CommandListener;
 import com.fthlbot.discordbotfthl.Handlers.MessageHandlers;
 import com.fthlbot.discordbotfthl.Handlers.MessageHolder;
-import com.fthlbot.discordbotfthl.RandomEvents.ServerMemeberJoinImpl;
+import com.fthlbot.discordbotfthl.RandomEvents.ServerMemberJoin.NegoServerMemberjoinImpl;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import com.fthlbot.discordbotfthl.Util.SlapbotEmojis;
 import com.fthlbot.discordbotfthl.Util.SlashCommandBuilder;
@@ -109,9 +109,9 @@ public class DiscordBotFthlApplication {
 
     private final SuggestionImpl suggestionImpl;
 
-    private final ServerMemeberJoinImpl serverMemeberJoin;
+    private final NegoServerMemberjoinImpl serverMemeberJoin;
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, ServerMemeberJoinImpl serverMemeberJoin) {
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemeberJoin) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -153,7 +153,7 @@ public class DiscordBotFthlApplication {
     @Bean
     @ConfigurationProperties(value = "discord-bot")
     public DiscordApi api() throws ClashAPIException, IOException {
-        log.info(config.getNegoStaffRoleID() + " id");
+        log.info(config.getNegoServerStaffRoleID() + " id");
         TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
 
         long testID = config.getTestServerID();

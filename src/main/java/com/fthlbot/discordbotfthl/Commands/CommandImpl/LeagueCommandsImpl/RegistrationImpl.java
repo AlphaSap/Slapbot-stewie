@@ -96,15 +96,7 @@ public class RegistrationImpl implements RegistrationListener {
         }
 
         try{
-        //Return if channel is not the same as reg channel
-            //TODO
-           /* if (!isRegChannel(event.getSlashCommandInteraction().getChannel().get().getCommandID())){
-                slashCommandInteraction.createImmediateResponder()
-                        .setContent("This command can only be run the registration channel in the applicant server, please join the applicant server and run this command!")
-                        .setFlags(InteractionCallbackDataFlag.EPHEMERAL)
-                        .respond();
-                return;
-            }*/
+
         List<SlashCommandInteractionOption> arguments = slashCommandInteraction.getArguments();
         String clanTag = arguments.get(0).getStringValue().get();
         String divisionAlias = arguments.get(1).getStringValue().get();

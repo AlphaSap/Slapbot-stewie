@@ -7,6 +7,7 @@ import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLogger;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import org.javacord.api.DiscordApi;
+import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.permission.Role;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
@@ -60,7 +61,13 @@ public class CommandListener implements SlashCommandCreateListener {
                     return;
                 }
                 if (!canUserAnywhere(command, event.getSlashCommandInteraction().getServer().get())){
-                    event.getSlashCommandInteraction().createImmediateResponder().setContent("Sorry this is not the correct the server to use this command!\nPlease see my help page to find where you can use this command!").respond();
+                    event.getSlashCommandInteraction()
+                            .createImmediateResponder()
+                            .setFlags(MessageFlag.EPHEMERAL)
+                            .setContent(
+                                    "Sorry this is not the correct the server to use this " +
+                                            "command!\nPlease see my help page to find where you can use this command!"
+                            ).respond();
                     return;
                 }
                 boolean staffCommand = isStaffCommand(command);
@@ -120,7 +127,7 @@ public class CommandListener implements SlashCommandCreateListener {
     }
     private boolean hasStaffRole(Server server, User user){
         List<Role> roles = user.getRoles(server);
-        return roles.stream().anyMatch(x -> x.getId() == config.getStaffRoleID());
+        return roles.stream().anyMatch(x -> x.getId() == config.getFthlServerStaffRoleID());
     }
 
 

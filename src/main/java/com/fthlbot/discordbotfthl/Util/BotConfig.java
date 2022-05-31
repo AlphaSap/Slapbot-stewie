@@ -24,16 +24,18 @@ public class BotConfig {
 
 
     //Role IDs
-    @Value("${role.staff}")
-    private long staffRoleID;
-    @Value("${role.applicant}")
-    private long applicantRoleID;
-    @Value("${role.Representative}")
-    private long representativeRoleID;
-    @Value("${role.techTeam}")
-    private long techTeamRoleID;
-    @Value("${role.negoStaff}")
-    private long negoStaffRoleID;
+    @Value("${role.fthlServer.staff}")
+    private long fthlServerStaffRoleID;
+    @Value("${role.fthlServer.Representative}")
+    private long fileServerRepresentativeRoleID;
+    @Value("${role.negoServer.staff}")
+    private long negoServerStaffRoleID;
+    @Value("${role.negoServer.Representative}")
+    private long negServerRepresentativeRoleID;
+    @Value("${role.applicantServer.staff}")
+    private long applicantServerStaffRoleID;
+    @Value("${role.applicantServer.Applicant}")
+    private long applicantServerApplicantRoleID;
 
     //ServerIDs
     @Value("${server.fthlServer}")
@@ -139,29 +141,32 @@ public class BotConfig {
         return transactionChannelID;
     }
 
-    public long getStaffRoleID() {
-        return staffRoleID;
+    public long getFthlServerStaffRoleID() {
+        return fthlServerStaffRoleID;
+    }
+
+    public long getFileServerRepresentativeRoleID() {
+        return fileServerRepresentativeRoleID;
+    }
+
+    public long getNegoServerStaffRoleID() {
+        return negoServerStaffRoleID;
+    }
+
+    public long getNegServerRepresentativeRoleID() {
+        return negServerRepresentativeRoleID;
+    }
+
+    public long getApplicantServerStaffRoleID() {
+        return applicantServerStaffRoleID;
+    }
+
+    public long getApplicantServerApplicantRoleID() {
+        return applicantServerApplicantRoleID;
     }
 
     public long getNegoServerID() {
         return negoServerID;
-    }
-
-
-    public long getApplicantRoleID() {
-        return applicantRoleID;
-    }
-
-    public long getRepresentativeRoleID() {
-        return representativeRoleID;
-    }
-
-    public long getTechTeamRoleID() {
-        return techTeamRoleID;
-    }
-
-    public long getNegoStaffRoleID() {
-        return negoStaffRoleID;
     }
 
     public long getFthlServerID() {
