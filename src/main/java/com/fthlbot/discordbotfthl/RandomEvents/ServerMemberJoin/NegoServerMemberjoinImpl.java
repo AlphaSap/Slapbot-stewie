@@ -41,7 +41,6 @@ public class NegoServerMemberjoinImpl implements ServerMemberJoinListener {
                 .setTeams(teamByRep);
 
         EmbedBuilder embedBuilder = serverMemberJoinService.getEmbed();
-        server.getTextChannels().get(0).sendMessage(embedBuilder);
 
         TextChannel sysChannel = server.getSystemChannel().orElse(
                 server.getTextChannels().get(0)

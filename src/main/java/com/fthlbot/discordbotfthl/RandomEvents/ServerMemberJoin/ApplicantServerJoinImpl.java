@@ -36,7 +36,6 @@ public class ApplicantServerJoinImpl implements ServerMemberJoinListener {
                 .setTeams(teamByRep);
 
         EmbedBuilder embedBuilder = serverMemberJoinService.getEmbed();
-        event.getServer().getTextChannels().get(0).sendMessage(embedBuilder);
 
         TextChannel sysChannel = event.getServer().getSystemChannel().orElse(
                 event.getServer().getTextChannels().get(0)
