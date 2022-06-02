@@ -16,6 +16,7 @@ import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.LowLevelComponent;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
+import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.javacord.api.util.logging.ExceptionLogger;
@@ -41,7 +42,7 @@ import java.util.concurrent.TimeUnit;
         alias = "remove-channels-from-category",
         usage = "/remove-channels-from-category <Category ID> <Preserve Logs(True by default)>",
         description = "Removes all the channels from a category and preserves logs",
-        type = CommandType.STAFF
+        type = CommandType.MISC
 )
 public class RemoveAllChannelFromACategoryImpl implements RemoveAllChannelFromACategoryListener {
     private final BotConfig botConfig;
@@ -53,8 +54,18 @@ public class RemoveAllChannelFromACategoryImpl implements RemoveAllChannelFromAC
 
     @Override
     public void execute(SlashCommandCreateEvent event) {
-
         CompletableFuture<InteractionOriginalResponseUpdater> respondLater = event.getSlashCommandInteraction().respondLater();
+
+        User user = event.getSlashCommandInteraction().getUser();
+        Server server = event.getSlashCommandInteraction().getServer().get();
+
+        if (!server.isAdmin(user)){
+            respondLater.thenAccept(e -> {
+                e.setContent("You are not an admin");
+                e.update();
+            });
+            return;
+        }
 
         String categoryID = event.getSlashCommandInteraction().getArguments().get(0).getStringValue().get();
         Boolean isLogs = true;
@@ -65,14 +76,6 @@ public class RemoveAllChannelFromACategoryImpl implements RemoveAllChannelFromAC
         }
 
         Channel logChannel = event.getApi().getChannelById(botConfig.getErrorLogChannelID()).get();
-
-        Optional<Server> server = event.getSlashCommandInteraction().getServer();
-        if (server.isEmpty()) {
-            respondLater.thenAccept(res -> {
-                res.setContent("This command can be used inside a server!").update();
-            });
-            return;
-        }
 
         Optional<ChannelCategory> category = event.getApi().getChannelCategoryById(categoryID);
         if (category.isEmpty()) {
