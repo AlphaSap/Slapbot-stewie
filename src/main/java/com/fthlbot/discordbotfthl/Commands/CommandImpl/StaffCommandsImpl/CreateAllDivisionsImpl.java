@@ -8,7 +8,6 @@ import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
-import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
@@ -49,9 +48,11 @@ public class CreateAllDivisionsImpl implements Command {
                 }
                 if (b.getButtonInteraction().getMessage().getContent().equals("yes")) {
                     divisionService.createDivisions();
-                    event.getSlashCommandInteraction().createImmediateResponder().setContent("All divisions have been created").respond();
+                    event.getSlashCommandInteraction().createFollowupMessageBuilder()
+                            .setContent("All divisions have been created")
+                            .send();
                 } else {
-                    event.getSlashCommandInteraction().createImmediateResponder().setContent("Aborted").respond();
+                    event.getSlashCommandInteraction().createFollowupMessageBuilder().setContent("Aborted").send();
                 }
             });
         });
