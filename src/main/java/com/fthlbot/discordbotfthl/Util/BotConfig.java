@@ -75,10 +75,17 @@ public class BotConfig {
     private String f11StartDate;
     @Value("${f11.endTime}")
     private String f11EndDate;
-    @Value("${fmix.startTime}")
-    private String fmixStartDate;
-    @Value("${fmix.endTime}")
-    private String fmixEndDate;
+    @Value("${elite.startTime}")
+    private String eliteStartDate;
+    @Value("${elite.endTime}")
+    private String eliteEndDate;
+
+    @Value("${lite.startTime}")
+    private String liteStartDate;
+
+    @Value("${lite.endTime}")
+    private String liteEndDate;
+
     @Value("${league.startDate}")
     private String leagueStartDate;
     @Value("${league.RegistrationStartDate}")
@@ -117,12 +124,12 @@ public class BotConfig {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(f11EndDate);
     }
 
-    public Date getFmixStartDate() throws ParseException {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(fmixStartDate);
+    public Date getEliteStartDate() throws ParseException {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(eliteStartDate);
     }
 
-    public Date getFmixEndDate() throws ParseException {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(fmixEndDate);
+    public Date getEliteEndDate() throws ParseException {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(eliteEndDate);
     }
 
     public Date getF5StartDate() throws ParseException {
@@ -207,9 +214,13 @@ public class BotConfig {
              dates[0] = this.getF11StartDate();
              dates[1] = this.getF11EndDate();
          }
-         case "fmix" -> {
-             dates[0] = this.getFmixStartDate();
-             dates[1] = this.getFmixEndDate();
+         case "elite" -> {
+             dates[0] = this.getEliteStartDate();
+             dates[1] = this.getEliteEndDate();
+         }
+         case "lite" -> {
+             dates[0] = this.getLiteStartDate();
+             dates[1] = this.getLiteEndDate();
          }
          default -> {
              throw new IllegalStateException("Incorrect division alias");
@@ -227,5 +238,13 @@ public class BotConfig {
 
     public long getSuggestionChannelID() {
         return suggestionChannelID;
+    }
+
+    public Date getLiteStartDate() throws ParseException {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(liteStartDate);
+    }
+
+    public Date getLiteEndDate() throws ParseException {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(liteEndDate);
     }
 }

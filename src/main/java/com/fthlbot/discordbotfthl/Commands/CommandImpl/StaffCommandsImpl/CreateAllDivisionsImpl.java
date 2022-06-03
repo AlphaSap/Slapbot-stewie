@@ -4,8 +4,14 @@ import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
 import com.fthlbot.discordbotfthl.Handlers.Command;
+import org.javacord.api.entity.message.component.ActionRow;
+import org.javacord.api.entity.message.component.Button;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
+import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.springframework.stereotype.Component;
+
+import java.awt.*;
 
 @Component
 @Invoker(
@@ -24,11 +30,30 @@ public class CreateAllDivisionsImpl implements Command {
 
     @Override
     public void execute(SlashCommandCreateEvent event) {
-        if(event.getSlashCommandInteraction().getUser().isBotOwner()){
-            divisionService.createDivisions();
-            event.getSlashCommandInteraction().createImmediateResponder().setContent("Created all divisions").respond();
+        if (!event.getSlashCommandInteraction().getUser().isBotOwner()) {
+            event.getSlashCommandInteraction().createImmediateResponder().setContent("You are not the bot owner").respond();
             return;
         }
-        event.getSlashCommandInteraction().createImmediateResponder().setContent("You are not the bot owner").respond();
+        EmbedBuilder embedBuilder = new EmbedBuilder()
+                .setTitle("Warning")
+                .setDescription("This will delete all divisions and create new ones. Are you sure you want to do this?")
+                .setColor(Color.ORANGE)
+                .setTimestampToNow();
+        event.getSlashCommandInteraction().createImmediateResponder().addEmbed(embedBuilder).addComponents(ActionRow.of(
+                Button.primary("Yes", "yes"),
+                Button.danger("No", "no")
+        )).respond().thenAccept(message -> {
+            message.update().join().addButtonClickListener(b -> {
+                if (b.getButtonInteraction().getUser().getId() != event.getSlashCommandInteraction().getUser().getId()) {
+                    return;
+                }
+                if (b.getButtonInteraction().getMessage().getContent().equals("yes")) {
+                    divisionService.createDivisions();
+                    event.getSlashCommandInteraction().createImmediateResponder().setContent("All divisions have been created").respond();
+                } else {
+                    event.getSlashCommandInteraction().createImmediateResponder().setContent("Aborted").respond();
+                }
+            });
+        });
     }
 }
