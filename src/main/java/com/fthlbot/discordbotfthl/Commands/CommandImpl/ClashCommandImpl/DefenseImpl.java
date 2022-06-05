@@ -8,12 +8,9 @@ import Core.JClash;
 import Core.exception.ClashAPIException;
 import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
-import com.fthlbot.discordbotfthl.Commands.CommandListener.ClashCommandListener.AttackListener;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.ClashCommandListener.DefenseListener;
-import com.fthlbot.discordbotfthl.Util.Utils;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
-import com.fthlbot.discordbotfthl.Util.JavacordLogger;
-import org.javacord.api.entity.channel.ServerTextChannel;
+import com.fthlbot.discordbotfthl.Util.Utils;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
@@ -25,8 +22,8 @@ import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @Component
@@ -81,12 +78,6 @@ public class DefenseImpl implements DefenseListener {
                     .setStatusCode(Integer.valueOf(e.getMessage()))
                     .respond();
         }
-        new JavacordLogger()
-                .setLogger(DefenseImpl.class)
-                .setChannel((ServerTextChannel) event.getApi().getTextChannelById(777902179771613184L).get())
-                .info("User def command",
-                        event.getInteraction().getUser(),
-                        event.getSlashCommandInteraction().getServer().get());
     }
 
     private EmbedBuilder getDefEmbed(SlashCommandInteraction interaction, WarInfo c) {
