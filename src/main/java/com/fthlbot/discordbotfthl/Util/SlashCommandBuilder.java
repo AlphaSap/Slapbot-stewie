@@ -357,21 +357,6 @@ public class SlashCommandBuilder {
                 .createGlobal(getApi()).join();
     }
 
-    //TODO: Add auto-complete for teams name;
-    public SlashCommand createClanCommand() {
-        SlashCommandOption e1 = SlashCommandOption.create(STRING,
-                "clan-tag",
-                "Enter the clan's tag",
-                true
-        );
-        SlashCommandOptionBuilder builder = new SlashCommandOptionBuilder().setAutocompletable(true).setOptions(List.of(e1));
-        return SlashCommand
-                .with("clan", "A command to view a player's profile")
-                .setOptions(List.of(
-                        builder.build()
-                ))
-                .createGlobal(getApi()).join();
-    }
     public SlashCommand createStatsCommand() {
         return SlashCommand
                 .with("stats", "A command to view a current war for a clan")
@@ -538,5 +523,36 @@ public class SlashCommandBuilder {
                 e.deleteGlobal();
             });
         });
+    }
+
+    public SlashCommand createChangeAliasCommand() {
+        return SlashCommand
+                .with("change-alias", "staff only command to change alias of a team")
+                .setOptions(List.of(
+                        SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
+                                "division",
+                                "choose from one of the following division",
+                                true,
+                                asList(
+                                        SlashCommandOptionChoice.create("f8", "f8"),
+                                        SlashCommandOptionChoice.create("f5", "f5"),
+                                        SlashCommandOptionChoice.create("f9", "f9"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
+                                        SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("Lite", "Lite"),
+                                        SlashCommandOptionChoice.create("Elite", "Elite")
+                                )
+                        ), SlashCommandOption.create(SlashCommandOptionType.STRING,
+                                "team-identifier",
+                                "Enter the name of your team or its CURRENT alias",
+                                true
+                        ),
+                        SlashCommandOption.create(SlashCommandOptionType.USER,
+                                "new-alias",
+                                "Enter the new alias for the team",
+                                true
+                        )
+                ))
+                .createGlobal(getApi()).join();
     }
 }

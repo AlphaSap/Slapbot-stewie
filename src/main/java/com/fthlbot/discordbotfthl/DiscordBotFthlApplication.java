@@ -27,8 +27,10 @@ import com.fthlbot.discordbotfthl.Util.SlapbotEmojis;
 import com.fthlbot.discordbotfthl.Util.SlashCommandBuilder;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
+import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.server.Server;
+import org.javacord.api.entity.user.UserStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -161,7 +163,7 @@ public class DiscordBotFthlApplication {
 
         clash = new JClash(env.getProperty("CLASH_EMAIL"), env.getProperty("CLASH_PASS"));
         DiscordApi api = new DiscordApiBuilder()
-                .setToken(env.getProperty("TOKEN_TEST_BOT"))
+                .setToken(env.getProperty("TOKEN_BOT"))
                 .setUserCacheEnabled(false)
                 .setAllIntentsExcept(
                         Intent.GUILD_WEBHOOKS,
@@ -175,7 +177,23 @@ public class DiscordBotFthlApplication {
                 .join();
         ArrayList<Server> servers = new ArrayList<>(api.getServers());
 
-        //Add commands to the handler
+        //Adding commands to the handler
+        CommandListener commandListener = registerCommands();
+
+        api.addListener(commandListener);
+
+        api.addListener(serverMemeberJoin);
+
+
+        api.updateActivity(ActivityType.LISTENING, "Slash commands!");
+
+        SlapbotEmojis.setEmojis( api.getServerById(config.getEmojiServerID()).get().getCustomEmojis().stream().toList());
+        log.info("Logged in as {}", api.getYourself().getDiscriminatedName());
+        log.info("Watching servers {}", servers.size());
+        printMemoryUsage();
+        return api;
+    }
+    private CommandListener registerCommands() {
         List<Command> commandList = new ArrayList<>(List.of(
                 this.pingImpl,
                 this.registration,
@@ -214,19 +232,7 @@ public class DiscordBotFthlApplication {
 
         MessageHolder messageHolder = messageHandlers.setCommands();
         CommandListener commandListener = new CommandListener(messageHolder, loggerService, config);
-
-        api.addListener(commandListener);
-
-        api.addListener(serverMemeberJoin);
-
-        builder.setApi(api);
-//        builder.makeAllCommands();
-
-        SlapbotEmojis.setEmojis( api.getServerById(config.getEmojiServerID()).get().getCustomEmojis().stream().toList());
-        log.info("Logged in as {}", api.getYourself().getDiscriminatedName());
-        log.info("Watching servers {}", servers.size());
-        printMemoryUsage();
-        return api;
+        return commandListener;
     }
 
     private void printMemoryUsage(){
