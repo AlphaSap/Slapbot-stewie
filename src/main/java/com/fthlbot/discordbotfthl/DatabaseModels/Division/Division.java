@@ -62,4 +62,28 @@ public class Division {
         return this.allowedRosterChanges;
     }
 
+    public Division setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public Division setAlias(String alias) {
+        this.alias = alias;
+        return this;
+    }
+
+    public Division setRosterSize(Integer rosterSize) {
+        this.rosterSize = rosterSize;
+        return this;
+    }
+
+    public Division setAllowedRosterChanges(Integer allowedRosterChanges) {
+        this.allowedRosterChanges = allowedRosterChanges;
+        return this;
+    }
+
+    public Division setAllowedTownHall(Integer[] allowedTownHall) {
+        this.allowedTownHall = allowedTownHall;
+        return this;
+    }
 }
