@@ -2,6 +2,7 @@ package com.fthlbot.discordbotfthl.Util;
 
 import org.javacord.api.DiscordApi;
 import org.javacord.api.interaction.*;
+import org.javacord.api.util.logging.ExceptionLogger;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
@@ -519,6 +520,61 @@ public class SlashCommandBuilder {
     public void deleteAllCommand() {
         this.getApi().getGlobalSlashCommands().thenAccept(globalSlashCommands -> {
             globalSlashCommands.forEach(e -> {
+                System.out.println("Deleting command: " + e.getName());
+                e.deleteGlobal();
+            });
+        });
+    }
+
+    public SlashCommand createDivisionEditor(){
+        return SlashCommand.with("division-editor",  "Staff only command to edit a division")
+                .setOptions(
+                        List.of(
+                                SlashCommandOption.createWithChoices(STRING,
+                                        "division",
+                                        "choose from one of the following division",
+                                        true,
+                                        asList(
+                                                SlashCommandOptionChoice.create("F8", "F8"),
+                                                SlashCommandOptionChoice.create("F5", "F5"),
+                                                SlashCommandOptionChoice.create("F9", "F9"),
+                                                SlashCommandOptionChoice.create("F11", "F11"),
+                                                SlashCommandOptionChoice.create("F10", "F10"),
+                                                SlashCommandOptionChoice.create("Lite", "Lite"),
+                                                SlashCommandOptionChoice.create("Elite", "Elite")
+                                        )
+                                ),
+                                SlashCommandOption.createWithChoices(STRING,
+                                        "to-change",
+                                        "select what you want to change",
+                                        true,
+                                        asList(
+                                                SlashCommandOptionChoice.create("name", "name"),
+                                                SlashCommandOptionChoice.create("alias", "alias"),
+                                                SlashCommandOptionChoice.create("allowed roster change", "allowed roster change"),
+                                                SlashCommandOptionChoice.create("roster size", "roster size"),
+                                                SlashCommandOptionChoice.create("allowed townhall", "allowed townhall")
+                                        )
+                                )
+                        )
+                )
+                .createGlobal(getApi())
+                .exceptionally(ExceptionLogger.get())
+                .join();
+    }
+
+    public void deleteACommand(String name, long serverId) {
+        this.getApi().getServerSlashCommands(this.getApi().getServerById(serverId).get()).thenAccept(x -> {
+            x.stream().filter(e -> e.getName().equals(name)).forEach(e -> {
+                System.out.println("Deleting command: " + e.getName());
+                e.deleteForServer(serverId);
+            });
+        });
+    }
+
+    public void deleteACommand(String name) {
+        this.getApi().getGlobalSlashCommands().thenAccept(x -> {
+            x.stream().filter(e -> e.getName().equals(name)).forEach(e -> {
                 System.out.println("Deleting command: " + e.getName());
                 e.deleteGlobal();
             });

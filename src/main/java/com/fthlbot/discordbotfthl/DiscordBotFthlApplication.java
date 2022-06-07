@@ -23,6 +23,7 @@ import com.fthlbot.discordbotfthl.Handlers.MessageHandlers;
 import com.fthlbot.discordbotfthl.Handlers.MessageHolder;
 import com.fthlbot.discordbotfthl.RandomEvents.ServerJoinImpl;
 import com.fthlbot.discordbotfthl.RandomEvents.ServerLeaveImpl;
+import com.fthlbot.discordbotfthl.RandomEvents.ServerMemberJoin.ApplicantServerJoinImpl;
 import com.fthlbot.discordbotfthl.RandomEvents.ServerMemberJoin.NegoServerMemberjoinImpl;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import com.fthlbot.discordbotfthl.Util.SlapbotEmojis;
@@ -114,10 +115,14 @@ public class DiscordBotFthlApplication {
 
     private final NegoServerMemberjoinImpl serverMemeberJoin;
 
+    private final ApplicantServerJoinImpl applicantServerJoin;
+
     private final ServerJoinImpl serverJoin;
     private final ServerLeaveImpl serverLeave;
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemeberJoin, ServerJoinImpl serverJoin, ServerLeaveImpl serverLeave) {
+    private final DivisionEditorImpl divisionEditor;
+
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemeberJoin, ApplicantServerJoinImpl applicantServerJoin, ServerJoinImpl serverJoin, ServerLeaveImpl serverLeave, DivisionEditorImpl divisionEditor) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -149,8 +154,10 @@ public class DiscordBotFthlApplication {
         this.clanInfo = clanInfo;
         this.suggestionImpl = suggestionImpl;
         this.serverMemeberJoin = serverMemeberJoin;
+        this.applicantServerJoin = applicantServerJoin;
         this.serverJoin = serverJoin;
         this.serverLeave = serverLeave;
+        this.divisionEditor = divisionEditor;
     }
 
 
@@ -181,18 +188,22 @@ public class DiscordBotFthlApplication {
                         Intent.GUILD_MESSAGE_TYPING
                 ).login()
                 .join();
+
+        builder.setApi(api);
+        builder.deleteACommand("division-editor");
+        builder.createDivisionEditor();
         ArrayList<Server> servers = new ArrayList<>(api.getServers());
 
         //Adding commands to the handler
         CommandListener commandListener = registerCommands();
 
         api.addListener(commandListener);
-
         api.addListener(serverMemeberJoin);
-
+        api.addListener(applicantServerJoin);
         //To log the servers the bot is in
         api.addListener(serverJoin);
         api.addListener(serverLeave);
+
 
 
         api.updateActivity(ActivityType.LISTENING, "Slash commands!");
@@ -230,7 +241,8 @@ public class DiscordBotFthlApplication {
                 this.checkLineUp,
                 this.fairPlayCheckOnAllTeam,
                 this.clanInfo,
-                this.suggestionImpl
+                this.suggestionImpl,
+                this.divisionEditor
         ));
         log.info("Commands added Size: " + commandList.size());
         //Making help command
@@ -241,8 +253,7 @@ public class DiscordBotFthlApplication {
         MessageHandlers messageHandlers = new MessageHandlers(commandList);
 
         MessageHolder messageHolder = messageHandlers.setCommands();
-        CommandListener commandListener = new CommandListener(messageHolder, loggerService, config);
-        return commandListener;
+        return new CommandListener(messageHolder, loggerService, config);
     }
 
     private void printMemoryUsage(){
