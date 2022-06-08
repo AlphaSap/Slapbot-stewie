@@ -113,7 +113,7 @@ public class DiscordBotFthlApplication {
 
     private final SuggestionImpl suggestionImpl;
 
-    private final NegoServerMemberjoinImpl serverMemeberJoin;
+    private final NegoServerMemberjoinImpl serverMemberJoin;
 
     private final ApplicantServerJoinImpl applicantServerJoin;
 
@@ -122,7 +122,7 @@ public class DiscordBotFthlApplication {
 
     private final DivisionEditorImpl divisionEditor;
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemeberJoin, ApplicantServerJoinImpl applicantServerJoin, ServerJoinImpl serverJoin, ServerLeaveImpl serverLeave, DivisionEditorImpl divisionEditor) {
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemberJoin, ApplicantServerJoinImpl applicantServerJoin, ServerJoinImpl serverJoin, ServerLeaveImpl serverLeave, DivisionEditorImpl divisionEditor) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -153,7 +153,7 @@ public class DiscordBotFthlApplication {
         this.checkLineUp = checkLineUp;
         this.clanInfo = clanInfo;
         this.suggestionImpl = suggestionImpl;
-        this.serverMemeberJoin = serverMemeberJoin;
+        this.serverMemberJoin = serverMemberJoin;
         this.applicantServerJoin = applicantServerJoin;
         this.serverJoin = serverJoin;
         this.serverLeave = serverLeave;
@@ -198,7 +198,7 @@ public class DiscordBotFthlApplication {
         CommandListener commandListener = registerCommands();
 
         api.addListener(commandListener);
-        api.addListener(serverMemeberJoin);
+        api.addListener(serverMemberJoin);
         api.addListener(applicantServerJoin);
         //To log the servers the bot is in
         api.addListener(serverJoin);

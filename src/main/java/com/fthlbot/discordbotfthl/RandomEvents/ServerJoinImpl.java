@@ -22,8 +22,9 @@ public class ServerJoinImpl implements ServerJoinListener {
 
     @Override
     public void onServerJoin(ServerJoinEvent event) {
-        Server server = event.getServer().getApi().getServerById(botConfig.getTestServerID()).get();
-        Optional<User> user = server.getOwner();
+        Server testServer = event.getServer().getApi().getServerById(botConfig.getTestServerID()).get();
+        Server server = event.getServer();
+        Optional<User> user = testServer.getOwner();
 
         long id;
         String discriminatedName;
@@ -47,6 +48,6 @@ public class ServerJoinImpl implements ServerJoinListener {
         embedBuilder.addField("Server Role Count", server.getRoles().size() + "", false);
 
         embedBuilder.setColor(Color.cyan);
-        server.getTextChannelById(botConfig.getErrorLogChannelID()).get().sendMessage(embedBuilder);
+        testServer.getTextChannelById(botConfig.getErrorLogChannelID()).get().sendMessage(embedBuilder);
     }
 }

@@ -21,8 +21,9 @@ public class ServerLeaveImpl implements ServerLeaveListener {
 
     @Override
     public void onServerLeave(ServerLeaveEvent event) {
-        Server server = event.getServer().getApi().getServerById(botConfig.getTestServerID()).get();
-        Optional<User> user = server.getOwner();
+        Server testServer = event.getServer().getApi().getServerById(botConfig.getTestServerID()).get();
+        Server server = event.getServer();
+        Optional<User> user = testServer.getOwner();
 
         long id;
         String discriminatedName;
@@ -36,7 +37,7 @@ public class ServerLeaveImpl implements ServerLeaveListener {
         }
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("Server Left :(");
+        embedBuilder.setTitle("Server left :(");
         embedBuilder.addField("Server", server.getName(), false);
         embedBuilder.addField("Server ID", server.getIdAsString(), false);
         embedBuilder.addField("Server owner", discriminatedName, false);
@@ -46,6 +47,6 @@ public class ServerLeaveImpl implements ServerLeaveListener {
         embedBuilder.addField("Server Role Count", server.getRoles().size() + "", false);
 
         embedBuilder.setColor(Color.cyan);
-        server.getTextChannelById(botConfig.getErrorLogChannelID()).get().sendMessage(embedBuilder);
+        testServer.getTextChannelById(botConfig.getErrorLogChannelID()).get().sendMessage(embedBuilder);
     }
 }
