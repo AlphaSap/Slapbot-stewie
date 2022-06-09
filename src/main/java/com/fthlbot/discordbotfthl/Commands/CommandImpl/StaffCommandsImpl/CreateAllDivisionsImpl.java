@@ -46,7 +46,7 @@ public class CreateAllDivisionsImpl implements Command {
                 if (b.getButtonInteraction().getUser().getId() != event.getSlashCommandInteraction().getUser().getId()) {
                     return;
                 }
-                if (b.getButtonInteraction().getMessage().getContent().equals("yes")) {
+                if (b.getButtonInteraction().getCustomId().equalsIgnoreCase("Yes")) {
                     divisionService.createDivisions();
                     event.getSlashCommandInteraction().createFollowupMessageBuilder()
                             .setContent("All divisions have been created")
@@ -55,6 +55,9 @@ public class CreateAllDivisionsImpl implements Command {
                     event.getSlashCommandInteraction().createFollowupMessageBuilder().setContent("Aborted").send();
                 }
             });
+        }).exceptionally(e -> {
+            event.getSlashCommandInteraction().createFollowupMessageBuilder().setContent("Error: %s".formatted(e.getMessage())).send();
+            return null;
         });
     }
 }
