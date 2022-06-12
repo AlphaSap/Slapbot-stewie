@@ -24,25 +24,14 @@ public class ServerJoinImpl implements ServerJoinListener {
     public void onServerJoin(ServerJoinEvent event) {
         Server testServer = event.getServer().getApi().getServerById(botConfig.getTestServerID()).get();
         Server server = event.getServer();
-        Optional<User> user = testServer.getOwner();
-
-        long id;
-        String discriminatedName;
-
-        if (user.isPresent()) {
-            id = user.get().getId();
-            discriminatedName = user.get().getDiscriminatedName();
-        }else {
-            id = 000000L;
-            discriminatedName = "Unknown";
-        }
+        User user = testServer.requestOwner().join();
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Server joined");
         embedBuilder.addField("Server", server.getName(), false);
         embedBuilder.addField("Server ID", server.getIdAsString(), false);
-        embedBuilder.addField("Server owner", discriminatedName, false);
-        embedBuilder.addField("Server owner ID", id + "", false);
+        embedBuilder.addField("Server owner", user.getDiscriminatedName(), false);
+        embedBuilder.addField("Server owner ID", user.getId() + "", false);
         embedBuilder.addField("Server Member Count", server.getMemberCount() + "", false);
         embedBuilder.addField("Server Channel Count", server.getChannels().size() + "", false);
         embedBuilder.addField("Server Role Count", server.getRoles().size() + "", false);
