@@ -23,7 +23,7 @@ public class ServerLeaveImpl implements ServerLeaveListener {
     public void onServerLeave(ServerLeaveEvent event) {
         Server testServer = event.getServer().getApi().getServerById(botConfig.getTestServerID()).get();
         Server server = event.getServer();
-        User user = testServer.requestOwner().join();
+        User user = server.requestOwner().join();
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Server left :(");

@@ -24,7 +24,7 @@ public class ServerJoinImpl implements ServerJoinListener {
     public void onServerJoin(ServerJoinEvent event) {
         Server testServer = event.getServer().getApi().getServerById(botConfig.getTestServerID()).get();
         Server server = event.getServer();
-        User user = testServer.requestOwner().join();
+        User user = server.requestOwner().join();
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Server joined");
