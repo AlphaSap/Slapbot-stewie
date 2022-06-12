@@ -4,13 +4,18 @@ import com.fthlbot.discordbotfthl.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
 import com.fthlbot.discordbotfthl.Handlers.Command;
+import com.fthlbot.discordbotfthl.Util.Pagination.ButtonRemoveJobScheduler;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
+import org.quartz.SchedulerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @Invoker(
@@ -22,6 +27,8 @@ import java.awt.*;
 public class CreateAllDivisionsImpl implements Command {
 
     private final DivisionService divisionService;
+
+    private final Logger log = LoggerFactory.getLogger(CreateAllDivisionsImpl.class);
 
     public CreateAllDivisionsImpl(DivisionService divisionService) {
         this.divisionService = divisionService;
@@ -54,10 +61,17 @@ public class CreateAllDivisionsImpl implements Command {
                 } else {
                     event.getSlashCommandInteraction().createFollowupMessageBuilder().setContent("Aborted").send();
                 }
-            });
+                b.getButtonInteraction().acknowledge();
+            }).removeAfter(11, TimeUnit.MINUTES);
+            try {
+                new ButtonRemoveJobScheduler().execute(message);
+            } catch (SchedulerException e) {
+                log.warn("Failed to schedule button removal job", e);
+            }
         }).exceptionally(e -> {
             event.getSlashCommandInteraction().createFollowupMessageBuilder().setContent("Error: %s".formatted(e.getMessage())).send();
             return null;
         });
+
     }
 }
