@@ -1,5 +1,6 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl;
 
+import Core.Enitiy.clan.ClanModel;
 import Core.Enitiy.player.League;
 import Core.Enitiy.player.Player;
 import Core.JClash;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Component;
 import java.awt.*;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Component
@@ -88,12 +90,15 @@ public class PlayerImpl implements PlayerListener {
                 .setTimestampToNow()
                 .setColor(Color.GREEN);
         //TODO: add an image to below embed
+        Optional<ClanModel> clan = Optional.ofNullable(player.getClan());
+        String clanName = clan.map(ClanModel::getName).orElse("No clan found!");
+        String clanTag = clan.map(ClanModel::getTag).orElse("No clan found!");
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle(player.getName())
                 .addField("TownHall Level", player.getTownHallLevel() + "")
                 .addField("Player Tag", player.getTag())
-                .addField("Clan name ", player.getClan().getName())
-                .addField("Clan Tag", player.getClan().getTag())
+                .addField("Clan name ", clanName)
+                .addField("Clan Tag", clanTag)
                 .addField("Clan Role", player.getRole())
 
                 .addField("Experience level", player.getExpLevel() + "<:exp:924431294828531803>")
