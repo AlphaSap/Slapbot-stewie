@@ -38,13 +38,13 @@ public class StatsImpl implements Command {
         JClash clash = new JClash();
         try {
             ClanModel join = clash.getClan(tag).join();
-            if (!join.isWarLogPublic()){
+            if (!join.isWarLogPublic()) {
                 responder.thenAccept(res -> {
                     res.setContent("War log is not public").update();
                 });
                 return;
             }
-            String s = stats(join, clash.getCurrentWar(tag).join());
+            String s = stats1(join, clash.getCurrentWar(tag).join());
             responder.thenAccept(response -> {
                 response.setContent(s).update();
             });
@@ -202,6 +202,116 @@ public class StatsImpl implements Command {
             return "Unable to fetch the current war! Reason: 'War Log not public'";
     }
 
+    public String stats1 (ClanModel clan, WarInfo war) throws ClashAPIException, ParseException {
+        if (!clan.isWarLogPublic()){
+            return "War Log not public";
+        }
+        if (war.getState().equalsIgnoreCase("notInWar")) {
+            return "Clan not in war";
+        }
+        int Home_2_left = 0, Opponent_2_left = 0, Home_3_left = 0, Opponent_3_left = 0, Home3 = 0,
+                opponent3 = 0, Home2 = 0, opponent2 = 0;
+        String toJoin = timeLeftInWar(war);
+
+        List<ClanWarMember> clanWarMember = war.getClan().getWarMembers();
+        List<ClanWarMember> clanWarMember_Opponent = war.getEnemy().getWarMembers();
+
+        List<Integer> homeAvgTime = new ArrayList<>();
+        List<Integer> opponentAvgTime = new ArrayList<>();
+
+        for (int i = 0; i < clanWarMember.toArray().length; i++) {
+            if (clanWarMember.get(i).getBestOpponentAttack() != null) {
+                Integer stars = clanWarMember.get(i).getBestOpponentAttack().getStars();
+                if (stars == 3) {
+                    Home3++;
+                }
+                if (stars == 2) {
+                    Home2++;
+                }
+                Integer duration = clanWarMember.get(i).getBestOpponentAttack().getDuration();
+                homeAvgTime.add(duration);
+            }
+
+            if (clanWarMember_Opponent.get(i).getBestOpponentAttack() != null) {
+                Integer stars = clanWarMember_Opponent.get(i).getBestOpponentAttack().getStars();
+                if (stars == 3) {
+                    opponent3++;
+                }
+                if (stars == 2) {
+                    opponent2++;
+                }
+                Integer duration = clanWarMember_Opponent.get(i).getBestOpponentAttack().getDuration();
+                opponentAvgTime.add(duration);
+            }
+        }
+        String hr = Home3 + "/" + war.getClan().getAttacks() +
+                "   " + Math.round((double) Home3 * 100 / war.getClan().getAttacks()) +
+                "%       HR       " + Math.round((double) opponent3 * 100 / war.getEnemy().getAttacks()) +
+                "%   " + opponent3 + "/" + war.getEnemy().getAttacks();
+
+        //Calculating Average Time
+        //Home
+        int homeTime = calculateAverageMinutes(homeAvgTime);
+        //Opponent
+        int opponentTime = calculateAverageMinutes(opponentAvgTime);
+
+        String Mes = String.format(
+                """
+                        %s   vs   %s
+                        %-5d     Stars         %5d
+                        %-5.2f     Percentage    %5.2f
+                        %-5d     Attacks       %5d
+                        %-5d     ***           %5d
+                        %-5d     **            %5d
+                        %-5s     Average Time  %5s""",
+
+                clan.getName(), war.getEnemy().getName(), war.getClan().getStars(), war.getEnemy().getStars(),
+                war.getClan().getDestructionPercentage(), war.getEnemy().getDestructionPercentage(),
+                war.getClan().getAttacks(), war.getEnemy().getAttacks(),
+                Home_3_left, Opponent_3_left, Home_2_left, Opponent_2_left,
+                convertSecondsToMinutes(homeTime), convertSecondsToMinutes(opponentTime)
+        );
+
+        String stats = Mes + "\n \n" + hr + "\n" + toJoin;
+        return "```" + stats + "```";
+    }
+
+    private String timeLeftInWar(WarInfo war) throws ParseException {
+        Date BattleTime_end = war.getEndTimeAsDate();
+
+        Date BattleTime_start = war.getStartTimeAsDate();
+
+        String to_join = "";
+        if (war.getState().equalsIgnoreCase("preparation")) {
+
+            Date now = new Date();
+            long difference_In_prep = BattleTime_start.getTime() - now.getTime();
+
+            long difference_In_Minute = (difference_In_prep / (1000 * 60)) % 60;
+
+            long difference_In_Hours = (difference_In_prep / (1000 * 60 * 60)) % 24;
+
+            if (difference_In_Minute < 0) {
+                to_join = "Preparation time ending soon";
+            } else
+                to_join = "War starts in " + difference_In_Hours + " hours " + difference_In_Minute + " minutes";
+        } else if (war.getState().equalsIgnoreCase("inWar")) {
+            Date now = new Date();
+            long difference_in_battle = BattleTime_end.getTime() - now.getTime();
+            long difference_In_Minute = (difference_in_battle / (1000 * 60)) % 60;
+
+            long difference_In_Hours = (difference_in_battle / (1000 * 60 * 60)) % 24;
+
+            if (difference_In_Minute < 0) {
+                to_join = "War is ending!";
+            } else
+                to_join = "War ends in " + difference_In_Hours + " hours " + difference_In_Minute + " minutes";
+        } else if (war.getState().equalsIgnoreCase("warEnded")) {
+            to_join = war.getStatus();
+        }
+        return to_join;
+    }
+
     //calculate average minutes from a list of seconds
     public int calculateAverageMinutes(List<Integer> seconds) {
         double sum = 0;
@@ -212,6 +322,7 @@ public class StatsImpl implements Command {
     }
 
     private static final int SECONDS_PER_MINUTE = 60;
+
     //convert seconds into minutes and seconds
     public String convertSecondsToMinutes(int seconds) {
         int minutes = seconds / SECONDS_PER_MINUTE;
