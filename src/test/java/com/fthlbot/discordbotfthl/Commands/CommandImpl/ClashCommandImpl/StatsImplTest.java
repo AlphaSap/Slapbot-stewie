@@ -10,12 +10,5 @@ class StatsImplTest {
 
     @Test
     void calculateAverageMinutes() {
-        StatsImpl stats = new StatsImpl();
-
-        List<Integer> minutes = List.of(60, 60, 60, 60, 60);
-        int s = stats.calculateAverageMinutes(minutes);
-        System.out.println(s);
-        String s1 = stats.convertSecondsToMinutes(s);
-        System.out.println(s1);
     }
 }
