@@ -9,13 +9,13 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
+import com.fthlbot.discordbotfthl.Util.BotConfig;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.SlashCommandInteractionOption;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.javacord.api.util.logging.ExceptionLogger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -34,10 +34,13 @@ public class RosterAdditionImpl extends RosterAddUtilClass implements RosterAddL
     private final RosterService rosterService;
     private final DivisionService divisionService;
 
-    public RosterAdditionImpl(TeamService teamService, RosterService rosterService, DivisionService divisionService) {
+    private final BotConfig config;
+
+    public RosterAdditionImpl(TeamService teamService, RosterService rosterService, DivisionService divisionService, BotConfig config) {
         this.teamService = teamService;
         this.rosterService = rosterService;
         this.divisionService = divisionService;
+        this.config = config;
     }
 
     @Override
@@ -55,7 +58,7 @@ public class RosterAdditionImpl extends RosterAddUtilClass implements RosterAddL
 
             Division division = divisionService.getDivisionByAlias(divisionAlias);
             Team team = teamService.getTeamByDivisionAndAlias(teamAlias, division);
-            addPlayers(event, slashCommandInteraction, tags, team, rosterService);
+            addPlayers(event, slashCommandInteraction, tags, team, rosterService, config);
 
             res.thenAccept(r -> {
                 r.setContent("Roster Addition requested!").update();

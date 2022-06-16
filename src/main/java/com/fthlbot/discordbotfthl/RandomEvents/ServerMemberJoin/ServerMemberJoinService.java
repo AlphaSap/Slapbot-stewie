@@ -63,7 +63,7 @@ public class ServerMemberJoinService {
         }
     }
 
-    public void giveRoles(Server server, String roleName) {
+    public void giveRoles(Server server, long roleID, String roleName) {
         if (getTeams().isEmpty()) {
             log.warn("User {} is not a rep", user.getIdAsString());
             return;
@@ -72,7 +72,7 @@ public class ServerMemberJoinService {
             for (Team team : getTeams()) {
                 server.addRoleToUser(getUser(), server.getRolesByName(team.getDivision().getAlias()).get(0));
             }
-            Role repRole = server.getRoleById(botConfig.getNegServerRepresentativeRoleID()).orElse(
+            Role repRole = server.getRoleById(roleID).orElse(
                     server.getRolesByName(roleName).get(0)
             );
             server.addRoleToUser(getUser(), repRole);

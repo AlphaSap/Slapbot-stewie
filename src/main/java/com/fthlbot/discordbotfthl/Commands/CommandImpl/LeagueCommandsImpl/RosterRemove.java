@@ -8,10 +8,12 @@ import com.fthlbot.discordbotfthl.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;
+import com.fthlbot.discordbotfthl.DatabaseModels.Roster.Roster;
 import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
 import com.fthlbot.discordbotfthl.Handlers.Command;
+import com.fthlbot.discordbotfthl.Util.BotConfig;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
@@ -36,10 +38,12 @@ public class RosterRemove implements Command {
 
     private final DivisionService divisionService;
 
-    public RosterRemove(TeamService teamService, RosterService rosterService, DivisionService divisionService) {
+    private final BotConfig config;
+    public RosterRemove(TeamService teamService, RosterService rosterService, DivisionService divisionService, BotConfig config) {
         this.teamService = teamService;
         this.rosterService = rosterService;
         this.divisionService = divisionService;
+        this.config = config;
     }
 
     @Override
@@ -66,7 +70,7 @@ public class RosterRemove implements Command {
         for (String tag : tags) {
             try {
                 Player join = jClash.getPlayer(tag).join();
-                rosterService.removeFromRoster(team, join.getTag());
+                Roster roster = rosterService.removeFromRoster(team, join.getTag());
                 EmbedBuilder embedBuilder = new EmbedBuilder()
                         .setTitle("Removed " + join.getName() + " from " + team.getName())
                         .setTimestampToNow()
@@ -75,6 +79,18 @@ public class RosterRemove implements Command {
                                 "Level: " + join.getTownHallLevel()
                         ).setColor(Color.GREEN).setAuthor(event.getSlashCommandInteraction().getUser());
                 event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(embedBuilder).send();
+
+                CompletableFuture.runAsync(() -> {
+                   EmbedBuilder embed = new EmbedBuilder()
+                           .addField("Team Name", team.getName())
+                           .addField("Division", team.getDivision().getAlias())
+                           .addField("Player Tag", roster.getPlayerTag())
+                           .addField("Player Name", roster.getPlayerName())
+                           .setColor(Color.RED)
+                           .setTimestampToNow();
+                    event.getApi().getTextChannelById(config.getRegistrationAndRosterLogChannelID()).get().sendMessage(embed);
+
+                });
             } catch (IOException e) {
                 EmbedBuilder embedBuilder = new EmbedBuilder()
                         .setTitle("Failed to remove " + tag + " from " + team.getName())

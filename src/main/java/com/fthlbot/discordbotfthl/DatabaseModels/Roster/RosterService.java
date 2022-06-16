@@ -97,11 +97,11 @@ public class RosterService {
         team.setAllowRosterChangesLeft(allowRosterChangesLeft);
         teamService.updateTeam(team);
     }
-    public void removeFromRoster(Team team, String tag) throws EntityNotFoundException {
+    public Roster removeFromRoster(Team team, String tag) throws EntityNotFoundException {
         Optional<Roster> roster = repo.findRosterByTeamAndPlayerTag(team, tag);
         if (roster.isPresent()){
             repo.delete(roster.get());
-            return;
+            return roster.get();
         }
         throw new EntityNotFoundException(String.format("""
                 `%s` is not present on your roster

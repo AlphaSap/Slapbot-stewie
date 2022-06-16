@@ -497,7 +497,7 @@ public class SlashCommandBuilder {
                 )).createGlobal(getApi()).join();
     }
 
-    public SlashCommand createSuggestionCommnad(){
+    public SlashCommand createSuggestionCommand(){
         return SlashCommand.with("suggestion", "Suggest a new feature").createGlobal(getApi()).join();
     }
 

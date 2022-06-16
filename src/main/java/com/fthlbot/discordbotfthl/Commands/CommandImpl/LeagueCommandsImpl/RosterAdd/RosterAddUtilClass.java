@@ -7,6 +7,7 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Roster.Roster;
 import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
+import com.fthlbot.discordbotfthl.Util.BotConfig;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
 import org.javacord.api.entity.channel.TextChannel;
@@ -26,7 +27,7 @@ public class RosterAddUtilClass {
     //TODO: https://stackoverflow.com/questions/22561110/equivalent-of-go-channel-in-java
     private final static Logger log = LoggerFactory.getLogger(RosterAddUtilClass.class);
 
-    public void addPlayers(SlashCommandCreateEvent event, SlashCommandInteraction interaction, String[] tags, Team team, RosterService service) {
+    public void addPlayers(SlashCommandCreateEvent event, SlashCommandInteraction interaction, String[] tags, Team team, RosterService service, BotConfig config) {
         for (String tag : tags) {
             Thread thread = new Thread(() -> {
                 try {
@@ -37,6 +38,15 @@ public class RosterAddUtilClass {
                     //send a message for each addition
                     EmbedBuilder embedBuilder = sendMessage(player.getTag(), team.getName(), interaction.getChannel().get(), interaction.getUser());
                     event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(embedBuilder).send();
+
+                    EmbedBuilder embed = new EmbedBuilder()
+                            .addField("Team Name", team.getName())
+                            .addField("Division", team.getDivision().getAlias())
+                            .addField("Player Tag", roster.getPlayerTag())
+                            .addField("Player Name", roster.getPlayerName())
+                            .setColor(Color.GREEN)
+                            .setTimestampToNow();
+                    event.getApi().getTextChannelById(config.getRegistrationAndRosterLogChannelID()).get().sendMessage(embed);
                 } catch (LeagueException e) {
                     EmbedBuilder leagueError = GeneralService.getLeagueError(e, event);
                     interaction.getChannel().get().sendMessage(leagueError);

@@ -18,6 +18,7 @@ import com.fthlbot.discordbotfthl.Util.GeneralService;
 import org.javacord.api.entity.channel.ChannelCategory;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.channel.ServerTextChannelBuilder;
+import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.entity.permission.PermissionsBuilder;
@@ -38,6 +39,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import static com.fthlbot.discordbotfthl.DiscordBotFthlApplication.clash;
@@ -77,7 +79,6 @@ public class RegistrationImpl implements RegistrationListener {
     private final Logger logger = LoggerFactory.getLogger(RegistrationImpl.class);
 
 
-
     public RegistrationImpl(DivisionService divisionService, TeamService teamService, BotConfig config) {
         this.divisionService = divisionService;
         this.teamService = teamService;
@@ -90,78 +91,102 @@ public class RegistrationImpl implements RegistrationListener {
         CompletableFuture<InteractionOriginalResponseUpdater> respond = slashCommandInteraction.respondLater();
 
         //check if today is between league start date and registration start date from config
-        if(!isRegistrationOpen()){
+        if (!isRegistrationOpen()) {
             respond.thenAccept(res -> res.setContent("Registration is closed").update());
             return;
         }
+        long registrationChannelID = config.getRegistrationChannelID();
+        Optional<TextChannel> channel = event.getSlashCommandInteraction().getChannel();
 
-        try{
+        if (channel.isEmpty()){
+            respond.thenAccept(res -> res.setContent("This command can only be executed in a Text Channel").update());
+            return;
+        }
 
-        List<SlashCommandInteractionOption> arguments = slashCommandInteraction.getArguments();
-        String clanTag = arguments.get(0).getStringValue().get();
-        String divisionAlias = arguments.get(1).getStringValue().get();
-        String teamAlias = arguments.get(2).getStringValue().get();
-        User user = event.getSlashCommandInteraction().getUser();
-        User secondRep = user;
-        if (arguments.size() >= 4)
-            secondRep = arguments.get(3).getUserValue().orElse(user);
+        if (channel.get().getId() != registrationChannelID){
+            respond.thenAccept(res -> res.setContent("This command is restricted to <#%d>".formatted(registrationChannelID)).update());
+            return;
+        }
 
-        Division division = divisionService.getDivisionByAlias(divisionAlias);
-        ClanModel clan = clash.getClan(clanTag).join();
+        try {
 
-        //Make team
-        Team team = new Team(
-                clan.getName(),
-                clan.getTag(),
-                teamAlias,
-                division,
-                user.getId(),
-                secondRep.getId(),
-                division.getAllowedRosterChanges()
-        );
+            List<SlashCommandInteractionOption> arguments = slashCommandInteraction.getArguments();
+            String clanTag = arguments.get(0).getStringValue().get();
+            String divisionAlias = arguments.get(1).getStringValue().get();
+            String teamAlias = arguments.get(2).getStringValue().get();
+            User user = event.getSlashCommandInteraction().getUser();
+            User secondRep = user;
+            if (arguments.size() >= 4)
+                secondRep = arguments.get(3).getUserValue().orElse(user);
 
-        team = teamService.saveTeam(team);
-        ServerTextChannel applicantChannel =
-                createApplicantChannel(event.getSlashCommandInteraction().getServer().get(), user, secondRep, team);
+            Division division = divisionService.getDivisionByAlias(divisionAlias);
+            ClanModel clan = clash.getClan(clanTag).join();
+
+            //Make team
+            Team team = new Team(
+                    clan.getName(),
+                    clan.getTag(),
+                    teamAlias,
+                    division,
+                    user.getId(),
+                    secondRep.getId(),
+                    division.getAllowedRosterChanges()
+            );
+
+            team = teamService.saveTeam(team);
+            ServerTextChannel applicantChannel =
+                    createApplicantChannel(event.getSlashCommandInteraction().getServer().get(), user, secondRep, team);
 
             EmbedBuilder embedBuilder = new EmbedBuilder()
-                .setTitle("Registration successful")
-                .setDescription("Hey there, you have successfully registered for FTHL season 6! \nHere are some commands that might be useful to you ")
+                    .setTitle("Registration successful")
+                    .setDescription("Hey there, you have successfully registered for FTHL season 6! \nHere are some commands that might be useful to you ")
                     .addField("Team Name", team.getName(), false)
                     .addField("Clan Tag", team.getTag(), false)
                     .addField("Division", team.getDivision().getName(), false)
                     .addField("Representatives", user.getDiscriminatedName() + "\n" + secondRep.getDiscriminatedName(), false)
                     .addInlineField("commands", "`/team-info`\n`/team-roster`\n`/all-team`")
-                .addInlineField("Roster Management", "`/roster-add`\n`/roster-remove`")
+                    .addInlineField("Roster Management", "`/roster-add`\n`/roster-remove`")
                     .setThumbnail("https://media.discordapp.net/attachments/777902179771613184/970270133769633812/fthl-logo.png?width=670&height=670")
-                .setTimestampToNow()
-                .setColor(Color.green)
-                .setAuthor(user);
+                    .setTimestampToNow()
+                    .setColor(Color.green)
+                    .setAuthor(user);
 
-        //slashCommandInteraction.createImmediateResponder().addEmbeds(embedBuilder).respond();
+            //slashCommandInteraction.createImmediateResponder().addEmbeds(embedBuilder).respond();
             User finalSecondRep = secondRep;
             respond.thenAccept(res -> {
-            res.setContent("Your application has been recorded. Head over to your private channel to see your application and to manage your roster. <#%d>".formatted(applicantChannel.getId())).update();
+                res.setContent("Your application has been recorded. Head over to your private channel to see your application and to manage your roster. <#%d>".formatted(applicantChannel.getId())).update();
 
-            applicantChannel.sendMessage(embedBuilder);
-            applicantChannel.sendMessage("<@%d> \n <@%d>".formatted(user.getId(), finalSecondRep.getId()));
-        });
+                applicantChannel.sendMessage(embedBuilder);
+                applicantChannel.sendMessage("<@%d> \n <@%d>".formatted(user.getId(), finalSecondRep.getId()));
+            });
 
-        }catch(LeagueException e){
+            //Log the registration
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setTitle("New Registration!")
+                    .addField("Team Name", team.getName(), true)
+                    .addField("Team Alias", team.getAlias(), true)
+                    .addField("Clan Tag", team.getTag(), true)
+                    .addField("Division", division.getAlias(), true)
+                    .addField("Team Resp", "%s/n%s".formatted(user.getDiscriminatedName(), secondRep.getDiscriminatedName()))
+                    .setTimestampToNow()
+                    .setColor(Color.BLUE);
+            event.getApi().getTextChannelById(config.getRegistrationAndRosterLogChannelID()).get().sendMessage(embed);
+
+        } catch (LeagueException e) {
             leagueSlashErrorMessage(respond, e);
             e.printStackTrace();
-        }catch (ClashAPIException | IOException e){
+        } catch (ClashAPIException | IOException e) {
             ClashExceptionHandler handler = new ClashExceptionHandler();
             handler.setResponder(respond.join()).setStatusCode(Integer.valueOf(e.getMessage()));
             handler.respond();
             e.printStackTrace();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private boolean isRegistrationOpen() {
-            Date registrationDate;
+        Date registrationDate;
         try {
             registrationDate = config.getRegistrationDate();
             Date leagueStartDate = config.getLeagueStartDate();
@@ -174,10 +199,6 @@ public class RegistrationImpl implements RegistrationListener {
             logger.error("Error parsing registration date");
         }
         return false;
-    }
-
-    private boolean isRegChannel(long channelID) {
-        return channelID == config.getRegistrationChannelID();
     }
 
     public ServerTextChannel createApplicantChannel(Server server, User applicant, User applicant2, Team team) {
@@ -205,9 +226,9 @@ public class RegistrationImpl implements RegistrationListener {
     }
 
     //A method that takes a string and returns a ChannelCatrgorie object when the string matches the name of a category
-    private ChannelCategory getChannelCategory(String categoryName, Server server){
-        for(ChannelCategory category : server.getChannelCategories()){
-            if(category.getName().equalsIgnoreCase(categoryName)){
+    private ChannelCategory getChannelCategory(String categoryName, Server server) {
+        for (ChannelCategory category : server.getChannelCategories()) {
+            if (category.getName().equalsIgnoreCase(categoryName)) {
                 return category;
             }
         }

@@ -43,6 +43,6 @@ public class ApplicantServerJoinImpl implements ServerMemberJoinListener {
 
         sysChannel.sendMessage(embedBuilder);
 
-        serverMemberJoinService.giveRoles(event.getServer(), "Applicant");
+        serverMemberJoinService.giveRoles(event.getServer(), botConfig.getApplicantServerApplicantRoleID(), "Applicant");
     }
 }

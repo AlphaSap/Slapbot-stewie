@@ -150,8 +150,9 @@ public class NegoChannelCreationImpl implements NegoChannelCreationListener {
                 embed.setTimestampToNow();
 
                 x.sendMessage(embed).join();
-                //TODO change the applicant role id with nego server role id
-                x.sendMessage("<@&"+970652854861828096L+">");
+                List.of(rep1,rep2,rep3,rep4).forEach(user -> {
+                    x.sendMessage("<@%s>".formatted(user.getId()));
+                });
             });
         }
         respondLater.thenAccept(x -> {

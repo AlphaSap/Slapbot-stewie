@@ -48,6 +48,6 @@ public class NegoServerMemberjoinImpl implements ServerMemberJoinListener {
 
         sysChannel.sendMessage(embedBuilder);
 
-        serverMemberJoinService.giveRoles(server, "Representative");
+        serverMemberJoinService.giveRoles(server, botConfig.getNegoServerRepresentativeRoleID(), "Representative");
     }
 }

@@ -21,8 +21,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Pagination {
     public void buttonPagination(List<EmbedBuilder> em, CompletableFuture<InteractionOriginalResponseUpdater> message, DiscordApi api) {
         Server server = api.getServerById(927210932462030860L).get();
-        //todo Change this to all custom emojis when you get time lmao
-        KnownCustomEmoji emoji1 = server.getCustomEmojis().stream().filter(emoji -> emoji.getName().equals("deny")).findFirst().get();
 
         LowLevelComponent[] lowLevelComponents = {
                 Button.secondary("first", "⏪"),

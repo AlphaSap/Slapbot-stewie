@@ -89,7 +89,6 @@ public class PlayerImpl implements PlayerListener {
                 .addInlineField("Team Registered in Fthl", teams)
                 .setTimestampToNow()
                 .setColor(Color.GREEN);
-        //TODO: add an image to below embed
         Optional<ClanModel> clan = Optional.ofNullable(player.getClan());
         String clanName = clan.map(ClanModel::getName).orElse("No clan found!");
         String clanTag = clan.map(ClanModel::getTag).orElse("No clan found!");

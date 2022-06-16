@@ -15,8 +15,8 @@ public class BotConfig {
     //Channel IDs
     @Value("${channel.registrationChannel}")
     private long registrationChannelID;
-    @Value("${channel.transactionChannel}")
-    private long transactionChannelID;
+    @Value("${channel.registrationAndRosterLogChannel}")
+    private long registrationAndRosterLogChannelID;
     @Value("${channel.errorLogsAndInfo}")
     private long errorLogChannelID;
     @Value("${channel.suggestionChannel}")
@@ -27,11 +27,11 @@ public class BotConfig {
     @Value("${role.fthlServer.staff}")
     private long fthlServerStaffRoleID;
     @Value("${role.fthlServer.Representative}")
-    private long fileServerRepresentativeRoleID;
+    private long fthlServerRepresentativeRoleID;
     @Value("${role.negoServer.staff}")
     private long negoServerStaffRoleID;
     @Value("${role.negoServer.Representative}")
-    private long negServerRepresentativeRoleID;
+    private long negoServerRepresentativeRoleID;
     @Value("${role.applicantServer.staff}")
     private long applicantServerStaffRoleID;
     @Value("${role.applicantServer.Applicant}")
@@ -144,24 +144,24 @@ public class BotConfig {
         return registrationChannelID;
     }
 
-    public long getTransactionChannelID() {
-        return transactionChannelID;
+    public long getRegistrationAndRosterLogChannelID() {
+        return registrationAndRosterLogChannelID;
     }
 
     public long getFthlServerStaffRoleID() {
         return fthlServerStaffRoleID;
     }
 
-    public long getFileServerRepresentativeRoleID() {
-        return fileServerRepresentativeRoleID;
+    public long getFTHLServerRepresentativeRoleID() {
+        return fthlServerRepresentativeRoleID;
     }
 
     public long getNegoServerStaffRoleID() {
         return negoServerStaffRoleID;
     }
 
-    public long getNegServerRepresentativeRoleID() {
-        return negServerRepresentativeRoleID;
+    public long getNegoServerRepresentativeRoleID() {
+        return negoServerRepresentativeRoleID;
     }
 
     public long getApplicantServerStaffRoleID() {
