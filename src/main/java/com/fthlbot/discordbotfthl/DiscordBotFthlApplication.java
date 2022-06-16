@@ -190,8 +190,6 @@ public class DiscordBotFthlApplication {
                 .join();
 
         builder.setApi(api);
-        builder.deleteAllCommand();
-        builder.makeAllCommands();
         ArrayList<Server> servers = new ArrayList<>(api.getServers());
 
         //Adding commands to the handler

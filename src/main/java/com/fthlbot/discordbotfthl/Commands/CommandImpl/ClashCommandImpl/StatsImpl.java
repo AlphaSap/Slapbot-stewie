@@ -1,8 +1,6 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl;
 
 import Core.Enitiy.clan.ClanModel;
-import Core.Enitiy.clanwar.ClanWarMember;
-import Core.Enitiy.clanwar.WarInfo;
 import Core.JClash;
 import Core.exception.ClashAPIException;
 import com.fthlbot.discordbotfthl.Annotation.CommandType;
@@ -15,11 +13,6 @@ import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
 import java.util.concurrent.CompletableFuture;
 
 @Component

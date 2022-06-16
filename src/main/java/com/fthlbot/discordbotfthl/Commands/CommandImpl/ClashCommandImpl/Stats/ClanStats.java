@@ -5,7 +5,9 @@ import Core.Enitiy.clanwar.ClanWarMember;
 import Core.Enitiy.clanwar.ClanWarModel;
 import Core.Enitiy.clanwar.WarInfo;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -18,8 +20,8 @@ public class ClanStats {
         this.war = war;
     }
 
-    public String clanStats () {
-        if (!this.clan.isWarLogPublic()){
+    public String clanStats() {
+        if (!this.clan.isWarLogPublic()) {
             return "War log is not public";
         }
         if (this.war.getState().equalsIgnoreCase("notInWar")) {
@@ -64,7 +66,45 @@ public class ClanStats {
         int opponentTimeAsInt = calculateAverageMinutes(opponentTime);
 
         int avgHR = (int) ((float) homeThree.get() * 100 / (float) homeTotal);
-        int avgHR_opponent = (int) ((float) opponentThree.get() * 100/ (float) opponentTotal);
+        int avgHR_opponent = (int) ((float) opponentThree.get() * 100 / (float) opponentTotal);
+
+        Date BattleTime_end = null;
+        Date BattleTime_start;
+        String to_join = "";
+        try {
+            BattleTime_end = this.war.getEndTimeAsDate();
+            BattleTime_start = this.war.getStartTimeAsDate();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (this.war.getState().equalsIgnoreCase("preparation")) {
+
+            Date now = new Date();
+            long difference_In_prep = BattleTime_start.getTime() - now.getTime();
+
+            long difference_In_Minute = (difference_In_prep / (1000 * 60)) % 60;
+
+            long difference_In_Hours = (difference_In_prep / (1000 * 60 * 60)) % 24;
+
+            if (difference_In_Minute < 0) {
+                to_join = "Preparation time ending soon";
+            } else
+                to_join = "War starts in " + difference_In_Hours + " hours " + difference_In_Minute + " minutes";
+        } else if (this.war.getState().equalsIgnoreCase("inWar")) {
+            Date now = new Date();
+            long difference_in_battle = BattleTime_end.getTime() - now.getTime();
+            long difference_In_Minute = (difference_in_battle / (1000 * 60)) % 60;
+
+            long difference_In_Hours = (difference_in_battle / (1000 * 60 * 60)) % 24;
+
+            if (difference_In_Minute < 0) {
+                to_join = "War is ending!";
+            } else
+                to_join = "War ends in " + difference_In_Hours + " hours " + difference_In_Minute + " minutes";
+        } else if (this.war.getState().equalsIgnoreCase("warEnded")) {
+            to_join = this.war.getStatus();
+        }
         String s = """
                 %-5s     VS     %5s
                 %-5s         Stars           %5s
@@ -73,24 +113,24 @@ public class ClanStats {
                 %-5d         ***             %5d
                 %-5d         **              %5d
                 %-5s         Average Time    %5s
-                
+                                
                 %d/%d -  %d%%    HR     %d%% -  %d/%d
                 """.formatted(
-                        this.war.getClan().getName(),
-                        this.war.getEnemy().getName(),
-                        this.war.getClan().getStars(),
-                        this.war.getEnemy().getStars(),
-                        this.war.getClan().getDestructionPercentage(),
-                        this.war.getEnemy().getDestructionPercentage(),
-                        this.war.getClan().getAttacks(),
-                        this.war.getEnemy().getAttacks(),
-                        homeThree.get(), opponentThree.get(), homeTwo.get(), opponentTwo.get(),
-                         convertSecondsToMinutes(homeTimeAsInt), convertSecondsToMinutes(opponentTimeAsInt),
-                        homeThree.get(), homeTotal, avgHR, avgHR_opponent,   opponentThree.get(), opponentTotal
-                );
+                this.war.getClan().getName(),
+                this.war.getEnemy().getName(),
+                this.war.getClan().getStars(),
+                this.war.getEnemy().getStars(),
+                this.war.getClan().getDestructionPercentage(),
+                this.war.getEnemy().getDestructionPercentage(),
+                this.war.getClan().getAttacks(),
+                this.war.getEnemy().getAttacks(),
+                homeThree.get(), opponentThree.get(), homeTwo.get(), opponentTwo.get(),
+                convertSecondsToMinutes(homeTimeAsInt), convertSecondsToMinutes(opponentTimeAsInt),
+                homeThree.get(), homeTotal, avgHR, avgHR_opponent, opponentThree.get(), opponentTotal
+        );
 
 
-        return "```" + sb.append(s) + "```";
+        return "```" + sb.append(s).append("\n").append(to_join) + "```";
     }
 
     //calculate average minutes from a list of seconds
