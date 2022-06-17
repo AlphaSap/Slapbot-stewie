@@ -10,6 +10,7 @@ import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
+import org.javacord.api.util.logging.ExceptionLogger;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,13 +91,13 @@ public class GeneralService {
                     .setTimestampToNow();
             res.addEmbed(em);
             res.update();
-        });
+        }).exceptionally(ExceptionLogger.get());
     }
     public static void leagueSlashErrorMessage(CompletableFuture<InteractionOriginalResponseUpdater> responder, String e) {
         responder.thenAccept(res -> {
             res.setContent(e);
             res.update();
-        });
+        }).exceptionally(ExceptionLogger.get());
     }
     public static void leagueSlashErrorMessage(SlashCommandCreateEvent event, LeagueException e){
         EmbedBuilder em = new EmbedBuilder()
