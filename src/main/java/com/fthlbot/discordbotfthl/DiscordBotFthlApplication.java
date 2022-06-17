@@ -176,7 +176,7 @@ public class DiscordBotFthlApplication {
 
         clash = new JClash(env.getProperty("CLASH_EMAIL"), env.getProperty("CLASH_PASS"));
         DiscordApi api = new DiscordApiBuilder()
-                .setToken(env.getProperty("TOKEN_TEST_BOT"))
+                .setToken(env.getProperty("TOKEN_BOT"))
                 .setUserCacheEnabled(false)
                 .setAllIntentsExcept(
                         Intent.GUILD_WEBHOOKS,
