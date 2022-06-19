@@ -167,7 +167,7 @@ public class DiscordBotFthlApplication {
 
     @Bean
     @ConfigurationProperties(value = "discord-bot")
-    public DiscordApi api() throws ClashAPIException, IOException {
+    public DiscordApi api() throws Exception {
         log.info(config.getNegoServerStaffRoleID() + " id");
         TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
 
@@ -201,8 +201,6 @@ public class DiscordBotFthlApplication {
         //To log the servers the bot is in
         api.addListener(serverJoin);
         api.addListener(serverLeave);
-
-
 
         api.updateActivity(ActivityType.LISTENING, "Slash commands!");
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.javacord.api.interaction.SlashCommandOptionType.*;
@@ -83,10 +84,9 @@ public class SlashCommandBuilder {
                                 true,
                                 asList(
                                         SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f5", "f5"),
                                         SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("Lite", "Lite"),
                                         SlashCommandOptionChoice.create("Elite", "Elite")
                                 )
@@ -117,10 +117,9 @@ public class SlashCommandBuilder {
                                 true,
                                 asList(
                                         SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f5", "f5"),
                                         SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("Lite", "Lite"),
                                         SlashCommandOptionChoice.create("Elite", "Elite")
                                 )
@@ -151,10 +150,9 @@ public class SlashCommandBuilder {
                                 true,
                                 asList(
                                         SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f5", "f5"),
                                         SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("Lite", "Lite"),
                                         SlashCommandOptionChoice.create("Elite", "Elite")
                                 )
@@ -194,10 +192,9 @@ public class SlashCommandBuilder {
                                 true,
                                 asList(
                                         SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f5", "f5"),
                                         SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("Lite", "Lite"),
                                         SlashCommandOptionChoice.create("Elite", "Elite")
                                 )
@@ -215,10 +212,9 @@ public class SlashCommandBuilder {
                                 true,
                                 asList(
                                         SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f5", "f5"),
                                         SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("Lite", "Lite"),
                                         SlashCommandOptionChoice.create("Elite", "Elite")
                                 )
@@ -251,10 +247,9 @@ public class SlashCommandBuilder {
                                 true,
                                 asList(
                                         SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f5", "f5"),
                                         SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("Lite", "Lite"),
                                         SlashCommandOptionChoice.create("Elite", "Elite")
                                 )
@@ -282,10 +277,9 @@ public class SlashCommandBuilder {
                                 true,
                                 asList(
                                         SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f5", "f5"),
                                         SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("Lite", "Lite"),
                                         SlashCommandOptionChoice.create("Elite", "Elite")
                                 )
@@ -321,10 +315,9 @@ public class SlashCommandBuilder {
                                 true,
                                 asList(
                                         SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f5", "f5"),
                                         SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("Lite", "Lite"),
                                         SlashCommandOptionChoice.create("Elite", "Elite")                                )
                         )
@@ -393,10 +386,9 @@ public class SlashCommandBuilder {
                                 true,
                                 asList(
                                         SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f5", "f5"),
                                         SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("Lite", "Lite"),
                                         SlashCommandOptionChoice.create("Elite", "Elite")
                                 )
@@ -423,11 +415,10 @@ public class SlashCommandBuilder {
                                 "choose from one of the following division",
                                 true,
                                 asList(
-                                        SlashCommandOptionChoice.create("F8", "F8"),
-                                        SlashCommandOptionChoice.create("F5", "F5"),
-                                        SlashCommandOptionChoice.create("F9", "F9"),
-                                        SlashCommandOptionChoice.create("F11", "F11"),
-                                        SlashCommandOptionChoice.create("F10", "F10"),
+                                        SlashCommandOptionChoice.create("f8", "f8"),
+                                        SlashCommandOptionChoice.create("f9", "f9"),
+                                        SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("Lite", "Lite"),
                                         SlashCommandOptionChoice.create("Elite", "Elite")
                                 )
@@ -474,11 +465,10 @@ public class SlashCommandBuilder {
                         "Enter the division you want to check, it can be found in your negotiation channel topic",
                         true,
                         asList(
-                                SlashCommandOptionChoice.create("F8", "F8"),
-                                SlashCommandOptionChoice.create("F5", "F5"),
-                                SlashCommandOptionChoice.create("F9", "F9"),
-                                SlashCommandOptionChoice.create("F11", "F11"),
-                                SlashCommandOptionChoice.create("F10", "F10"),
+                                SlashCommandOptionChoice.create("f8", "f8"),
+                                SlashCommandOptionChoice.create("f9", "f9"),
+                                SlashCommandOptionChoice.create("f10", "f10"),
+                                SlashCommandOptionChoice.create("f11", "f11"),
                                 SlashCommandOptionChoice.create("Lite", "Lite"),
                                 SlashCommandOptionChoice.create("Elite", "Elite")
                         )
@@ -535,11 +525,10 @@ public class SlashCommandBuilder {
                                         "choose from one of the following division",
                                         true,
                                         asList(
-                                                SlashCommandOptionChoice.create("F8", "F8"),
-                                                SlashCommandOptionChoice.create("F5", "F5"),
-                                                SlashCommandOptionChoice.create("F9", "F9"),
-                                                SlashCommandOptionChoice.create("F11", "F11"),
-                                                SlashCommandOptionChoice.create("F10", "F10"),
+                                                SlashCommandOptionChoice.create("f8", "f8"),
+                                                SlashCommandOptionChoice.create("f9", "f9"),
+                                                SlashCommandOptionChoice.create("f10", "f10"),
+                                                SlashCommandOptionChoice.create("f11", "f11"),
                                                 SlashCommandOptionChoice.create("Lite", "Lite"),
                                                 SlashCommandOptionChoice.create("Elite", "Elite")
                                         )
@@ -572,13 +561,13 @@ public class SlashCommandBuilder {
         });
     }
 
-    public void deleteACommand(String name) {
-        this.getApi().getGlobalSlashCommands().thenAccept(x -> {
-            x.stream().filter(e -> e.getName().equals(name)).forEach(e -> {
-                System.out.println("Deleting command: " + e.getName());
-                e.deleteGlobal();
-            });
-        });
+    public void deleteACommand(String name) throws Exception {
+        List<SlashCommand> x = this.getApi().getGlobalSlashCommands().join();
+        Optional<SlashCommand> first = x.stream().filter(e -> e.getName().equalsIgnoreCase(name)).findFirst();
+        if (first.isEmpty()){
+            throw new Exception("Cannot find the command to delete");
+        }
+        first.get().deleteGlobal();
     }
 
     public SlashCommand createChangeAliasCommand() {
@@ -591,10 +580,9 @@ public class SlashCommandBuilder {
                                 true,
                                 asList(
                                         SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f5", "f5"),
                                         SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("Lite", "Lite"),
                                         SlashCommandOptionChoice.create("Elite", "Elite")
                                 )
@@ -603,7 +591,7 @@ public class SlashCommandBuilder {
                                 "Enter the name of your team or its CURRENT alias",
                                 true
                         ),
-                        SlashCommandOption.create(SlashCommandOptionType.USER,
+                        SlashCommandOption.create(STRING,
                                 "new-alias",
                                 "Enter the new alias for the team",
                                 true

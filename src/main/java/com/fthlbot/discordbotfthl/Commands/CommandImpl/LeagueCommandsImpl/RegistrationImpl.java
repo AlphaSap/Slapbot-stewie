@@ -118,7 +118,10 @@ public class RegistrationImpl implements RegistrationListener {
             User secondRep = user;
             if (arguments.size() >= 4)
                 secondRep = arguments.get(3).getUserValue().orElse(user);
-
+            if (teamAlias.length() > 5) {
+                respond.thenApply(x -> x.setContent("Team Alias must be between the length of 1 - 5")).thenApply(x -> x.update());
+                return;
+            }
             Division division = divisionService.getDivisionByAlias(divisionAlias);
             ClanModel clan = clash.getClan(clanTag).join();
 
