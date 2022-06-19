@@ -15,8 +15,6 @@ import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.javacord.api.listener.interaction.SlashCommandCreateListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.time.LocalDateTime;
@@ -72,13 +70,10 @@ public class CommandListener implements SlashCommandCreateListener {
                 }
                 boolean staffCommand = isStaffCommand(command);
                 if (staffCommand){
-                    long fthlServerID = config.getFthlServerID();
-                    long testServerID = config.getTestServerID();
                     DiscordApi api = event.getApi();
 
-                    Server server = api.getServerById(fthlServerID).orElse(api.getServerById(testServerID).get());
                     User user = event.getSlashCommandInteraction().getUser();
-                    boolean b = hasStaffRole(server, user) || user.isBotOwner();
+                    boolean b =  user.isBotOwner() || hasStaffRole(user);
                     if (!b) {
                         CompletableFuture<InteractionOriginalResponseUpdater> respondLater = event.getSlashCommandInteraction().respondLater();
                         respondLater.thenAccept(res -> {
@@ -125,9 +120,21 @@ public class CommandListener implements SlashCommandCreateListener {
         }
         return false;
     }
-    private boolean hasStaffRole(Server server, User user){
-        List<Role> roles = user.getRoles(server);
-        return roles.stream().anyMatch(x -> x.getId() == config.getFthlServerStaffRoleID());
+    private boolean hasStaffRole(User user){
+        List<Long> staffID = List.of(
+                444574761121611788L,
+                123094716014264322L,
+                613121864016986112L,
+                690562682784317470L,
+                398424326723862529L,
+                498175857244766218L,
+                613121864016986112L,
+                777114883984195605L,
+                726808764056993833L,
+                602935588018061453L,
+                450224783972499467L);
+        return staffID.stream().anyMatch(x -> x.equals(user.getId()));
+        //return roles.stream().anyMatch(x -> x.getId() == config.getFthlServerStaffRoleID());
     }
 
 
