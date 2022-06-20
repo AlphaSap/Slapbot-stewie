@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import static java.util.Arrays.asList;
 import static org.javacord.api.interaction.SlashCommandOptionType.*;
@@ -26,9 +27,9 @@ public class SlashCommandBuilder {
         return api;
     }
 
-    public SlashCommand createPingCommand() {
-        return SlashCommand.with("ping", "To check bots latency").createGlobal(getApi()).join();
-    }
+//    public SlashCommand createPingCommand() {
+//        return SlashCommand.with("ping", "To check bots latency").createGlobal(getApi()).join();
+//    }
 
     public SlashCommand createRegistrationCommand() {
         return SlashCommand
@@ -41,10 +42,9 @@ public class SlashCommandBuilder {
                                 true,
                                 asList(
                                         SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f5", "f5"),
                                         SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("Lite", "Lite"),
                                         SlashCommandOptionChoice.create("Elite", "Elite")
                                 )
@@ -513,7 +513,7 @@ public class SlashCommandBuilder {
                 System.out.println("Deleting command: " + e.getName());
                 e.deleteGlobal();
             });
-        });
+        }).join();
     }
 
     public SlashCommand createDivisionEditor(){
@@ -598,5 +598,45 @@ public class SlashCommandBuilder {
                         )
                 ))
                 .createGlobal(getApi()).join();
+    }
+
+    public void e(){
+        CompletableFuture<Void> voidCompletableFuture = this.getApi().getGlobalSlashCommands()
+                .thenApply(x -> x.stream().filter(e -> e.getName().equalsIgnoreCase("change-alias")))
+                .thenApply(x -> x.findFirst())
+                .thenAccept(x -> {
+                    if (x.isEmpty()) {
+                        System.out.println("No command found");
+                        return;
+                    }
+                    System.out.println("Found command");
+                    SlashCommandUpdater s = new SlashCommandUpdater(x.get().getId()).setSlashCommandOptions(
+                            List.of(
+                                    SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
+                                            "division",
+                                            "choose from one of the following division",
+                                            true,
+                                            asList(
+                                                    SlashCommandOptionChoice.create("f8", "f8"),
+                                                    SlashCommandOptionChoice.create("f9", "f9"),
+                                                    SlashCommandOptionChoice.create("f10", "f10"),
+                                                    SlashCommandOptionChoice.create("f11", "f11"),
+                                                    SlashCommandOptionChoice.create("Lite", "Lite"),
+                                                    SlashCommandOptionChoice.create("Elite", "Elite")
+                                            )
+                                    ), SlashCommandOption.create(SlashCommandOptionType.STRING,
+                                            "team-identifier",
+                                            "Enter the name of your team or its CURRENT alias",
+                                            true
+                                    ),
+                                    SlashCommandOption.create(STRING,
+                                            "new-alias",
+                                            "Enter the new alias for the team",
+                                            true
+                                    )
+                            ));
+
+                    s.updateGlobal(this.api).exceptionally(ExceptionLogger.get()).join();
+                });
     }
 }

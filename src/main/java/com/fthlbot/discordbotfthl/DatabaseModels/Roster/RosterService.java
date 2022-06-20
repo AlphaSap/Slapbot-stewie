@@ -3,14 +3,10 @@ package com.fthlbot.discordbotfthl.DatabaseModels.Roster;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.*;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
-import com.fthlbot.discordbotfthl.MinionBotAPI.MinionBotClient;
-import com.fthlbot.discordbotfthl.MinionBotAPI.MinionBotPlayer;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import org.javacord.api.entity.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,8 +16,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static org.springframework.data.domain.Sort.*;
 
 @Service
 public class RosterService {
@@ -40,11 +34,6 @@ public class RosterService {
     public List<Roster> getRosterForATeam(Team team) throws EntityNotFoundException {
         return repo.findRosterByTeam(team);
     }
-
-    public Page<Roster> getRoster(Team team){
-        return repo.findRosterByTeam(team, PageRequest.of(0, 10, by(Direction.ASC, "town_hall_level")));
-    }
-
     //TODO fp checks
     //check pos
     public Roster addToRoster(Roster roster, User user) throws LeagueException {
