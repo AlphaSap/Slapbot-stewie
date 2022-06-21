@@ -1,7 +1,6 @@
 package com.fthlbot.discordbotfthl;
 
 import Core.JClash;
-import Core.exception.ClashAPIException;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands.ImageGenCommandImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands.SuggestionImpl;
@@ -41,7 +40,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
-import java.io.IOException;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +120,9 @@ public class DiscordBotFthlApplication {
 
     private final DivisionEditorImpl divisionEditor;
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemberJoin, ApplicantServerJoinImpl applicantServerJoin, ServerJoinImpl serverJoin, ServerLeaveImpl serverLeave, DivisionEditorImpl divisionEditor) {
+    private final InfoCommandImpl infoCommandImpl;
+
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemberJoin, ApplicantServerJoinImpl applicantServerJoin, ServerJoinImpl serverJoin, ServerLeaveImpl serverLeave, DivisionEditorImpl divisionEditor, InfoCommandImpl infoCommandImpl) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -158,6 +158,7 @@ public class DiscordBotFthlApplication {
         this.serverJoin = serverJoin;
         this.serverLeave = serverLeave;
         this.divisionEditor = divisionEditor;
+        this.infoCommandImpl = infoCommandImpl;
     }
 
 
@@ -170,9 +171,6 @@ public class DiscordBotFthlApplication {
     public DiscordApi api() throws Exception {
         log.info(config.getNegoServerStaffRoleID() + " id");
         TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
-
-        long testID = config.getTestServerID();
-
 
         clash = new JClash(env.getProperty("CLASH_EMAIL"), env.getProperty("CLASH_PASS"));
         DiscordApi api = new DiscordApiBuilder()
@@ -190,7 +188,11 @@ public class DiscordBotFthlApplication {
                 .join();
 
         builder.setApi(api);
+        builder.createInfoCommand();
         ArrayList<Server> servers = new ArrayList<>(api.getServers());
+
+        log.info("Logged in as {}", api.getYourself().getDiscriminatedName());
+        log.info("Watching servers {}", servers.size());
 
         //Adding commands to the handler
         CommandListener commandListener = registerCommands();
@@ -205,8 +207,6 @@ public class DiscordBotFthlApplication {
         api.updateActivity(ActivityType.LISTENING, "Slash commands!");
 
         SlapbotEmojis.setEmojis( api.getServerById(config.getEmojiServerID()).get().getCustomEmojis().stream().toList());
-        log.info("Logged in as {}", api.getYourself().getDiscriminatedName());
-        log.info("Watching servers {}", servers.size());
         printMemoryUsage();
         return api;
     }
@@ -238,9 +238,9 @@ public class DiscordBotFthlApplication {
                 this.fairPlayCheckOnAllTeam,
                 this.clanInfo,
                 this.suggestionImpl,
-                this.divisionEditor
+                this.divisionEditor,
+                this.infoCommandImpl
         ));
-        log.info("Commands added Size: " + commandList.size());
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
         //Add help command
@@ -249,6 +249,8 @@ public class DiscordBotFthlApplication {
         MessageHandlers messageHandlers = new MessageHandlers(commandList);
 
         MessageHolder messageHolder = messageHandlers.setCommands();
+
+        log.info("Added {} Commands!", commandList.size());
         return new CommandListener(messageHolder, loggerService, config);
     }
 

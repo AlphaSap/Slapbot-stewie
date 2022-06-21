@@ -79,15 +79,3 @@ will have an int divWeek, and an array of schedule wars, the array will have two
   ]
 }
 ```
-# TODO
-- ~~Make team all command~~
-- ~~Make clan change command~~
-- ~~Make Rep change command~~
-- ~~Make alias change command~~
-- ~~Make nego channel shit!~~
-- fix the clash error class
-
-
-- Make stats command
-- Make player command
-- ~~Make defense command~~

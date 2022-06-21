@@ -639,4 +639,8 @@ public class SlashCommandBuilder {
                     s.updateGlobal(this.api).exceptionally(ExceptionLogger.get()).join();
                 });
     }
+
+    public void createInfoCommand(){
+        SlashCommand.with("info", "Shows bots information").createGlobal(getApi()).join();
+    }
 }

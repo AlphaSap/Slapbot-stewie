@@ -129,4 +129,8 @@ public class TeamService {
     public List<Team> getTeamByRep(long userID) {
         return repo.findTeamByRep1IDOrRep2ID(userID, userID);
     }
+
+    public List<Team> getAllTeams() {
+        return repo.findAll();
+    }
 }

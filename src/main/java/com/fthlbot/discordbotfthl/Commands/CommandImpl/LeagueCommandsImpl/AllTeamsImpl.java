@@ -65,7 +65,7 @@ public class AllTeamsImpl implements AllTeamsListener {
                     .setTitle(String.format("Teams in %s", divisionByAlias.getAlias()))
                     .setAuthor(event.getSlashCommandInteraction().getUser())
                     .setTimestampToNow()
-                    .setColor(Color.cyan);
+                    .setColor(Color.GREEN);
             addField(embedBuilder, formattedTeams);
         }
         respondLater.thenAccept(res -> {
@@ -100,10 +100,10 @@ public class AllTeamsImpl implements AllTeamsListener {
     private void addField(EmbedBuilder em, List<List<String>> list) {
         for (List<String> roster : list) {
             String description = String.join("\n", roster);
-            em.addField(formatRow("ID" ,"Tag", "TownHall", "Name", "   "), "```" + description + "```");
+            em.addField(formatRow("ID" ,"Tag", "Alias", "Name", "   "), "```" + description + "```");
         }
     }
-    final static int ID_MAX_LEN = 11,  ALIAS_MAX_LEN = 5, NAME_MAX_LEN = 2, MAXID = 4;
+    final static int ID_MAX_LEN = 11,  ALIAS_MAX_LEN = 5, NAME_MAX_LEN = 2, MAXID = 6;
 
     private static String formatRow(String id, String name, String tag, String alias, String ext) {
         return String.format("%-"+(MAXID + ext.length())+"s%-" + (ID_MAX_LEN + ext.length()) + "s%-" + (ALIAS_MAX_LEN + ext.length()) +

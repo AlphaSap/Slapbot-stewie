@@ -149,6 +149,7 @@ public class RegistrationImpl implements RegistrationListener {
                     .addField("Representatives", user.getDiscriminatedName() + "\n" + secondRep.getDiscriminatedName(), false)
                     .addInlineField("commands", "`/team-info`\n`/team-roster`\n`/all-team`")
                     .addInlineField("Roster Management", "`/roster-add`\n`/roster-remove`")
+                    .addInlineField("For Additional Help", "`/help`")
                     .setThumbnail("https://media.discordapp.net/attachments/777902179771613184/970270133769633812/fthl-logo.png?width=670&height=670")
                     .setTimestampToNow()
                     .setColor(Color.green)
@@ -160,7 +161,7 @@ public class RegistrationImpl implements RegistrationListener {
                 res.setContent("Your application has been recorded. Head over to your private channel to see your application and to manage your roster. <#%d>".formatted(applicantChannel.getId())).update();
 
                 applicantChannel.sendMessage(embedBuilder);
-                applicantChannel.sendMessage("<@%d> \n <@%d>".formatted(user.getId(), finalSecondRep.getId()));
+                applicantChannel.sendMessage("<@%d>\n<@%d>".formatted(user.getId(), finalSecondRep.getId()));
             });
 
             //Log the registration
@@ -170,7 +171,7 @@ public class RegistrationImpl implements RegistrationListener {
                     .addField("Team Alias", team.getAlias(), true)
                     .addField("Clan Tag", team.getTag(), true)
                     .addField("Division", division.getAlias(), true)
-                    .addField("Team Resp", "%s/n%s".formatted(user.getDiscriminatedName(), secondRep.getDiscriminatedName()))
+                    .addField("Team Resp", "%s\n%s".formatted(user.getDiscriminatedName(), secondRep.getDiscriminatedName()))
                     .setTimestampToNow()
                     .setColor(Color.BLUE);
             event.getApi().getTextChannelById(config.getRegistrationAndRosterLogChannelID()).get().sendMessage(embed);
