@@ -29,7 +29,6 @@ public class InfoCommandImpl implements Command {
 
     @Override
     public void execute(SlashCommandCreateEvent event) {
-
         CompletableFuture<InteractionOriginalResponseUpdater> res = event.getSlashCommandInteraction().respondLater();
         Collection<Server> servers = event.getApi().getServers();
         int members = servers.stream().map(Server::getMemberCount).reduce(0, Integer::sum);
