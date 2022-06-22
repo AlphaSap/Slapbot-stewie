@@ -16,10 +16,9 @@ import java.util.concurrent.CompletableFuture;
 
 @Component
 @Invoker(
-        alias = "statistics",
-        description = "Shows the statistics of the bot",
-        usage = "/statistics",
-        type = CommandType.STAFF
+        alias = "info",
+        description = "Shows the informatio of the bot",
+        usage = "/info"
 )
 public class InfoCommandImpl implements Command {
     private final TeamService teamService;
