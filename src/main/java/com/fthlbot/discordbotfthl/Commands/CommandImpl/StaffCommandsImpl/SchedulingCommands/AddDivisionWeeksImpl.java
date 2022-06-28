@@ -68,7 +68,7 @@ public class AddDivisionWeeksImpl implements AddDivisionWeekListener {
         String json = arguments.get(1).getStringValue().get();
         JSONArray s = null;
 
-        s = utils.getJsonArray(event, respondLater, json);
+        s = utils.getJsonArray(event.getApi(), respondLater, json);
 
         //Return because the error message will be sent via the getJsonArray method
         if (s == null) return;

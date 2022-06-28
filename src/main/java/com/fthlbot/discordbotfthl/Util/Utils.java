@@ -1,5 +1,6 @@
 package com.fthlbot.discordbotfthl.Util;
 
+import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageAttachment;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
@@ -38,13 +39,13 @@ public class Utils {
             default -> null;
         };
     }
-    public JSONArray getJsonArray(SlashCommandCreateEvent event, CompletableFuture<InteractionOriginalResponseUpdater> respondLater, String json) {
+    public JSONArray getJsonArray(DiscordApi api, CompletableFuture<InteractionOriginalResponseUpdater> respondLater, String json) {
         JSONArray s;
         Pattern messageLink = DiscordRegexPattern.MESSAGE_LINK;
 
         Matcher matcher = messageLink.matcher(json);
         if (matcher.matches()) {
-            Optional<CompletableFuture<Message>> messageByLink = event.getApi().getMessageByLink(json);
+            Optional<CompletableFuture<Message>> messageByLink = api.getMessageByLink(json);
             if (messageByLink.isPresent()) {
                 Message message = messageByLink.get().join();
                 List<MessageAttachment> attachments = message.getAttachments();

@@ -62,7 +62,7 @@ public class RosterAddUtilClass {
                     });
                     Optional<TextChannel> channel = event.getSlashCommandInteraction().getChannel();
                     channel.ifPresent(textChannel -> textChannel.sendMessage("I don't know how you got this error but I'm going to ignore it ||jk xD||"));
-
+                    e.printStackTrace();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
