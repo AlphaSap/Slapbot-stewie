@@ -18,8 +18,11 @@ import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.javacord.api.util.logging.ExceptionLogger;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Invoker(
         alias = "roster-add",
@@ -56,12 +59,15 @@ public class RosterAdditionImpl extends RosterAddUtilClass implements RosterAddL
 
             String[] tags = arguments.get(2).getStringValue().get().split("\\s+");
 
+            //Conversion to set is necessary to remove duplicates - which would go un notice inside the database when queried at the same time.
+            Set<String> collect = Arrays.stream(tags).collect(Collectors.toSet());
+
             Division division = divisionService.getDivisionByAlias(divisionAlias);
             Team team = teamService.getTeamByDivisionAndAlias(teamAlias, division);
             res.thenAccept(r -> {
                 r.setContent("Roster Addition requested!").update();
             }).exceptionally(ExceptionLogger.get());
-            addPlayers(event, slashCommandInteraction, tags, team, rosterService, config);
+            addPlayers(event, slashCommandInteraction, collect, team, rosterService, config);
 
 
         }catch (LeagueException e){

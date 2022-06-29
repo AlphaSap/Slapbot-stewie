@@ -22,12 +22,13 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Set;
 
 public class RosterAddUtilClass {
     //TODO: https://stackoverflow.com/questions/22561110/equivalent-of-go-channel-in-java
     private final static Logger log = LoggerFactory.getLogger(RosterAddUtilClass.class);
 
-    public void addPlayers(SlashCommandCreateEvent event, SlashCommandInteraction interaction, String[] tags, Team team, RosterService service, BotConfig config) {
+    public void addPlayers(SlashCommandCreateEvent event, SlashCommandInteraction interaction, Set<String> tags, Team team, RosterService service, BotConfig config) {
         for (String tag : tags) {
             Thread thread = new Thread(() -> {
                 try {
