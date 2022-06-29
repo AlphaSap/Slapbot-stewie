@@ -122,7 +122,9 @@ public class DiscordBotFthlApplication {
 
     private final InfoCommandImpl infoCommandImpl;
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemberJoin, ApplicantServerJoinImpl applicantServerJoin, ServerJoinImpl serverJoin, ServerLeaveImpl serverLeave, DivisionEditorImpl divisionEditor, InfoCommandImpl infoCommandImpl) {
+    private final ClanLineup clanLineup;
+
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemberJoin, ApplicantServerJoinImpl applicantServerJoin, ServerJoinImpl serverJoin, ServerLeaveImpl serverLeave, DivisionEditorImpl divisionEditor, InfoCommandImpl infoCommandImpl, ClanLineup clanLineup) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -159,6 +161,7 @@ public class DiscordBotFthlApplication {
         this.serverLeave = serverLeave;
         this.divisionEditor = divisionEditor;
         this.infoCommandImpl = infoCommandImpl;
+        this.clanLineup = clanLineup;
     }
 
 
@@ -238,7 +241,8 @@ public class DiscordBotFthlApplication {
                 this.clanInfo,
                 this.suggestionImpl,
                 this.divisionEditor,
-                this.infoCommandImpl
+                this.infoCommandImpl,
+                this.clanLineup
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
