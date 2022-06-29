@@ -643,4 +643,16 @@ public class SlashCommandBuilder {
     public void createInfoCommand(){
         SlashCommand.with("info", "Shows bots information").createGlobal(getApi()).join();
     }
+
+    public void createClanLineupCommand() {
+        SlashCommand.with("clan-lineup", "Shows the lineup of a clan")
+                .setOptions(List.of(
+                        SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
+                                "clan-tag",
+                                "enter the clan tag of the clan you want to see the lineup of",
+                                true
+                        )
+                ))
+                .createGlobal(getApi()).join();
+    }
 }

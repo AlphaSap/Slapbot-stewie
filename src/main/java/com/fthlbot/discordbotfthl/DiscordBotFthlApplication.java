@@ -188,7 +188,6 @@ public class DiscordBotFthlApplication {
                 .join();
 
         builder.setApi(api);
-        builder.createInfoCommand();
         ArrayList<Server> servers = new ArrayList<>(api.getServers());
 
         log.info("Logged in as {}", api.getYourself().getDiscriminatedName());
