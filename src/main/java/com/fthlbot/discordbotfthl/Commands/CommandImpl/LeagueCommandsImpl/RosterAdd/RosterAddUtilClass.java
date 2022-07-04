@@ -23,6 +23,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 public class RosterAddUtilClass {
     //TODO: https://stackoverflow.com/questions/22561110/equivalent-of-go-channel-in-java
@@ -30,7 +31,7 @@ public class RosterAddUtilClass {
 
     public void addPlayers(SlashCommandCreateEvent event, SlashCommandInteraction interaction, Set<String> tags, Team team, RosterService service, BotConfig config) {
         for (String tag : tags) {
-            Thread thread = new Thread(() -> {
+            CompletableFuture.runAsync(() -> {
                 try {
                     JClash clash = new JClash();
                     Player player = clash.getPlayer(tag).join();
@@ -65,10 +66,18 @@ public class RosterAddUtilClass {
                     channel.ifPresent(textChannel -> textChannel.sendMessage("I don't know how you got this error but I'm going to ignore it ||jk xD||"));
                     e.printStackTrace();
                 } catch (Exception e) {
+                    event.getSlashCommandInteraction().createFollowupMessageBuilder()
+                                    .addEmbed(
+                                            new EmbedBuilder()
+                                                    .setTitle("Error")
+                                                    .addField("Error", e.getMessage(), false)
+                                                    .setDescription("Please contact the developer")
+                                                    .setColor(Color.RED)
+                                                    .setTimestampToNow()
+                                    ).send();
                     e.printStackTrace();
                 }
             });
-            thread.start();
         }
     }
 
