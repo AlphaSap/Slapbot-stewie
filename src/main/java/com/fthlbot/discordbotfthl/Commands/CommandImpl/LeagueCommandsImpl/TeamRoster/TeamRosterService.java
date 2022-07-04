@@ -67,12 +67,6 @@ public class TeamRosterService {
                         .append("\n");
 
             }
-//            for (int i = 0; i < rosterByTeam.size(); i++) {
-//                if (i % 15 == 0) {
-//                    s.add(new StringBuilder());
-//                }
-//                s.get(i).append("%15s 2%d %s\n".formatted(rosterByTeam.get(i).getPlayerName(), rosterByTeam.get(i).getTownHallLevel(), rosterByTeam.get(i).getPlayerTag()));
-//            }
 
             for (int i = 0; i < s.size(); i++) {
                 StringBuilder stringBuilder = s.get(i);
