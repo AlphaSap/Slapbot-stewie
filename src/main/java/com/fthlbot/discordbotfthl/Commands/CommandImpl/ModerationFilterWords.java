@@ -44,6 +44,7 @@ public class ModerationFilterWords implements MessageCreateListener {
                 .split("\\s+");
 
         for (String arg : args) {
+            if(arg.matches("^:[A-za-z\\d]+:$")) continue;
             if (arg.matches("nigg")) return true;
 
             if (arg.startsWith("n") && arg.length() >= 5){
