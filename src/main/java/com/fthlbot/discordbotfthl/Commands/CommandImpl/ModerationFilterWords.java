@@ -36,7 +36,7 @@ public class ModerationFilterWords implements MessageCreateListener {
     }
 
     private boolean checkMessage(String text) {
-        String[] args = text.toLowerCase().split("nigger");
+        String[] args = text.toLowerCase().split("\\s+");
 
         for (String arg : args) {
             if (arg.matches("nigg")) return true;
@@ -45,7 +45,10 @@ public class ModerationFilterWords implements MessageCreateListener {
                 if (arg.endsWith("gga") || arg.endsWith("gger")) return true;
             }
 
-            if (arg.matches("n[i|*]gger") || arg.matches("n[i|*]gga") ) return true;
+            if (arg.matches("n[i|*][g|*][g|*][e|*][r|*]") || arg.matches("n[i|*][g|*][g|*][a|*]") ) {
+                if (arg.matches("^[*]+$")) continue;
+                return true;
+            }
         }
 
         String join = String.join("", args).toLowerCase();
