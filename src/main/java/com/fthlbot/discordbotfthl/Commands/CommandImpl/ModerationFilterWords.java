@@ -32,11 +32,16 @@ public class ModerationFilterWords implements MessageCreateListener {
 
         if (checkMessage(event.getMessage().getContent())){
             timeOutUser(event.getApi(), event.getMessage().getAuthor().asUser().get(), event.getServer().get());
+            event.getMessage().delete("Banned Word");
         }
     }
 
     private boolean checkMessage(String text) {
-        String[] args = text.toLowerCase().split("\\s+");
+        String[] args = text.toLowerCase()
+                .replace("╭╮", "n")
+                .replace("9", "g")
+                .replace("3", "e")
+                .split("\\s+");
 
         for (String arg : args) {
             if (arg.matches("nigg")) return true;
@@ -45,10 +50,12 @@ public class ModerationFilterWords implements MessageCreateListener {
                 if (arg.endsWith("gga") || arg.endsWith("gger")) return true;
             }
 
-            if (arg.matches("n[i|*][g|*][g|*][e|*][r|*]") || arg.matches("n[i|*][g|*][g|*][a|*]") ) {
+            if (arg.matches("n[i|*][g|*|q][g|*|q][e|*][r|*]") || arg.matches("n[i|*][g|*|q][g|*|q][a|*]") ) {
                 if (arg.matches("^[*]+$")) continue;
                 return true;
             }
+
+            if (arg.matches("igga") || arg.matches("igger")) return true;
         }
 
         String join = String.join("", args).toLowerCase();
