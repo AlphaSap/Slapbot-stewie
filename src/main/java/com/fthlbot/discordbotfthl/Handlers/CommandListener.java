@@ -33,20 +33,6 @@ public class CommandListener implements SlashCommandCreateListener {
         this.config = config;
     }
 
-    /*@Override
-    public void onMessageCreate(MessageCreateEvent event) {
-        if (!event.getMessageAuthor().isRegularUser()){
-            return;
-        }
-        String[] args = event.getMessageContent().split("\\s+");
-        String key = args[0].toLowerCase(Locale.ROOT);
-        if (messageHolder.getCommand().containsKey(key)) {
-            CompletableFuture.runAsync(() -> {
-                Command command = messageHolder.getCommand().get(key);
-                command.execute(event);
-            });
-        }
-    }*/
 
     @Override
     public void onSlashCommandCreate(SlashCommandCreateEvent event) {
@@ -70,8 +56,6 @@ public class CommandListener implements SlashCommandCreateListener {
                 }
                 boolean staffCommand = isStaffCommand(command);
                 if (staffCommand){
-                    DiscordApi api = event.getApi();
-
                     User user = event.getSlashCommandInteraction().getUser();
                     boolean b =  user.isBotOwner() || hasStaffRole(user);
                     if (!b) {

@@ -68,7 +68,12 @@ public class PlayerImpl implements PlayerListener {
 
     private List<EmbedBuilder> createEmbed(Player player) {
         MinionBotClient client = new MinionBotClient();
-        MinionBotPlayer[] playerBan = client.getPlayerBan(player.getTag());
+        MinionBotPlayer[] playerBan = new MinionBotPlayer[0];
+        try {
+            playerBan = client.getPlayerBan(player.getTag());
+        } catch (Exception e) {
+           //.. swallow the error
+        }
         StringBuilder ban = new StringBuilder();
         if (playerBan.length == 0) {
             //No ban
