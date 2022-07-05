@@ -7,6 +7,7 @@ import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
+import org.javacord.api.util.logging.ExceptionLogger;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -54,14 +55,14 @@ public class ModerationFilterWords implements MessageCreateListener {
     }
 
     private void timeOutUser(DiscordApi api, User user, Server server){
-        boolean permission = server.hasAnyPermission(api.getYourself(), PermissionType.MODERATE_MEMBERS);
+//        boolean permission = server.hasAnyPermission(api.getYourself(), PermissionType.ADMINISTRATOR);
+//
+//        if (!permission) {
+//            log.info("Tried to Time out a member but do not have permission!");
+//            return;
+//        }
 
-        if (!permission) {
-            log.info("Tried to Time out a member but do not have permission!");
-            return;
-        }
-
-        server.timeoutUser(user, Duration.ofHours(8));
+        server.timeoutUser(user, Duration.ofHours(8)).exceptionally(ExceptionLogger.get());
         log.info("Timed out " + user.getName());
     }
 }
