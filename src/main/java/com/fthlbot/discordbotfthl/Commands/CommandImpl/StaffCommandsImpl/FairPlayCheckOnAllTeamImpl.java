@@ -94,13 +94,14 @@ public class FairPlayCheckOnAllTeamImpl implements Command {
                 if (minionBotPlayer.getOrgInitials().isEmpty()) {
                     continue;
                 }
-                if (!minionBotPlayer.getOrgInitials().get().equalsIgnoreCase("FTHL")) {
-                    continue;
-                }
+//                if (!minionBotPlayer.getOrgInitials().get().equalsIgnoreCase("FTHL")) {
+//                    continue;
+//                }
                 EmbedBuilder embed = new EmbedBuilder()
                         .setTitle("Fair Play Violation")
                         .setColor(Color.RED)
                         .setFooter("Click the button to remove the player form the roster!")
+                        .addField("League", minionBotPlayer.getOrgInitials().get())
                         .addField("Team", t.getName(), false)
                         .addField("Player", "Name: %s\nTag: %s".formatted(roster.getPlayerName(), roster.getPlayerTag()), false);
                 ActionRow actionRow = ActionRow.of(
