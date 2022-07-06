@@ -36,7 +36,7 @@ public class RosterService {
     }
     //TODO fp checks
     //check pos
-    public Roster addToRoster(Roster roster, User user) throws LeagueException {
+    public synchronized Roster addToRoster(Roster roster, User user) throws LeagueException {
         Optional<Roster> alreadyAddedAccount = repo.findRosterByPlayerTagAndDivision(roster.getPlayerTag(), roster.getDivision());
         List<Roster> rosterByTeam = repo.findRosterByTeam(roster.getTeam());
         if (alreadyAddedAccount.isPresent()){
@@ -64,11 +64,12 @@ public class RosterService {
             throw new IncorrectTownHallException(roster.getTownHallLevel(), roster.getDivision());
         }
 
-        try {
-            decrementAllowedRosterChanges(roster.getTeam());
-        } catch (ParseException e) {
-            throw new UnExpectedLeagueException("Failed to parse date, this should never happen\n Please report this to the developer");
-        }
+        //TODO change this -
+//        try {
+//            decrementAllowedRosterChanges(roster.getTeam());
+//        } catch (ParseException e) {
+//            throw new UnExpectedLeagueException("Failed to parse date, this should never happen\n Please report this to the developer");
+//        }
         return repo.save(roster);
     }
 
