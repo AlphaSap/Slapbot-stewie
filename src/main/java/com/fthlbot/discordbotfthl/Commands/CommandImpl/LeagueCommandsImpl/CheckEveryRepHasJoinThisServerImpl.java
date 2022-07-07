@@ -33,7 +33,7 @@ public class CheckEveryRepHasJoinThisServerImpl implements Command {
         CompletableFuture<InteractionOriginalResponseUpdater> response = event.getSlashCommandInteraction().respondLater();
 
         response.thenAccept(updater -> {
-            updater.setContent("Checking...");
+            updater.setContent("Checking...").update();
         });
 
         teamService.getAllTeams().stream().map(x -> {
