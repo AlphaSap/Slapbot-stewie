@@ -14,15 +14,13 @@ import java.time.Duration;
 public class FilterWordService {
     private static final Logger log = LoggerFactory.getLogger(FilterWordService.class.getName());
     public boolean checkMessage(String text) {
-        String[] args = text.toLowerCase()
-                .replace("╭╮", "n")
+        String[] args = text.toLowerCase().replace("╭╮", "n")
                 .replace("9", "g")
-                .replace("", "n")
                 .replace("3", "e")
                 .split("\\s+");
 
         for (String arg : args) {
-            if(arg.matches("^:[A-za-z\\d]+:$")) continue;
+            //if(arg.matches("^:[A-za-z\\d]+:$")) continue;
             if (arg.matches("nigg")) return true;
 
             if (arg.startsWith("n") && arg.length() >= 5){
@@ -44,7 +42,7 @@ public class FilterWordService {
     }
 
     public void timeOutUser(DiscordApi api, User user, Server server){
-        server.timeoutUser(user, Duration.ofHours(8)).exceptionally(ExceptionLogger.get());
+        server.timeoutUser(user, Duration.ofHours(8)).exceptionally(ExceptionLogger.get()).exceptionally(ExceptionLogger.get());
         log.info("Timed out " + user.getName());
     }
 }
