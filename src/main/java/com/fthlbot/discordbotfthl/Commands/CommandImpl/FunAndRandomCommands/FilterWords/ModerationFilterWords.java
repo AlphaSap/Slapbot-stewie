@@ -26,7 +26,6 @@ public class ModerationFilterWords implements MessageCreateListener {
 
         if (event.getServer().get().getId() != botConfig.getFthlServerID()) return;
 
-        log.info("Checking message: " + event.getMessageContent());
         if (filterWordService.checkMessage(event.getMessage().getContent())){
             filterWordService.timeOutUser(event.getApi(), event.getMessage().getAuthor().asUser().get(), event.getServer().get());
             event.getMessage().delete("Banned Word");

@@ -34,8 +34,6 @@ public class FilterWordsEdit implements MessageEditListener {
 
         if (event.getServer().get().getId() != botConfig.getFthlServerID()) return;
 
-        log.info("Checking message: " + event.getMessageContent());
-
         if (filterWordService.checkMessage(event.getNewContent())) {
             filterWordService.timeOutUser(event.getApi(), messageAuthor.get().asUser().get(), event.getServer().get());
             event.deleteMessage();
