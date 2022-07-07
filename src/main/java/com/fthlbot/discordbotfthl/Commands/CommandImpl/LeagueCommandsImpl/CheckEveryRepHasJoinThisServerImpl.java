@@ -8,6 +8,8 @@ import com.fthlbot.discordbotfthl.Util.BotConfig;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CompletableFuture;
@@ -22,6 +24,8 @@ import java.util.concurrent.CompletableFuture;
 public class CheckEveryRepHasJoinThisServerImpl implements Command {
     private final TeamService teamService;
     private final BotConfig config;
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public CheckEveryRepHasJoinThisServerImpl(TeamService teamService, BotConfig config) {
         this.teamService = teamService;
@@ -41,6 +45,7 @@ public class CheckEveryRepHasJoinThisServerImpl implements Command {
             User rep2 = event.getSlashCommandInteraction().getApi().getUserById(x.getRep2ID()).join();
             return new UserHolder(rep1, rep2);
         }).forEach(x -> {
+            log.info("Checking {} and {}", x.getRep1().getName(), x.getRep2().getName());
             boolean b = x.getRep1().getMutualServers().stream().allMatch(a -> a.getId() == config.getNegoServerID());
             if (!b) {
                 event.getSlashCommandInteraction().createFollowupMessageBuilder()
