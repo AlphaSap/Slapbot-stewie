@@ -2,6 +2,7 @@ package com.fthlbot.discordbotfthl;
 
 import Core.JClash;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.*;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands.FilterWords.FilterWordsEdit;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands.ImageGenCommandImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands.SuggestionImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands.PingImpl;
@@ -11,7 +12,7 @@ import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.TeamRo
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.UtilCommands.ShowDivisionWeekImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.UtilCommands.TeamInfoImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.RosterRemove;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.ModerationFilterWords;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands.FilterWords.ModerationFilterWords;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.AddDivisionWeeksImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.CreateMatchUps;
@@ -127,9 +128,11 @@ public class DiscordBotFthlApplication {
 
     private final ModerationFilterWords moderationFilterWords;
 
+    private final FilterWordsEdit  filterWordsEdit;
+
     private final CheckEveryRepHasJoinThisServerImpl checkEveryRepHasJoinThisServer;
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemberJoin, ApplicantServerJoinImpl applicantServerJoin, ServerJoinImpl serverJoin, ServerLeaveImpl serverLeave, DivisionEditorImpl divisionEditor, InfoCommandImpl infoCommandImpl, ClanLineup clanLineup, ModerationFilterWords moderationFilterWords, CheckEveryRepHasJoinThisServerImpl checkEveryRepHasJoinThisServer) {
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemberJoin, ApplicantServerJoinImpl applicantServerJoin, ServerJoinImpl serverJoin, ServerLeaveImpl serverLeave, DivisionEditorImpl divisionEditor, InfoCommandImpl infoCommandImpl, ClanLineup clanLineup, ModerationFilterWords moderationFilterWords, FilterWordsEdit filterWordsEdit, CheckEveryRepHasJoinThisServerImpl checkEveryRepHasJoinThisServer) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -168,6 +171,7 @@ public class DiscordBotFthlApplication {
         this.infoCommandImpl = infoCommandImpl;
         this.clanLineup = clanLineup;
         this.moderationFilterWords = moderationFilterWords;
+        this.filterWordsEdit = filterWordsEdit;
         this.checkEveryRepHasJoinThisServer = checkEveryRepHasJoinThisServer;
     }
 
@@ -215,7 +219,7 @@ public class DiscordBotFthlApplication {
         api.addListener(serverJoin);
         api.addListener(serverLeave);
         api.addMessageCreateListener(moderationFilterWords);
-        api.addMessageEditListener(moderationFilterWords);
+        api.addMessageEditListener(filterWordsEdit);
 
         api.updateActivity(ActivityType.LISTENING, "Slash commands!");
 
