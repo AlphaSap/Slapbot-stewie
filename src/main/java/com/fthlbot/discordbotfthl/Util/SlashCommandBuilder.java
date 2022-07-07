@@ -516,6 +516,11 @@ public class SlashCommandBuilder {
         }).join();
     }
 
+    public SlashCommand createCheckEveryRepJoinedTheServer(){
+        return SlashCommand.with("check-rep-joined-the-server", "Checks if every rep has joined the server")
+                .addOption(SlashCommandOption.create(LONG, "server-id", "Enter the server ID you want to check, Bot must be present in the server you want to check", true))
+                .createGlobal(getApi()).join();
+    }
     public SlashCommand createDivisionEditor(){
         return SlashCommand.with("division-editor",  "Staff only command to edit a division")
                 .setOptions(

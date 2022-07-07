@@ -59,4 +59,4 @@ jobs:
             docker image rm sahil2903/discord-bot-fthl:latest
             docker kill $(docker ps -q)
             docker pull sahil2903/discord-bot-fthl:latest
-            docker run -d --env-file .env sahil2903/discord-bot-fthl:latest .
+            docker run -d --name bot --env-file .env sahil2903/discord-bot-fthl:latest .

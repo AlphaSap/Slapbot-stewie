@@ -127,7 +127,9 @@ public class DiscordBotFthlApplication {
 
     private final ModerationFilterWords moderationFilterWords;
 
-    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemberJoin, ApplicantServerJoinImpl applicantServerJoin, ServerJoinImpl serverJoin, ServerLeaveImpl serverLeave, DivisionEditorImpl divisionEditor, InfoCommandImpl infoCommandImpl, ClanLineup clanLineup, ModerationFilterWords moderationFilterWords) {
+    private final CheckEveryRepHasJoinThisServerImpl checkEveryRepHasJoinThisServer;
+
+    public DiscordBotFthlApplication(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashCommandBuilder builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemberJoin, ApplicantServerJoinImpl applicantServerJoin, ServerJoinImpl serverJoin, ServerLeaveImpl serverLeave, DivisionEditorImpl divisionEditor, InfoCommandImpl infoCommandImpl, ClanLineup clanLineup, ModerationFilterWords moderationFilterWords, CheckEveryRepHasJoinThisServerImpl checkEveryRepHasJoinThisServer) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -166,6 +168,7 @@ public class DiscordBotFthlApplication {
         this.infoCommandImpl = infoCommandImpl;
         this.clanLineup = clanLineup;
         this.moderationFilterWords = moderationFilterWords;
+        this.checkEveryRepHasJoinThisServer = checkEveryRepHasJoinThisServer;
     }
 
 
@@ -195,6 +198,8 @@ public class DiscordBotFthlApplication {
                 .join();
 
         builder.setApi(api);
+        builder.createCheckEveryRepJoinedTheServer();
+
         ArrayList<Server> servers = new ArrayList<>(api.getServers());
 
         log.info("Logged in as {}", api.getYourself().getDiscriminatedName());
@@ -248,7 +253,8 @@ public class DiscordBotFthlApplication {
                 this.suggestionImpl,
                 this.divisionEditor,
                 this.infoCommandImpl,
-                this.clanLineup
+                this.clanLineup,
+                this.checkEveryRepHasJoinThisServer
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
