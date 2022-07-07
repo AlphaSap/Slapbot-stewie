@@ -209,7 +209,8 @@ public class DiscordBotFthlApplication {
         //To log the servers the bot is in
         api.addListener(serverJoin);
         api.addListener(serverLeave);
-        api.addListener(moderationFilterWords);
+        api.addMessageCreateListener(moderationFilterWords);
+        api.addMessageEditListener(moderationFilterWords);
 
         api.updateActivity(ActivityType.LISTENING, "Slash commands!");
 

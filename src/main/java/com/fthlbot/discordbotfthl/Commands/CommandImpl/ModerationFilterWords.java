@@ -3,7 +3,6 @@ package com.fthlbot.discordbotfthl.Commands.CommandImpl;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.message.MessageAuthor;
-import org.javacord.api.entity.permission.PermissionType;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
