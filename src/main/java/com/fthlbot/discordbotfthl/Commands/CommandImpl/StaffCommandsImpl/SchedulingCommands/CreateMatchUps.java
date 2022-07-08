@@ -70,6 +70,10 @@ public class CreateMatchUps implements Command {
         var jsonArray = jsonObject.getJSONArray("schedule");
 
         int length = jsonArray.length();
+        DivisionWeeks divWeekByID = divisionWeekService.getDivWeekByID(divWeekID);
+        if(divWeekByID.isByeWeek()){
+            throw new LeagueException("This is a bye week, no match-ups can be set");
+        }
         List<ScheduledWar> scheduledWarList = new ArrayList<>();
         for (int i = 0; i < length; i++) {
             int home = jsonArray.getJSONObject(i).getInt("home");
@@ -78,7 +82,6 @@ public class CreateMatchUps implements Command {
             Team homeTeam = teamService.getTeamByID(home);
             Team enemyTeam = teamService.getTeamByID(enemy);
 
-            DivisionWeeks divWeekByID = divisionWeekService.getDivWeekByID(divWeekID);
             ScheduledWar war = new ScheduledWar(
                     divWeekByID,
                     homeTeam,
