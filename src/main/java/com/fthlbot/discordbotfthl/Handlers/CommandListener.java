@@ -57,7 +57,7 @@ public class CommandListener implements SlashCommandCreateListener {
                 boolean staffCommand = isStaffCommand(command);
                 if (staffCommand){
                     User user = event.getSlashCommandInteraction().getUser();
-                    boolean b = /* user.isBotOwner() ||*/ hasStaffRole(user, event.getApi());
+                    boolean b = user.isBotOwner() || hasStaffRole(user, event.getApi());
                     if (!b) {
                         CompletableFuture<InteractionOriginalResponseUpdater> respondLater = event.getSlashCommandInteraction().respondLater();
                         respondLater.thenAccept(res -> {
