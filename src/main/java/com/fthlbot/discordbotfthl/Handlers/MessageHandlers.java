@@ -23,8 +23,7 @@ public class MessageHandlers {
             Annotation[] annotations = command.getClass().getAnnotations();
             //add a forloop for all the commands above line
             for (Annotation annotation : annotations) {
-                if (annotation instanceof Invoker) {
-                    Invoker invoker = (Invoker) annotation;
+                if (annotation instanceof Invoker invoker) {
                     commandMap.put(invoker.alias(), command);
                 }
             }

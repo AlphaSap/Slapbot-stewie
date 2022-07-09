@@ -57,7 +57,7 @@ public class CommandListener implements SlashCommandCreateListener {
                 boolean staffCommand = isStaffCommand(command);
                 if (staffCommand){
                     User user = event.getSlashCommandInteraction().getUser();
-                    boolean b =  user.isBotOwner() || hasStaffRole(user);
+                    boolean b = /* user.isBotOwner() ||*/ hasStaffRole(user, event.getApi());
                     if (!b) {
                         CompletableFuture<InteractionOriginalResponseUpdater> respondLater = event.getSlashCommandInteraction().respondLater();
                         respondLater.thenAccept(res -> {
@@ -104,21 +104,11 @@ public class CommandListener implements SlashCommandCreateListener {
         }
         return false;
     }
-    private boolean hasStaffRole(User user){
-        List<Long> staffID = List.of(
-                444574761121611788L,
-                123094716014264322L,
-                613121864016986112L,
-                690562682784317470L,
-                398424326723862529L,
-                498175857244766218L,
-                613121864016986112L,
-                777114883984195605L,
-                726808764056993833L,
-                602935588018061453L,
-                450224783972499467L);
-        return staffID.stream().anyMatch(x -> x.equals(user.getId()));
-        //return roles.stream().anyMatch(x -> x.getId() == config.getFthlServerStaffRoleID());
+    private boolean hasStaffRole(User user, DiscordApi api){
+        return api.getServerById(config.getFthlServerID()).get()
+                .getRoles(user)
+                .stream()
+                .anyMatch(x -> x.getId() == config.getFthlServerStaffRoleID());
     }
 
 
