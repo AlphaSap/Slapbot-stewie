@@ -1,4 +1,4 @@
-package com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl;
+package com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl;
 
 import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
@@ -46,7 +46,7 @@ public class CheckEveryRepHasJoinThisServerImpl implements Command {
             return new UserHolder(rep1, rep2);
         }).forEach(x -> {
             log.info("Checking {} and {}", x.getRep1().getName(), x.getRep2().getName());
-            boolean b = x.getRep1().getMutualServers().stream().allMatch(a -> a.getId() == config.getNegoServerID());
+            boolean b = x.getRep1().getMutualServers().stream().anyMatch(a -> a.getId() == config.getNegoServerID());
             if (!b) {
                 event.getSlashCommandInteraction().createFollowupMessageBuilder()
                         .setContent(x.getRep1().getName() + " has not joined the server yet")
