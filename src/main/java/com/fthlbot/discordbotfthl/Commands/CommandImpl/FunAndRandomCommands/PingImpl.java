@@ -1,17 +1,10 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands;
 
-import com.fthlbot.discordbotfthl.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.Annotation.Invoker;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.PingListener;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
-import org.javacord.api.event.message.MessageCreateEvent;
 import org.springframework.stereotype.Component;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
 
 @Invoker(
         alias = "ping",

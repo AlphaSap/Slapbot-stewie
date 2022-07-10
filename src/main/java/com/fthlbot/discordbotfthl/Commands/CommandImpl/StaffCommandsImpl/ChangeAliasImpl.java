@@ -1,7 +1,7 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl;
 
-import com.fthlbot.discordbotfthl.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.Annotation.Invoker;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.StaffCommandListener.ChangeClanListener;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;

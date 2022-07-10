@@ -1,7 +1,7 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl;
 
-import com.fthlbot.discordbotfthl.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.Annotation.Invoker;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.RemoveAllChannelFromACategoryListener;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import com.fthlbot.discordbotfthl.Util.SlapbotEmojis;
@@ -10,8 +10,6 @@ import org.javacord.api.entity.channel.ChannelCategory;
 import org.javacord.api.entity.channel.RegularServerChannel;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.emoji.KnownCustomEmoji;
-import org.javacord.api.entity.message.Message;
-import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.LowLevelComponent;
 import org.javacord.api.entity.message.embed.EmbedBuilder;

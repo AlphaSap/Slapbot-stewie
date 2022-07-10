@@ -1,4 +1,4 @@
-package com.fthlbot.discordbotfthl.RandomEvents.ServerMemberJoin;
+package com.fthlbot.discordbotfthl.Events.ServerMemberJoin;
 
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.Util.BotConfig;

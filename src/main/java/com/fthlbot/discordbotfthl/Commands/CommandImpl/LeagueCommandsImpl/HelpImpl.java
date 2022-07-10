@@ -1,12 +1,11 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl;
 
-import com.fthlbot.discordbotfthl.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.Annotation.Invoker;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.HelpListener;
-import com.fthlbot.discordbotfthl.Handlers.Command;
+import com.fthlbot.discordbotfthl.core.Handlers.Command;
 import com.fthlbot.discordbotfthl.Util.Pagination.Pagination;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
-import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteractionOption;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
@@ -19,8 +18,8 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
-import static com.fthlbot.discordbotfthl.Annotation.CommandType.*;
-import static com.fthlbot.discordbotfthl.Annotation.CommandType.IGNORE;
+import static com.fthlbot.discordbotfthl.core.Annotation.CommandType.*;
+import static com.fthlbot.discordbotfthl.core.Annotation.CommandType.IGNORE;
 
 @Invoker(
         alias = "help",

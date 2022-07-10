@@ -1,9 +1,9 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl;
 
-import com.fthlbot.discordbotfthl.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.Annotation.Invoker;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
-import com.fthlbot.discordbotfthl.Handlers.Command;
+import com.fthlbot.discordbotfthl.core.Handlers.Command;
 import com.fthlbot.discordbotfthl.Util.Pagination.ButtonRemoveJobScheduler;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;

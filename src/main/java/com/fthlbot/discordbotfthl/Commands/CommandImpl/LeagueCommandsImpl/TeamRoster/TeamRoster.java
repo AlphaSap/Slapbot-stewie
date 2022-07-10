@@ -1,11 +1,11 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.TeamRoster;
 
-import com.fthlbot.discordbotfthl.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.Annotation.Invoker;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
-import com.fthlbot.discordbotfthl.Handlers.Command;
+import com.fthlbot.discordbotfthl.core.Handlers.Command;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.springframework.stereotype.Component;
 

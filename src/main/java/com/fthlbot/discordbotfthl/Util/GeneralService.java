@@ -1,8 +1,7 @@
 package com.fthlbot.discordbotfthl.Util;
 
-import Core.exception.ClashAPIException;
-import com.fthlbot.discordbotfthl.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.Annotation.Invoker;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
 import com.fthlbot.discordbotfthl.DiscordBotFthlApplication;
 import com.fthlbot.discordbotfthl.Util.Exception.UnsupportedCommandException;
@@ -20,7 +19,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -153,6 +151,7 @@ public class GeneralService {
         return str.toString();
     }
 
+    @Deprecated
     public static EmbedBuilder notEnoughArgument(){
         return new EmbedBuilder()
                 .setTitle("<:deny:934405749881315380>Error!")
@@ -203,8 +202,23 @@ public class GeneralService {
         return date.getTime() / UNIX_CONVERTER;
     }
 
+    /**
+     * Converts a unix timestamp to a date
+     * @param date the unix timestamp
+     * @return Date
+     */
     public static String dateToStringInDiscordFormat(Date date) {
         StringBuilder sb = new StringBuilder();
         return sb.append("<t:").append(dateToUnix(date)).append(":f>").toString();
+    }
+
+    public static void printMemoryUsage(){
+        Runtime runtime = Runtime.getRuntime();
+        long maxMemory = runtime.maxMemory();
+        long allocatedMemory = runtime.totalMemory();
+        long freeMemory = runtime.freeMemory();
+        log.info("Max Memory: " + maxMemory);
+        log.info("Allocated Memory: " + allocatedMemory);
+        log.info("Free Memory: " + freeMemory);
     }
 }

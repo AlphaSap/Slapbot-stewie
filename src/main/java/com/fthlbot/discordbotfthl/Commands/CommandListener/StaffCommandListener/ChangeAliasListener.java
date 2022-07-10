@@ -1,6 +1,6 @@
 package com.fthlbot.discordbotfthl.Commands.CommandListener.StaffCommandListener;
 
-import com.fthlbot.discordbotfthl.Handlers.Command;
+import com.fthlbot.discordbotfthl.core.Handlers.Command;
 
 public interface ChangeAliasListener extends Command {
 }

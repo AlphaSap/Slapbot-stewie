@@ -1,7 +1,7 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands;
 
-import com.fthlbot.discordbotfthl.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.Annotation.Invoker;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
 import com.fthlbot.discordbotfthl.DatabaseModels.ScheduleWar.DivisonWeek.DivisionWeekService;
 import com.fthlbot.discordbotfthl.DatabaseModels.ScheduleWar.DivisonWeek.DivisionWeeks;
@@ -9,7 +9,7 @@ import com.fthlbot.discordbotfthl.DatabaseModels.ScheduleWar.Schedule.ScheduleWa
 import com.fthlbot.discordbotfthl.DatabaseModels.ScheduleWar.Schedule.ScheduledWar;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
-import com.fthlbot.discordbotfthl.Handlers.Command;
+import com.fthlbot.discordbotfthl.core.Handlers.Command;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
 import com.fthlbot.discordbotfthl.Util.Utils;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;

@@ -1,8 +1,8 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands;
 
-import com.fthlbot.discordbotfthl.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.Annotation.Invoker;
-import com.fthlbot.discordbotfthl.Handlers.Command;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
+import com.fthlbot.discordbotfthl.core.Handlers.Command;
 import org.imgscalr.Scalr;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;

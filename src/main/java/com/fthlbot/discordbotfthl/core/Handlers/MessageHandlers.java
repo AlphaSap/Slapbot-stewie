@@ -1,7 +1,7 @@
-package com.fthlbot.discordbotfthl.Handlers;
+package com.fthlbot.discordbotfthl.core.Handlers;
 
 
-import com.fthlbot.discordbotfthl.Annotation.Invoker;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;

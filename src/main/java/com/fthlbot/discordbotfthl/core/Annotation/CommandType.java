@@ -1,4 +1,4 @@
-package com.fthlbot.discordbotfthl.Annotation;
+package com.fthlbot.discordbotfthl.core.Annotation;
 
 
 /**

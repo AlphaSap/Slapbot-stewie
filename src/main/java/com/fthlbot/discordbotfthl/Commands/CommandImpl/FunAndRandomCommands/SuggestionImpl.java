@@ -1,8 +1,8 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands;
 
-import com.fthlbot.discordbotfthl.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.Annotation.Invoker;
-import com.fthlbot.discordbotfthl.Handlers.Command;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
+import com.fthlbot.discordbotfthl.core.Handlers.Command;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.message.component.ActionRow;

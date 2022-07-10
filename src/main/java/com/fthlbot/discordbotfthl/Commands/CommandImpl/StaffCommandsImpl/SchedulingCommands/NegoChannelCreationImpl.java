@@ -1,8 +1,8 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands;
 
-import com.fthlbot.discordbotfthl.Annotation.AllowedChannel;
-import com.fthlbot.discordbotfthl.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.Annotation.Invoker;
+import com.fthlbot.discordbotfthl.core.Annotation.AllowedChannel;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.StaffCommandListener.NegoChannelCreationListener;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;
 import com.fthlbot.discordbotfthl.DatabaseModels.ScheduleWar.DivisonWeek.DivisionWeekService;

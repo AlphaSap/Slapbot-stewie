@@ -1,33 +1,31 @@
-package com.fthlbot.discordbotfthl.RandomEvents;
+package com.fthlbot.discordbotfthl.Events;
 
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
-import org.javacord.api.event.server.ServerJoinEvent;
-import org.javacord.api.listener.server.ServerJoinListener;
+import org.javacord.api.event.server.ServerLeaveEvent;
+import org.javacord.api.listener.server.ServerLeaveListener;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
-import java.util.Optional;
 
 @Component
-public class ServerJoinImpl implements ServerJoinListener {
-
+public class ServerLeaveImpl implements ServerLeaveListener {
     private final BotConfig botConfig;
 
-    public ServerJoinImpl(BotConfig botConfig) {
+    public ServerLeaveImpl(BotConfig botConfig) {
         this.botConfig = botConfig;
     }
 
     @Override
-    public void onServerJoin(ServerJoinEvent event) {
+    public void onServerLeave(ServerLeaveEvent event) {
         Server testServer = event.getServer().getApi().getServerById(botConfig.getTestServerID()).get();
         Server server = event.getServer();
         User user = server.requestOwner().join();
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setTitle("Server joined");
+        embedBuilder.setTitle("Server left :(");
         embedBuilder.addField("Server", server.getName(), false);
         embedBuilder.addField("Server ID", server.getIdAsString(), false);
         embedBuilder.addField("Server owner", user.getDiscriminatedName(), false);

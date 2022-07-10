@@ -1,4 +1,4 @@
-package com.fthlbot.discordbotfthl.Handlers;
+package com.fthlbot.discordbotfthl.core.Handlers;
 
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 
