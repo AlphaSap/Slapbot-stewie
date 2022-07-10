@@ -7,12 +7,16 @@ import com.fthlbot.discordbotfthl.core.Handlers.Command;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
+import org.javacord.api.interaction.callback.InteractionFollowupMessageBuilder;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
 @Invoker(
         alias = "check-rep-joined-the-server",
@@ -40,25 +44,26 @@ public class CheckEveryRepHasJoinThisServerImpl implements Command {
             updater.setContent("Checking...").update();
         });
 
-        teamService.getAllTeams().stream().map(x -> {
+        List<UserHolder> userHolderStream = teamService.getAllTeams().stream().map(x -> {
             User rep1 = event.getSlashCommandInteraction().getApi().getUserById(x.getRep1ID()).join();
             User rep2 = event.getSlashCommandInteraction().getApi().getUserById(x.getRep2ID()).join();
             return new UserHolder(rep1, rep2);
-        }).forEach(x -> {
-            log.info("Checking {} and {}", x.getRep1().getName(), x.getRep2().getName());
-            boolean b = x.getRep1().getMutualServers().stream().anyMatch(a -> a.getId() == config.getNegoServerID());
-            if (!b) {
-                event.getSlashCommandInteraction().createFollowupMessageBuilder()
-                        .setContent(x.getRep1().getName() + " has not joined the server yet")
-                        .send();
+        }).toList();
+
+        InteractionFollowupMessageBuilder updater = event.getSlashCommandInteraction().createFollowupMessageBuilder();
+        userHolderStream.forEach(x -> {
+            Collection<User> members = event.getApi().getServerById(config.getNegoServerID()).get().getMembers();
+            boolean b = !members.contains(x.getRep1());
+            boolean b2 = !members.contains(x.getRep2());
+            if (b) {
+                updater.setContent("Reps not joined: " + x.getRep1().getName() + " and " + x.getRep2().getName()).send();
             }
-            boolean b2 = x.getRep2().getMutualServers().stream().allMatch(a -> a.getId() == config.getNegoServerID());
-            if (!b2) {
-                event.getSlashCommandInteraction().createFollowupMessageBuilder()
-                        .setContent(x.getRep2().getName() + " has not joined the server yet")
-                        .send();
+            if (b2) {
+                updater.setContent("Reps not joined: " + x.getRep1().getName() + " and " + x.getRep2().getName()).send();
             }
         });
+
+
 
     }
 
