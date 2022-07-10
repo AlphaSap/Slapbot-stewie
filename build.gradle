@@ -36,6 +36,9 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-quartz'
     implementation 'org.imgscalr:imgscalr-lib:4.2'
+
+    implementation 'org.yaml:snakeyaml:1.30'
+
 }
 
 tasks.named('test') {

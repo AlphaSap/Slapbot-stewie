@@ -1,0 +1,43 @@
+[
+  {
+    "name": "testme",
+    "description": "Ping the bot",
+    "examples": [
+      "/ping"
+    ],
+    "options": [
+      {
+        "name": "test",
+        "description": "test",
+        "required": false,
+        "type": "string",
+        "choices": [
+          {
+            "key": "test",
+            "value": "test"
+          },
+          {
+            "key": "test2",
+            "value": "test2"
+          }
+        ]
+      },
+      {
+        "name": "test2",
+        "description": "test2",
+        "required": false,
+        "type": "string",
+        "choices": [
+          {
+            "key": "test",
+            "value": "test"
+          },
+          {
+            "key": "test2",
+            "value": "test2"
+          }
+        ]
+      }
+    ]
+  }
+]

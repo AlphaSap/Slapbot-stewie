@@ -1,0 +1,42 @@
+command:
+  - name: "ping"
+  description: "Ping the bot"
+  examples:
+    - "/ping"
+
+
+  - name: "registration"
+    description: "Register a new team"
+    examples:
+      - "/register <clan-tag> <division-alias> <team-alias> <@Second Rep>"
+      - "/register <clan-tag> <division-alias> <team-alias>"
+    option:
+      - name: "clan-tag"
+        description: "Clan tag"
+        required: true
+        type: "STRING"
+      - name: "division-alias"
+        description: "Division alias"
+        required: true
+        type: "STRING"
+        choices:
+          - key: "f8"
+            value: "f8"
+          - key: "f9"
+            value: "f9"
+          - key: "f10"
+            value: "f10"
+          - key: "f11"
+            value: "f11"
+          - key: "elite"
+            value: "elite"
+          - key: "lite"
+            value: "lite"
+      - name: "team-alias"
+        description: "Team alias"
+        required: true
+        type: "STRING"
+      - name: "second-rep"
+        description: "Second rep"
+        required: false
+        type: "USER"
