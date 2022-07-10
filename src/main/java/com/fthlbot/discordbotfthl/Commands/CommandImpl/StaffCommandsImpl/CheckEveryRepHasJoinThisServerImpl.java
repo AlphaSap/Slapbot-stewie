@@ -1,5 +1,6 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl;
 
+import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
@@ -47,7 +48,7 @@ public class CheckEveryRepHasJoinThisServerImpl implements Command {
         List<UserHolder> userHolderStream = teamService.getAllTeams().stream().map(x -> {
             User rep1 = event.getSlashCommandInteraction().getApi().getUserById(x.getRep1ID()).join();
             User rep2 = event.getSlashCommandInteraction().getApi().getUserById(x.getRep2ID()).join();
-            return new UserHolder(rep1, rep2);
+            return new UserHolder(rep1, rep2, x);
         }).toList();
 
         InteractionFollowupMessageBuilder updater = event.getSlashCommandInteraction().createFollowupMessageBuilder();
@@ -56,10 +57,10 @@ public class CheckEveryRepHasJoinThisServerImpl implements Command {
             boolean b = !members.contains(x.getRep1());
             boolean b2 = !members.contains(x.getRep2());
             if (b) {
-                updater.setContent("Reps not joined: " + x.getRep1().getName() + " and " + x.getRep2().getName()).send();
+                updater.setContent("Reps not joined: " + x.getRep1().getName() + "\nTeam Name: " + x.getTeam().getName()).send();
             }
             if (b2) {
-                updater.setContent("Reps not joined: " + x.getRep1().getName() + " and " + x.getRep2().getName()).send();
+                updater.setContent("Reps not joined: " + x.getRep2().getName() + "\nTeam Name: " + x.getTeam().getName()).send();
             }
         });
 
@@ -71,6 +72,8 @@ public class CheckEveryRepHasJoinThisServerImpl implements Command {
         private final User rep1;
         private final User rep2;
 
+        private final Team team;
+
         public User getRep1() {
             return rep1;
         }
@@ -79,9 +82,14 @@ public class CheckEveryRepHasJoinThisServerImpl implements Command {
             return rep2;
         }
 
-        public UserHolder(User rep1, User rep2) {
+        public UserHolder(User rep1, User rep2, Team team) {
             this.rep1 = rep1;
             this.rep2 = rep2;
+            this.team = team;
+        }
+
+        public Team getTeam() {
+            return team;
         }
     }
 }
