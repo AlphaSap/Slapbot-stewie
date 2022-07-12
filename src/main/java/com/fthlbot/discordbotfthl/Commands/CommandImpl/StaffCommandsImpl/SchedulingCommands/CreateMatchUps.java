@@ -29,7 +29,7 @@ import java.util.concurrent.CompletableFuture;
         alias = "create-matchups",
         description = "A command to set match-ups for a specific division",
         usage = "/create-matchups <JSON>",
-        type = CommandType.STAFF
+        type = CommandType.DEV
 )
 public class CreateMatchUps implements Command {
 

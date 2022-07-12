@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
         alias = "create-all-divisions",
         description = "Creates all divisions",
         usage = "create-all-divisions",
-        type = CommandType.STAFF
+        type = CommandType.DEV
 )
 public class CreateAllDivisionsImpl implements Command {
 

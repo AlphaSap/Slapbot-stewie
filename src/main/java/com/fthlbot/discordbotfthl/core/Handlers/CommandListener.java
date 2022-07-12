@@ -64,6 +64,18 @@ public class CommandListener implements SlashCommandCreateListener {
                         return;
                     }
                 }
+                boolean devCommand = isDevCommand(command);
+                if (devCommand){
+                    User user = event.getSlashCommandInteraction().getUser();
+                    boolean b = user.isBotOwner();
+                    if (!b) {
+                        CompletableFuture<InteractionOriginalResponseUpdater> respondLater = event.getSlashCommandInteraction().respondLater();
+                        respondLater.thenAccept(res -> {
+                            res.setContent("This command is restricted to developers only!").update();
+                        });
+                        return;
+                    }
+                }
                 command.execute(event);
             });
             logCommand(event);
@@ -96,6 +108,17 @@ public class CommandListener implements SlashCommandCreateListener {
         for (Annotation annotation : annotations) {
             if (annotation instanceof Invoker invoker){
                 if (invoker.type().equals(CommandType.STAFF)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    private boolean isDevCommand(Command command) {
+        Annotation[] annotations = command.getClass().getAnnotations();
+        for (Annotation annotation : annotations) {
+            if (annotation instanceof Invoker invoker){
+                if (invoker.type().equals(CommandType.DEV)){
                     return true;
                 }
             }

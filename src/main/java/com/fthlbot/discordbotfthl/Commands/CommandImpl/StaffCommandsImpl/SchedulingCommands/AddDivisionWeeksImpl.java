@@ -33,7 +33,7 @@ import java.util.concurrent.CompletableFuture;
         alias = "add-weeks",
         usage = "/add-weeks <DIVISION> <JSON STRING>",
         description = "A command to add weeks for a division",
-        type = CommandType.STAFF
+        type = CommandType.DEV
 )
 public class AddDivisionWeeksImpl implements AddDivisionWeekListener {
     private final DivisionService divisionService;

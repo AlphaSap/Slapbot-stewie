@@ -27,7 +27,7 @@ import java.util.List;
         alias = "division-editor",
         description = "Edit a division",
         usage = "/division-editor (type in the modal form)",
-        type = CommandType.STAFF
+        type = CommandType.DEV
 )
 @Component
 public class DivisionEditorImpl implements Command {

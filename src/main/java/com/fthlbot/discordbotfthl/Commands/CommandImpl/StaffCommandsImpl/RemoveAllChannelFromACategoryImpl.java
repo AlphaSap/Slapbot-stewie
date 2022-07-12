@@ -59,7 +59,7 @@ public class RemoveAllChannelFromACategoryImpl implements RemoveAllChannelFromAC
 
         if (!server.isAdmin(user)){
             respondLater.thenAccept(e -> {
-                e.setContent("You are not an admin");
+                e.setContent("User is not an admin");
                 e.update();
             });
             return;
