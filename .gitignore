@@ -36,4 +36,4 @@ out/
 ### VS Code ###
 .vscode/
 
-/src/main/java/com/fthlbot/discordbotfthl/core/CommandCreation
+!**/src/main/java/com/fthlbot/discordbotfthl/core/CommandCreation/

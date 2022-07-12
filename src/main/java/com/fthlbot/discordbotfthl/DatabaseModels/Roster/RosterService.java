@@ -63,13 +63,11 @@ public class RosterService {
         if (!isCorrectTh){
             throw new IncorrectTownHallException(roster.getTownHallLevel(), roster.getDivision());
         }
-
-        //TODO change this -
-//        try {
-//            decrementAllowedRosterChanges(roster.getTeam());
-//        } catch (ParseException e) {
-//            throw new UnExpectedLeagueException("Failed to parse date, this should never happen\n Please report this to the developer");
-//        }
+        try {
+            decrementAllowedRosterChanges(roster.getTeam());
+        } catch (ParseException e) {
+            throw new UnExpectedLeagueException("Failed to parse date, this should never happen\n Please report this to the developer");
+        }
         return repo.save(roster);
     }
 
