@@ -146,7 +146,10 @@ public class CheckLineUpImpl implements CheckLineUpListener {
                 builder.setDescription("\n" + String.join("\n", "`"+enemyTeam+"`"));
                 builder.setTimestampToNow();
                 builder.setColor(Color.RED);
-                event.getSlashCommandInteraction().getChannel().get().sendMessage(builder).exceptionally(ExceptionLogger.get());
+                event.getSlashCommandInteraction().createFollowupMessageBuilder()
+                        .addEmbed(builder)
+                        .send()
+                        .exceptionally(ExceptionLogger.get());
 
                 // event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(builder).send().exceptionally(ExceptionLogger.get());
             }
