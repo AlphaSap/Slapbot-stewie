@@ -150,15 +150,15 @@ public class CreateMatchUps implements Command {
                     .setContent("Match-ups created, Would you like to save them or try again?")
                     .addComponents(ActionRow.of(
                             List.of(
-                                    Button.create("Save", ButtonStyle.PRIMARY, "save"),
-                                    Button.create("Try Again", ButtonStyle.DANGER, "exit")
+                                    Button.create("save", ButtonStyle.PRIMARY, "Save"),
+                                    Button.create("exit", ButtonStyle.DANGER, "Try Again")
                             )
                     )).send();
 
             new ButtonRemoveJobScheduler().execute(send.join());
 
             send.join().addButtonClickListener(b -> {
-               if (b.getButtonInteraction().getCustomId().equals("save")) {
+               if (b.getButtonInteraction().getCustomId().equals("Save")) {
                    b.getButtonInteraction().acknowledge();
                    save(scheduledWars);
                    event.getSlashCommandInteraction().createFollowupMessageBuilder()
