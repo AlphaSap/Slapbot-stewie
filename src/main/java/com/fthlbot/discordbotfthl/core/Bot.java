@@ -164,7 +164,6 @@ public class Bot {
         this.moderationFilterWords = moderationFilterWords;
         this.filterWordsEdit = filterWordsEdit;
         this.checkEveryRepHasJoinThisServer = checkEveryRepHasJoinThisServer;
-
         log.info("Bot object created");
     }
 

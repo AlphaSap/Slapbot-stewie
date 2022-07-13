@@ -17,8 +17,8 @@ public class ScheduleWarService {
     public void saveSchedule(ScheduledWar scheduledWar){
         repo.save(scheduledWar);
     }
-    public void saveSchedule(Collection<ScheduledWar> scheduledWar){
-        repo.saveAll(scheduledWar);
+    public List<ScheduledWar> saveSchedule(Collection<ScheduledWar> scheduledWar){
+        return repo.saveAll(scheduledWar);
     }
 
     //get schedule by divisionWeek
