@@ -158,7 +158,7 @@ public class CreateMatchUps implements Command {
             new ButtonRemoveJobScheduler().execute(send.join());
 
             send.join().addButtonClickListener(b -> {
-               if (b.getButtonInteraction().getCustomId().equals("Save")) {
+               if (b.getButtonInteraction().getCustomId().equalsIgnoreCase("Save")) {
                    b.getButtonInteraction().acknowledge();
                    save(scheduledWars);
                    event.getSlashCommandInteraction().createFollowupMessageBuilder()
