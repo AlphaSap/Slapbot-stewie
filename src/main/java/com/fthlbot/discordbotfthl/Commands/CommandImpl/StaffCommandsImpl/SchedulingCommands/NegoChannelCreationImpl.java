@@ -109,10 +109,10 @@ public class NegoChannelCreationImpl implements NegoChannelCreationListener {
         cat.setName(catgoryName.toString());
         cat.setAuditLogReason("Negotiation category created");
         ChannelCategory join = cat.create().join();
-        PermissionsBuilder everyoneElse = new PermissionsBuilder().setDenied(PermissionType.VIEW_CHANNEL);
-        PermissionsBuilder applicant = new PermissionsBuilder().setAllowed(PermissionType.VIEW_CHANNEL, PermissionType.SEND_MESSAGES);
 
         for (ScheduledWar war : scheduledWar) {
+            PermissionsBuilder everyoneElse = new PermissionsBuilder().setDenied(PermissionType.VIEW_CHANNEL);
+            PermissionsBuilder applicant = new PermissionsBuilder().setAllowed(PermissionType.VIEW_CHANNEL, PermissionType.SEND_MESSAGES);
             //make a string that has division name and both teams aliases
             StringBuilder sb2 = new StringBuilder();
             sb2.append(war.getDivisionWeeks().getDivision().getAlias());
