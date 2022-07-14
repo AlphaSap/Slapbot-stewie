@@ -170,6 +170,10 @@ public class CreateMatchUps implements Command {
                            .setContent("Match-ups not saved")
                            .send();
                }
+               b.getButtonInteraction().getMessage().delete();
+               event.getSlashCommandInteraction().createFollowupMessageBuilder()
+                       .setContent("Command completed")
+                          .send();
             }).removeAfter(9, TimeUnit.MINUTES);
 
         } catch (LeagueException e) {

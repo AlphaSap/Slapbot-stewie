@@ -109,6 +109,11 @@ public class Utils {
                 res.setContent("Invalid JSON! " + e.getMessage()).update();
             });
             return null;
+        } catch (Exception e) {
+            respondLater.thenAccept(res -> {
+                res.setContent("An error occurred! " + e.getMessage()).update();
+            });
+            return null;
         }
     }
 
