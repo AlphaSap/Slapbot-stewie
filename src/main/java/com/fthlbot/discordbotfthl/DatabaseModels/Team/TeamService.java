@@ -64,6 +64,7 @@ public class TeamService {
         ));
     }
 
+    @Deprecated
     private Team decrementRC (Team team) throws NoMoreRosterChangesLeftException {
         Integer changesLeft = team.getAllowRosterChangesLeft();
         if (changesLeft <= 0){

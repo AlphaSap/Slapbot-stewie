@@ -55,7 +55,11 @@ public class RosterService {
         }
 
         if (rosterByTeam.size() >= roster.getDivision().getRosterSize()){
-            throw new NoMoreRosterChangesLeftException(roster.getTeam());
+            throw new NoMoreRosterChangesLeftException(roster.getTeam(),
+                    """
+                    Your Roster is full!
+                    You can't add anymore accounts to your team. Accounts need to be removed before you can add more.
+                    """);
         }
 
         boolean isCorrectTh = Arrays.stream(roster.getDivision().getAllowedTownHall()).anyMatch(x -> x == roster.getTownHallLevel().intValue());
@@ -80,7 +84,8 @@ public class RosterService {
         int allowRosterChangesLeft = team.getAllowRosterChangesLeft() - 1;
         //throw exception if no more roster changes left
         if (allowRosterChangesLeft <= 0){
-            throw new NoMoreRosterChangesLeftException(team);
+            throw new NoMoreRosterChangesLeftException(team,
+                    "You have no more roster changes left! No more accounts can be added! [TRANSACTION POINTS - 0]");
         }
         team.setAllowRosterChangesLeft(allowRosterChangesLeft);
         teamService.updateTeam(team);

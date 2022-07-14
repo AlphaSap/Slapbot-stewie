@@ -10,6 +10,11 @@ public class NoMoreRosterChangesLeftException extends LeagueException {
         this.team = team;
     }
 
+    public NoMoreRosterChangesLeftException(Team team, String message) {
+        super(message);
+        this.team = team;
+    }
+
     public Team getTeam() {
         return team;
     }
