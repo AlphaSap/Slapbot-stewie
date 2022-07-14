@@ -88,7 +88,6 @@ public class NegoChannelCreationImpl implements NegoChannelCreationListener {
             GeneralService.leagueSlashErrorMessage(respondLater,"Negotiation server not found");
             return;
         }
-        ServerTextChannelBuilder channel = new ServerTextChannelBuilder(serverById.get());
         ChannelCategoryBuilder cat = new ChannelCategoryBuilder(serverById.get());
 
         //make a string that has division week end and start date
@@ -111,6 +110,8 @@ public class NegoChannelCreationImpl implements NegoChannelCreationListener {
         ChannelCategory join = cat.create().join();
 
         for (ScheduledWar war : scheduledWar) {
+            ServerTextChannelBuilder channel = new ServerTextChannelBuilder(serverById.get());
+
             PermissionsBuilder everyoneElse = new PermissionsBuilder().setDenied(PermissionType.VIEW_CHANNEL);
             PermissionsBuilder applicant = new PermissionsBuilder().setAllowed(PermissionType.VIEW_CHANNEL, PermissionType.SEND_MESSAGES);
             //make a string that has division name and both teams aliases
@@ -137,6 +138,7 @@ public class NegoChannelCreationImpl implements NegoChannelCreationListener {
                     .addPermissionOverwrite(rep2, applicant.build())
                     .addPermissionOverwrite(rep3, applicant.build())
                     .addPermissionOverwrite(rep4, applicant.build());
+
             channel.setTopic("Schedule ID: "+war.getID());
             channel.create().thenAccept(x ->{
                 //send a message to the channel
