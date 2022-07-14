@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -46,6 +47,7 @@ public class ShowDivisionWeekImpl implements ShowDivisionWeekListener {
         try {
             divisionObject = divisionService.getDivisionByAlias(division);
             divisionWeeks = divisionWeekService.getDivisionWeeksByDivision(divisionObject);
+            divisionWeeks.sort(Comparator.comparing(DivisionWeeks::getWeekNumber));
         } catch (LeagueException e) {
             //send send error message to discord, with the GeneralService.class
             GeneralService.leagueSlashErrorMessage(event, e);
