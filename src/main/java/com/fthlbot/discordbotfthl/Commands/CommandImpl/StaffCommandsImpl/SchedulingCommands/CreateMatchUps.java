@@ -135,6 +135,7 @@ public class CreateMatchUps implements Command {
                         .addEmbed(
                                 new EmbedBuilder()
                                         .setTitle("Scheduled War")
+                                        .addField("Index", String.valueOf(scheduledWars.indexOf(war)), true)
                                         .setDescription(
                                                 """
                                                         %s vs %s
@@ -143,7 +144,7 @@ public class CreateMatchUps implements Command {
                                         .addField("Division", war.getDivisionWeeks().getDivision().getName(), true)
                                         .setColor(Color.orange)
                                         .setTimestampToNow()
-                        ).send();
+                        ).send().join();
             }
 
             CompletableFuture<Message> send = event.getSlashCommandInteraction().createFollowupMessageBuilder()
@@ -177,6 +178,8 @@ public class CreateMatchUps implements Command {
             }).removeAfter(9, TimeUnit.MINUTES);
 
         } catch (LeagueException e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
             GeneralService.leagueSlashErrorMessage(respondLater, e);
         } catch (Exception e) {   //TODO
             GeneralService.sendFatalError(respondLater, e);
