@@ -7,6 +7,7 @@ import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.javacord.api.util.DiscordRegexPattern;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.context.annotation.Configuration;
 
@@ -77,32 +78,38 @@ public class Utils {
         Pattern messageLink = DiscordRegexPattern.MESSAGE_LINK;
 
         Matcher matcher = messageLink.matcher(json);
-        if (matcher.matches()) {
-            Optional<CompletableFuture<Message>> messageByLink = event.getApi().getMessageByLink(json);
-            if (messageByLink.isPresent()) {
-                Message message = messageByLink.get().join();
-                List<MessageAttachment> attachments = message.getAttachments();
+        try {
+            if (matcher.matches()) {
+                Optional<CompletableFuture<Message>> messageByLink = event.getApi().getMessageByLink(json);
+                if (messageByLink.isPresent()) {
+                    Message message = messageByLink.get().join();
+                    List<MessageAttachment> attachments = message.getAttachments();
 
-                if (attachments.size() >= 1) {
-                    byte[] join = attachments.get(0).downloadAsByteArray().join();
-                    String s1 = new String(join, StandardCharsets.UTF_8);
-                    s = new JSONObject(s1);
+                    if (attachments.size() >= 1) {
+                        byte[] join = attachments.get(0).downloadAsByteArray().join();
+                        String s1 = new String(join, StandardCharsets.UTF_8);
+                        s = new JSONObject(s1);
+                    } else {
+                        String content = message.getContent();
+                        s = new JSONObject(content);
+                        return s;
+                    }
                 } else {
                     respondLater.thenAccept(res -> {
-                        res.setContent("No file found!").update();
+                        res.setContent("Unable to find the message, if the bot cannot see the message it cannot access it's content.").update();
                     });
                     return null;
                 }
             } else {
-                respondLater.thenAccept(res -> {
-                    res.setContent("Unable to find the message, if the bot cannot see the message it cannot access it's content.").update();
-                });
-                return null;
+                s = new JSONObject(json);
             }
-        }else{
-            s = new JSONObject(json);
+            return s;
+        }catch (JSONException e) {
+            respondLater.thenAccept(res -> {
+                res.setContent("Invalid JSON! " + e.getMessage()).update();
+            });
+            return null;
         }
-        return s;
     }
 
 }
