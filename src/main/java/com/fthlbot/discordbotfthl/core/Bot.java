@@ -16,7 +16,6 @@ import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.Schedul
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.CreateMatchUps;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.SchedulingCommands.NegoChannelCreationImpl;
 import com.fthlbot.discordbotfthl.DatabaseModels.CommandLogger.CommandLoggerService;
-import com.fthlbot.discordbotfthl.Events.GiveRolesImpl;
 import com.fthlbot.discordbotfthl.Events.ServerJoinImpl;
 import com.fthlbot.discordbotfthl.Events.ServerLeaveImpl;
 import com.fthlbot.discordbotfthl.Events.ServerMemberJoin.ApplicantServerJoinImpl;
