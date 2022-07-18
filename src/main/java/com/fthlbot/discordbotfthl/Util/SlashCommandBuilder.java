@@ -18,6 +18,12 @@ import static org.javacord.api.interaction.SlashCommandOptionType.*;
 public class SlashCommandBuilder {
     private DiscordApi api;
 
+    private final BotConfig botConfig;
+
+    public SlashCommandBuilder(BotConfig botConfig) {
+        this.botConfig = botConfig;
+    }
+
     public SlashCommandBuilder setApi(DiscordApi api) {
         this.api = api;
         return this;
@@ -61,6 +67,12 @@ public class SlashCommandBuilder {
                         )
                 ))
                 .createGlobal(getApi()).join();
+    }
+
+    public SlashCommand createGiveRoleToRep(){
+        return SlashCommand
+                .with("give-role-to-rep", "command to give role to rep")
+                .createForServer(api.getServerById(botConfig.getFthlServerID()).get()).join();
     }
 
     public SlashCommand createHelpCommand() {

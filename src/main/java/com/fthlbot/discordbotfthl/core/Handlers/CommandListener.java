@@ -92,11 +92,14 @@ public class CommandListener implements SlashCommandCreateListener {
                 if (invoker.where().equals(AllowedChannel.ANYWHERE)){
                     return true;
                 }
-                if (invoker.where().equals(AllowedChannel.APPLICANT_SERVER)){
+                else if (invoker.where().equals(AllowedChannel.APPLICANT_SERVER)){
                     return server.getId() == config.getApplicantServerID();
                 }
-                if (invoker.where().equals(AllowedChannel.NEGO_SERVER)){
+                else if (invoker.where().equals(AllowedChannel.NEGO_SERVER)){
                     return server.getId() == config.getNegoServerID();
+                }
+                else if (invoker.where().equals(AllowedChannel.MAIN_SERVER)){
+                    return server.getId() == config.getFthlServerID();
                 }
             }
         }

@@ -2,6 +2,7 @@ package com.fthlbot.discordbotfthl;
 
 import Core.JClash;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
+import com.fthlbot.discordbotfthl.Util.SlashCommandBuilder;
 import com.fthlbot.discordbotfthl.core.Bot;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
@@ -31,9 +32,12 @@ public class DiscordBotFthlApplication {
 
     private Bot bot;
 
-    public DiscordBotFthlApplication(Environment env, Bot bot) {
+    private final SlashCommandBuilder slashCommandBuilder;
+
+    public DiscordBotFthlApplication(Environment env, Bot bot, SlashCommandBuilder slashCommandBuilder) {
         this.env = env;
         this.bot = bot;
+        this.slashCommandBuilder = slashCommandBuilder;
     }
 
     public static void main(String[] args) {
@@ -70,6 +74,9 @@ public class DiscordBotFthlApplication {
         api.updateActivity(ActivityType.LISTENING, "Slash commands!");
 
         bot.Start(api);
+
+        slashCommandBuilder.setApi(api);
+        slashCommandBuilder.createGiveRoleToRep();
 
         GeneralService.printMemoryUsage();
         return api;
