@@ -52,21 +52,25 @@ public class GiveRolesImpl implements Command {
 
         var server = event.getApi().getServerById(config.getFthlServerID()).get();
         for (Team team : allTeams) {
-            Optional<User> rep1 = Optional.ofNullable(event.getApi().getUserById(team.getRep1ID()).join());
-            Optional<User> rep2 = Optional.ofNullable(event.getApi().getUserById(team.getRep2ID()).join());
+            try {
+                Optional<User> rep1 = Optional.ofNullable(event.getApi().getUserById(team.getRep1ID()).join());
+                Optional<User> rep2 = Optional.ofNullable(event.getApi().getUserById(team.getRep2ID()).join());
 
-            if (rep1.isEmpty() || rep2.isEmpty()) {
-                log.info("One of the reps is null. Skipping team {}", team.getName());
+                if (rep1.isEmpty() || rep2.isEmpty()) {
+                    log.info("One of the reps is null. Skipping team {}", team.getName());
 
-                log.info("Rep1: {}", rep1.isEmpty() ? "null" : rep1.get().getName());
-                log.info("Rep2: {}", rep2.isEmpty() ? "null" : rep2.get().getName());
-                   continue;
-            }
+                    log.info("Rep1: {}", rep1.isEmpty() ? "null" : rep1.get().getName());
+                    log.info("Rep2: {}", rep2.isEmpty() ? "null" : rep2.get().getName());
+                    continue;
+                }
 
-            if (!doTheyHaveRole(team.getDivision(), rep1.get().getRoles(server))){
-                var findRoles = findRoles(server, team.getDivision().getAlias());
-                server.addRoleToUser(rep1.get(), findRoles.getFirst());
-                server.addRoleToUser(rep2.get(), findRoles.getSecond());
+                if (!doTheyHaveRole(team.getDivision(), rep1.get().getRoles(server))) {
+                    var findRoles = findRoles(server, team.getDivision().getAlias());
+                    server.addRoleToUser(rep1.get(), findRoles.getFirst());
+                    server.addRoleToUser(rep2.get(), findRoles.getSecond());
+                }
+            }catch (Exception e) {
+                log.error("Error while giving roles to reps for team {}", team.getName(), e);
             }
         }
 
