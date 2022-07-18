@@ -13,6 +13,7 @@ import org.javacord.api.entity.permission.Role;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
+import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.util.Pair;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Invoker(
         alias = "give-role-to-rep",
@@ -43,6 +45,7 @@ public class GiveRolesImpl implements Command {
 
     @Override
     public void execute(SlashCommandCreateEvent event) {
+        CompletableFuture<InteractionOriginalResponseUpdater> interactionOriginalResponseUpdaterCompletableFuture = event.getSlashCommandInteraction().respondLater();
         var allTeams = teamService.getAllTeams();
 
         //Guaranteed to be present.
@@ -66,6 +69,11 @@ public class GiveRolesImpl implements Command {
                 server.addRoleToUser(rep2.get(), findRoles.getSecond());
             }
         }
+
+        interactionOriginalResponseUpdaterCompletableFuture.thenAccept(interactionOriginalResponseUpdater -> {
+            interactionOriginalResponseUpdater.setContent("Done!").update();
+        });
+
     }
 
     private boolean doTheyHaveRole(Division division, List<Role> roles) {
