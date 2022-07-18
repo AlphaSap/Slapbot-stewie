@@ -86,7 +86,7 @@ public class GiveRolesImpl implements Command {
     private boolean doTheyHaveRole(Division division, List<Role> roles) {
         var map = roles.stream().map(Nameable::getName);
 
-        return map.anyMatch(it -> it.equals(division.getAlias()) || it.equals("Representative"));
+        return map.anyMatch(it -> it.equals(division.getAlias()) && it.equals("Representative"));
     }
 
     private Pair<Role, Role> findRoles(Server server, String divName) {
