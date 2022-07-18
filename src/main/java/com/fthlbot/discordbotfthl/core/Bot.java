@@ -207,7 +207,8 @@ public class Bot {
                 this.divisionEditor,
                 this.infoCommandImpl,
                 this.clanLineup,
-                this.checkEveryRepHasJoinThisServer
+                this.checkEveryRepHasJoinThisServer,
+                this.giveRoles
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
