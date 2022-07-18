@@ -68,6 +68,9 @@ public class GiveRolesImpl implements Command {
                     var findRoles = findRoles(server, team.getDivision().getAlias());
                     server.addRoleToUser(rep1.get(), findRoles.getFirst());
                     server.addRoleToUser(rep2.get(), findRoles.getSecond());
+
+                    server.addRoleToUser(rep2.get(), findRoles.getFirst());
+                    server.addRoleToUser(rep1.get(), findRoles.getSecond());
                 }
             }catch (Exception e) {
                 log.error("Error while giving roles to reps for team {}", team.getName(), e);
