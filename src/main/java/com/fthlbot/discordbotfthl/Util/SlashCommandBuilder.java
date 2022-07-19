@@ -37,6 +37,14 @@ public class SlashCommandBuilder {
 //        return SlashCommand.with("ping", "To check bots latency").createGlobal(getApi()).join();
 //    }
 
+    public SlashCommand createParseScheduleCommand() {
+        return SlashCommand.with("parse-schedule", "parse json for scheduling command").setOptions(
+                List.of(
+                        SlashCommandOption.create(STRING, "json", "json to parse", true)
+                )
+        ).createGlobal(getApi()).join();
+    }
+
     public SlashCommand createRegistrationCommand() {
         return SlashCommand
                 .with("register", "command to register")
@@ -69,7 +77,7 @@ public class SlashCommandBuilder {
                 .createGlobal(getApi()).join();
     }
 
-    public SlashCommand createGiveRoleToRep(){
+    public SlashCommand createGiveRoleToRep() {
         return SlashCommand
                 .with("give-role-to-rep", "command to give role to rep")
                 .createForServer(api.getServerById(botConfig.getFthlServerID()).get()).join();
@@ -331,7 +339,7 @@ public class SlashCommandBuilder {
                                         SlashCommandOptionChoice.create("f10", "f10"),
                                         SlashCommandOptionChoice.create("f11", "f11"),
                                         SlashCommandOptionChoice.create("Lite", "Lite"),
-                                        SlashCommandOptionChoice.create("Elite", "Elite")                                )
+                                        SlashCommandOptionChoice.create("Elite", "Elite"))
                         )
                 ))
                 .createGlobal(getApi()).join();
@@ -469,7 +477,7 @@ public class SlashCommandBuilder {
                 ))).createGlobal(getApi()).join();
     }
 
-    public SlashCommand createFPcheckCommand(){
+    public SlashCommand createFPcheckCommand() {
         return SlashCommand.with("fp-check", "Checks the FP for a clan")
                 .setOptions(List.of(SlashCommandOption.createWithChoices(
                         SlashCommandOptionType.STRING,
@@ -487,8 +495,8 @@ public class SlashCommandBuilder {
                 ))).createGlobal(getApi()).join();
     }
 
-    public SlashCommand createClanInfoCommand(){
-        return SlashCommand.with("clan-info","Get clan information")
+    public SlashCommand createClanInfoCommand() {
+        return SlashCommand.with("clan-info", "Get clan information")
                 .setOptions(List.of(
                         SlashCommandOption.create(
                                 STRING,
@@ -499,7 +507,7 @@ public class SlashCommandBuilder {
                 )).createGlobal(getApi()).join();
     }
 
-    public SlashCommand createSuggestionCommand(){
+    public SlashCommand createSuggestionCommand() {
         return SlashCommand.with("suggestion", "Suggest a new feature").createGlobal(getApi()).join();
     }
 
@@ -528,13 +536,14 @@ public class SlashCommandBuilder {
         }).join();
     }
 
-    public SlashCommand createCheckEveryRepJoinedTheServer(){
+    public SlashCommand createCheckEveryRepJoinedTheServer() {
         return SlashCommand.with("check-rep-joined-the-server", "Checks if every rep has joined the server")
                 .addOption(SlashCommandOption.create(LONG, "server-id", "Enter the server ID you want to check, Bot must be present in the server you want to check", true))
                 .createGlobal(getApi()).join();
     }
-    public SlashCommand createDivisionEditor(){
-        return SlashCommand.with("division-editor",  "Staff only command to edit a division")
+
+    public SlashCommand createDivisionEditor() {
+        return SlashCommand.with("division-editor", "Staff only command to edit a division")
                 .setOptions(
                         List.of(
                                 SlashCommandOption.createWithChoices(STRING,
@@ -581,7 +590,7 @@ public class SlashCommandBuilder {
     public void deleteACommand(String name) throws Exception {
         List<SlashCommand> x = this.getApi().getGlobalSlashCommands().join();
         Optional<SlashCommand> first = x.stream().filter(e -> e.getName().equalsIgnoreCase(name)).findFirst();
-        if (first.isEmpty()){
+        if (first.isEmpty()) {
             throw new Exception("Cannot find the command to delete");
         }
         first.get().deleteGlobal();
@@ -617,7 +626,7 @@ public class SlashCommandBuilder {
                 .createGlobal(getApi()).join();
     }
 
-    public void e(){
+    public void e() {
         CompletableFuture<Void> voidCompletableFuture = this.getApi().getGlobalSlashCommands()
                 .thenApply(x -> x.stream().filter(e -> e.getName().equalsIgnoreCase("change-alias")))
                 .thenApply(x -> x.findFirst())
@@ -657,7 +666,7 @@ public class SlashCommandBuilder {
                 });
     }
 
-    public void createInfoCommand(){
+    public void createInfoCommand() {
         SlashCommand.with("info", "Shows bots information").createGlobal(getApi()).join();
     }
 

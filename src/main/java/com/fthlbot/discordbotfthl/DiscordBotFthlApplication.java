@@ -76,7 +76,7 @@ public class DiscordBotFthlApplication {
         bot.Start(api);
 
         slashCommandBuilder.setApi(api);
-        slashCommandBuilder.createGiveRoleToRep();
+        slashCommandBuilder.createParseScheduleCommand();
 
         GeneralService.printMemoryUsage();
         return api;

@@ -5,6 +5,7 @@ import Core.Enitiy.clanwar.ClanWarMember;
 import Core.Enitiy.clanwar.WarInfo;
 import Core.JClash;
 import Core.exception.ClashAPIException;
+import com.fthlbot.discordbotfthl.core.Annotation.AllowedChannel;
 import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.CheckLineUpListener;
@@ -36,7 +37,8 @@ import java.util.concurrent.CompletableFuture;
         alias = "check-lineup",
         description = "Check the line up of a war between two teams",
         usage = "/check-lineup <Schedule ID>",
-        type = CommandType.ROSTER_MANAGEMENT
+        type = CommandType.ROSTER_MANAGEMENT,
+        where = AllowedChannel.NEGO_SERVER
 )
 public class CheckLineUpImpl implements CheckLineUpListener {
     private final ScheduleWarService scheduledWarService;
