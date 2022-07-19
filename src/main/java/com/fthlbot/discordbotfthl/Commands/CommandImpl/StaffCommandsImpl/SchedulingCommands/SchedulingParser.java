@@ -52,9 +52,14 @@ public class SchedulingParser  implements Command {
 
         String toParseString = event.getSlashCommandInteraction().getArguments().get(0).getStringValue().get();
 
-        StringBuilder sb = parseStringToJson(toParseString);
-        response.thenAccept(r -> r.setContent("```" + sb.toString() + "```").update());
-
+        if (checkString(toParseString)){
+            StringBuilder sb = parseStringToJson(toParseString);
+            response.thenAccept(r -> r.setContent("```" + sb.toString() + "```").update());
+        } else {
+            response.thenAccept(interaction -> {
+                interaction.setContent("The string is invalid.").update();
+            });
+        }
     }
 
     public StringBuilder parseStringToJson(String toParseString) {
