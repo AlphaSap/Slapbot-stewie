@@ -17,6 +17,8 @@ public class FilterWordService {
         String[] args = text.toLowerCase().replace("╭╮", "n")
                 .replace("9", "g")
                 .replace("3", "e")
+                .replace("¡", "i")
+                .replace("\uD835\uDE33", "e")
                 .split("\\s+");
 
         for (String arg : args) {
