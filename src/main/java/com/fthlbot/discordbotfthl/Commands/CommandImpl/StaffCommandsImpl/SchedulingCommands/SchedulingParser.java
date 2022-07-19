@@ -74,4 +74,26 @@ public class SchedulingParser  implements Command {
 
         return sb;
     }
+
+    /**
+     * Checks if the string is a valid schedule string.
+     */
+    public boolean checkString(String input){
+        String[] toParse = input.split("\n");
+        for (int i = 0; i < toParse.length; i++) {
+            String team = toParse[i];
+            String[] teamSplit = team.split("v");
+            if (teamSplit.length != 2) {
+                return false;
+            }
+            if (!teamSplit[0].trim().matches("\\d+")) {
+                return false;
+            }
+            if (!teamSplit[1].trim().matches("\\d+")) {
+                return false;
+            }
+
+        }
+        return true;
+    }
 }

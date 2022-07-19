@@ -76,7 +76,7 @@ public class DiscordBotFthlApplication {
         bot.Start(api);
 
         slashCommandBuilder.setApi(api);
-        slashCommandBuilder.createParseScheduleCommand();
+        slashCommandBuilder.createShowScheduleCommand();
 
         GeneralService.printMemoryUsage();
         return api;

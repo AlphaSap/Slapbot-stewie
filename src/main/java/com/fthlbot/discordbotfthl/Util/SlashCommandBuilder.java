@@ -45,6 +45,14 @@ public class SlashCommandBuilder {
         ).createGlobal(getApi()).join();
     }
 
+    public SlashCommand createShowScheduleCommand(){
+        return SlashCommand.with("show-schedule-wars", "show schedule").setOptions(
+                List.of(
+                        SlashCommandOption.create(LONG, "division-week-id", "division week to show", true)
+                )
+        ).createGlobal(getApi()).join();
+    }
+
     public SlashCommand createRegistrationCommand() {
         return SlashCommand
                 .with("register", "command to register")
