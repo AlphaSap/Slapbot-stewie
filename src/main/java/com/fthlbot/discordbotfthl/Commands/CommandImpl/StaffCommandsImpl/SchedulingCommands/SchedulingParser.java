@@ -13,9 +13,9 @@ import static com.fthlbot.discordbotfthl.core.Annotation.CommandType.*;
 
 /**
  * @author Sahil
- * @since 2.0
  * @version 2.0
  * @Notes: This class is used to parse the scheduling commands.
+ * @since 2.0
  */
 
 
@@ -43,8 +43,9 @@ import static com.fthlbot.discordbotfthl.core.Annotation.CommandType.*;
         usage = "/parse-schedule <TEXT>",
         type = STAFF,
         where = NEGO_SERVER
-) @Component
-public class SchedulingParser  implements Command {
+)
+@Component
+public class SchedulingParser implements Command {
 
     @Override
     public void execute(SlashCommandCreateEvent event) {
@@ -52,22 +53,26 @@ public class SchedulingParser  implements Command {
 
         String toParseString = event.getSlashCommandInteraction().getArguments().get(0).getStringValue().get();
 
-        if (checkString(toParseString)){
-            StringBuilder sb = parseStringToJson(toParseString);
+        try {
+            String sb = parse(toParseString);
             response.thenAccept(r -> r.setContent("```" + sb.toString() + "```").update());
-        } else {
-            response.thenAccept(interaction -> {
-                interaction.setContent("The string is invalid.").update();
-            });
+        }catch (ArrayIndexOutOfBoundsException e) {
+            response.thenAccept(r -> r.setContent("```" + "Please enter the text as Text example:\n" +
+                    "TEAMIDvTEAMID\n" +
+                    "TEAMIDvTEAMID" + "```").update());
+        }catch (Exception e) {
+            response.thenAccept(r -> r.setContent("```" + "Error: " + e.getMessage() + "```").update());
         }
     }
 
-    public StringBuilder parseStringToJson(String toParseString) {
-        String[] toParse = toParseString.split("\n");
-
+    public String parse(String input) {
+        //input String : 1550v1212 3593v4174 4508v5153 4801v1242 4468v1759
+        // parse the above input string to json string.
+        // example output : [{home:1550, enemy:1212}, {home:3593, enemy:4174}, {home:4508, enemy:5153}, {home:4801, enemy:1242}, {home:4468, enemy:1759}]
+        String[] teams = input.split("\\s+");
         StringBuilder sb = new StringBuilder();
         sb.append("[");
-        for (String team : toParse) {
+        for (String team : teams) {
             String[] teamSplit = team.split("v");
             sb.append("{");
             sb.append("\"home\":\"").append(teamSplit[0].trim()).append("\",");
@@ -76,29 +81,6 @@ public class SchedulingParser  implements Command {
         }
         sb.deleteCharAt(sb.length() - 1);
         sb.append("]");
-
-        return sb;
-    }
-
-    /**
-     * Checks if the string is a valid schedule string.
-     */
-    public boolean checkString(String input){
-        String[] toParse = input.split("\n");
-        for (int i = 0; i < toParse.length; i++) {
-            String team = toParse[i];
-            String[] teamSplit = team.split("v");
-            if (teamSplit.length != 2) {
-                return false;
-            }
-            if (!teamSplit[0].trim().matches("\\d+")) {
-                return false;
-            }
-            if (!teamSplit[1].trim().matches("\\d+")) {
-                return false;
-            }
-
-        }
-        return true;
+        return sb.toString();
     }
 }
