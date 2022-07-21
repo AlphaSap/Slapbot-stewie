@@ -26,8 +26,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -135,17 +138,17 @@ public class CheckLineUpImpl implements CheckLineUpListener {
             if (!homeTeam.isEmpty()) {
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setTitle("Unregistered Accounts on " + scheduleById.getTeamA().getName());
-                builder.setDescription("\n" + String.join("\n", "`"+homeTeam+"`"));
+                builder.setDescription("\n" + String.join("\n", "`" + homeTeam + "`"));
                 builder.setTimestampToNow();
                 builder.setColor(Color.RED);
 
                 event.getSlashCommandInteraction().getChannel().get().sendMessage(builder).exceptionally(ExceptionLogger.get());
-              //  event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(builder).send().exceptionally(ExceptionLogger.get());
+                //  event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(builder).send().exceptionally(ExceptionLogger.get());
             }
             if (!enemyTeam.isEmpty()) {
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setTitle("Unregistered Accounts on " + scheduleById.getTeamB().getName());
-                builder.setDescription("\n" + String.join("\n", "`"+enemyTeam+"`"));
+                builder.setDescription("\n" + String.join("\n", "`" + enemyTeam + "`"));
                 builder.setTimestampToNow();
                 builder.setColor(Color.RED);
                 event.getSlashCommandInteraction().createFollowupMessageBuilder()
@@ -154,6 +157,17 @@ public class CheckLineUpImpl implements CheckLineUpListener {
                         .exceptionally(ExceptionLogger.get());
 
                 // event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(builder).send().exceptionally(ExceptionLogger.get());
+            }
+
+            try {
+                URL resource = getClass().getResource("/snitch/eww.png");
+                BufferedImage read = ImageIO.read(resource);
+
+                event.getSlashCommandInteraction().createFollowupMessageBuilder()
+                        .addAttachment(read, "fp.png")
+                        .send();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
         } catch (ClashAPIException e) {
