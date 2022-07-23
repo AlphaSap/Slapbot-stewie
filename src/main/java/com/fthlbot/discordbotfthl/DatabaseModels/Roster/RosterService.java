@@ -90,7 +90,15 @@ public class RosterService {
         team.setAllowRosterChangesLeft(allowRosterChangesLeft);
         teamService.updateTeam(team);
     }
-    public Roster removeFromRoster(Team team, String tag) throws EntityNotFoundException {
+    public Roster removeFromRoster(Team team, String tag, User user) throws LeagueException {
+        boolean isRep =
+                team.getRep1ID().equals(user.getId())
+                        ||
+                        team.getRep2ID().equals(user.getId());
+        if (!isRep){
+            throw new NotTheRepException(user, team);
+        }
+
         Optional<Roster> roster = repo.findRosterByTeamAndPlayerTag(team, tag);
         if (roster.isPresent()){
             repo.delete(roster.get());
@@ -109,11 +117,21 @@ public class RosterService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * used for removing fp check command
+     * @see com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.FairPlayCheckOnAllTeamImpl
+     * @param roster
+     */
     public void removeRoster(Roster roster) {
         repo.delete(roster);
     }
 
     //Make a method that remove all roster from a team
+    /**
+     * Used only in conjunction with the remove team method
+     * @see com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.DeleteATeamImpl
+     * @param team
+     */
     @Transactional
     public void removeAllRoster(Team team) {
         repo.deleteRosterByTeam(team);

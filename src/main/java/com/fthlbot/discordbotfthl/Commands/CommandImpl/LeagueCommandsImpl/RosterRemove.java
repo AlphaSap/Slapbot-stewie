@@ -3,6 +3,7 @@ package com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl;
 import Core.Enitiy.player.Player;
 import Core.JClash;
 import Core.exception.ClashAPIException;
+import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
 import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
@@ -70,7 +71,7 @@ public class RosterRemove implements Command {
         for (String tag : tags) {
             try {
                 Player join = jClash.getPlayer(tag).join();
-                Roster roster = rosterService.removeFromRoster(team, join.getTag());
+                Roster roster = rosterService.removeFromRoster(team, join.getTag(), event.getSlashCommandInteraction().getUser());
                 EmbedBuilder embedBuilder = new EmbedBuilder()
                         .setTitle("Removed " + join.getName() + " from " + team.getName())
                         .setTimestampToNow()
@@ -108,7 +109,7 @@ public class RosterRemove implements Command {
                 clashExceptionHandler.setStatusCode(Integer.valueOf(e.getMessage()));
                 EmbedBuilder embedBuilder = clashExceptionHandler.createEmbed(tag).getEmbedBuilder();
                 event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(embedBuilder).send();
-            } catch (EntityNotFoundException e) {
+            } catch (LeagueException e) {
                 EmbedBuilder embedBuilder = GeneralService.getLeagueError(e, event);
                 event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(embedBuilder).send();
             }
