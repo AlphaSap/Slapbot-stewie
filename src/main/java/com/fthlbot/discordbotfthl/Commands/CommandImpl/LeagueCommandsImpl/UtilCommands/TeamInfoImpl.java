@@ -11,6 +11,9 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
+import org.javacord.api.entity.message.component.ActionRow;
+import org.javacord.api.entity.message.component.ButtonBuilder;
+import org.javacord.api.entity.message.component.ButtonStyle;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
@@ -73,7 +76,15 @@ public class TeamInfoImpl implements TeamInfoListener {
                 .setColor(Color.GREEN);
 
         //Send the embedBuilder
-        responder.thenAccept(updater -> updater.addEmbed(embedBuilder).update());
+        responder.thenAccept(updater -> {
+
+            updater.addEmbed(embedBuilder)
+                    .addComponents(ActionRow.of(
+                            new ButtonBuilder().setStyle(ButtonStyle.LINK).setUrl(
+                                    "https://link.clashofclans.com/en?action=OpenClanProfile&tag="+teamByDivisionAndAlias.getTag()
+                            ).setLabel("Clan Link").build()
+                    )).update();
+        });
     }
 }
 
