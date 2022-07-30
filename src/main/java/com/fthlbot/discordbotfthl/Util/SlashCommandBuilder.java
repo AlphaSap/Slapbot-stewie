@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static org.javacord.api.interaction.SlashCommandOptionType.*;
@@ -683,6 +684,18 @@ public class SlashCommandBuilder {
                 .setOptions(List.of(
                         SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
                                 "clan-tag",
+                                "enter the clan tag of the clan you want to see the lineup of",
+                                true
+                        )
+                ))
+                .createGlobal(getApi()).join();
+    }
+
+    public void createMinionBotStringCommand(){
+        SlashCommand.with("minion-bot-string", "Shows the string to add to your bot")
+                .setOptions(List.of(
+                        SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
+                                "div-week-id",
                                 "enter the clan tag of the clan you want to see the lineup of",
                                 true
                         )

@@ -39,7 +39,7 @@ public class RosterAddUtilClass {
                     service.addToRoster(roster, event.getInteraction().getUser());
                     //send a message for each addition
                     EmbedBuilder embedBuilder = sendMessage(player.getTag(), team.getName(), interaction.getChannel().get(), interaction.getUser());
-                    event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(embedBuilder).send();
+                    event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(embedBuilder).send().exceptionally(ExceptionLogger.get());
 
                     EmbedBuilder embed = new EmbedBuilder()
                             .addField("Team Name", team.getName())

@@ -138,29 +138,22 @@ public class CheckLineUpImpl implements CheckLineUpListener {
             if (!homeTeam.isEmpty()) {
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setTitle("Unregistered Accounts on " + scheduleById.getTeamA().getName());
-                builder.setDescription("\n" + String.join("\n", "`" + homeTeam + "`"));
-                builder.setTimestampToNow();
-                builder.setColor(Color.RED);
-
-                event.getSlashCommandInteraction().getChannel().get().sendMessage(builder).exceptionally(ExceptionLogger.get());
+                unrosterAccountMessage(event, homeTeam, builder);
                 //  event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(builder).send().exceptionally(ExceptionLogger.get());
             }
             if (!enemyTeam.isEmpty()) {
                 EmbedBuilder builder = new EmbedBuilder();
                 builder.setTitle("Unregistered Accounts on " + scheduleById.getTeamB().getName());
-                builder.setDescription("\n" + String.join("\n", "`" + enemyTeam + "`"));
-                builder.setTimestampToNow();
-                builder.setColor(Color.RED);
-                event.getSlashCommandInteraction().createFollowupMessageBuilder()
-                        .addEmbed(builder)
-                        .send()
-                        .exceptionally(ExceptionLogger.get());
-
+                unrosterAccountMessage(event, enemyTeam, builder);
                 // event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(builder).send().exceptionally(ExceptionLogger.get());
             }
 
             try {
                 URL resource = getClass().getResource("/snitch/eww.png");
+                if (resource == null) {
+                    log.warn("Could not find image - /snitch/eww.png [Alex saying be fp]");
+                    return;
+                }
                 BufferedImage read = ImageIO.read(resource);
 
                 event.getSlashCommandInteraction().createFollowupMessageBuilder()
@@ -188,6 +181,19 @@ public class CheckLineUpImpl implements CheckLineUpListener {
 
     }
 
+    private void unrosterAccountMessage(SlashCommandCreateEvent event, List<String> enemyTeam, EmbedBuilder builder) {
+        builder.setDescription("\n" + String.join("\n", "`" + enemyTeam + "`"));
+        builder.setTimestampToNow();
+        builder.setColor(Color.RED);
+        event.getSlashCommandInteraction().createFollowupMessageBuilder()
+                .addEmbed(builder)
+                .send()
+                .exceptionally(ExceptionLogger.get());
+        event.getSlashCommandInteraction().createFollowupMessageBuilder()
+                .setContent("Unregistered Accounts will have their hits **BLOCKED**. If hits are done from the unregistered accounts -1 from the score. Accounts will be allowed to hit if the opponent representative agrees")
+                .send();
+    }
+
     public List<String> checkPlayersFromWarModel(List<ClanWarMember> warMembers, Team team) throws EntityNotFoundException {
         List<String> unregisteredAccounts = new ArrayList<>();
         List<Roster> rosterForATeam = rosterService.getRosterForATeam(team);
@@ -196,7 +202,7 @@ public class CheckLineUpImpl implements CheckLineUpListener {
             boolean b = rosterForATeam.stream().anyMatch(y -> y.getPlayerTag().equalsIgnoreCase(x.getTag()));
             if (!b) {
                 log.info("Player " + x.getTag() + " is not registered for team " + team.getTag());
-                unregisteredAccounts.add(x.getTag());
+                unregisteredAccounts.add(x.getTag() + " - " + x.getName());
             }
         });
         return unregisteredAccounts;
