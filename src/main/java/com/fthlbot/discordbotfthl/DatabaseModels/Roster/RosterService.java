@@ -81,20 +81,21 @@ public class RosterService {
         if (botConfig.getLeagueStartDate().after(new Date())){
             return;
         }
-        int allowRosterChangesLeft = team.getAllowRosterChangesLeft() - 1;
+        int allowRosterChangesLeft = team.getAllowRosterChangesLeft();
         //throw exception if no more roster changes left
         if (allowRosterChangesLeft <= 0){
             throw new NoMoreRosterChangesLeftException(team,
                     "You have no more roster changes left! No more accounts can be added! [TRANSACTION POINTS - 0]");
         }
-        team.setAllowRosterChangesLeft(allowRosterChangesLeft);
+        team.setAllowRosterChangesLeft(allowRosterChangesLeft - 1);
         teamService.updateTeam(team);
     }
     public Roster removeFromRoster(Team team, String tag, User user) throws LeagueException {
         boolean isRep =
                 team.getRep1ID().equals(user.getId())
                         ||
-                        team.getRep2ID().equals(user.getId());
+                team.getRep2ID().equals(user.getId());
+
         if (!isRep){
             throw new NotTheRepException(user, team);
         }

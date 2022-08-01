@@ -7,8 +7,9 @@ import com.fthlbot.discordbotfthl.DatabaseModels.ScheduleWar.DivisonWeek.Divisio
 import com.fthlbot.discordbotfthl.DatabaseModels.ScheduleWar.Schedule.ScheduleWarService;
 import com.fthlbot.discordbotfthl.DatabaseModels.ScheduleWar.Schedule.ScheduledWar;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.core.Handlers.Command;
-import org.javacord.api.DiscordApi;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.slf4j.Logger;
@@ -19,6 +20,12 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Component
+@Invoker(
+        alias = "minion-bot-string",
+        description = "Get the string for the minion bot",
+        usage = "/minion-bot-string",
+        type = CommandType.STAFF
+)
 public class MinionBotStatsStringImpl implements Command {
     private final Logger log = LoggerFactory.getLogger(MinionBotStatsStringImpl.class);
 
