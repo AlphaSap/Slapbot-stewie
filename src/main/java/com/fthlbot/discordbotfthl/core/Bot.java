@@ -216,7 +216,8 @@ public class Bot {
                 this.checkEveryRepHasJoinThisServer,
                 this.giveRoles,
                 this.schedulingParser,
-                this.showScheduleWars
+                this.showScheduleWars,
+                this.minionBotStatsString
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
