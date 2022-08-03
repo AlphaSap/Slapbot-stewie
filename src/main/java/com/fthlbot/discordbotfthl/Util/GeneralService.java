@@ -105,7 +105,7 @@ public class GeneralService {
                 .setTimestampToNow();
         event.getSlashCommandInteraction().createImmediateResponder().addEmbeds(em).respond();
     }
-    public static void leagueSlashErrorMessage(SlashCommandCreateEvent event, Throwable e){
+    public static void leagueSlashErrorMessage(SlashCommandCreateEvent event, Exception e){
         EmbedBuilder em = new EmbedBuilder()
                 .setTitle("<:deny:934405749881315380>Error! ")
                 .setDescription(e.getMessage())
