@@ -65,29 +65,35 @@ public class MinionBotStatsStringImpl implements Command {
             return;
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(COMMAND_PREFIX);
-        for (ScheduledWar war : schedule) {
-            String tag = war.getTeamA().getTag();
-            String tag1 = war.getTeamB().getTag();
-            sb.append(tag).append(" ").append(tag1);
-        }
-        respond.thenAccept(res ->{
-           if (false){
-               //split into multiple messages - 1000 char max
-                int i = 0;
-               res.setContent("Sending multiple...").update();
-                while (i < sb.length()) {
-                    int end = i + 1000;
-                    if (end > sb.length()) {
-                        end = sb.length();
+        try {
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(COMMAND_PREFIX).append(" ");
+            for (ScheduledWar war : schedule) {
+                String tag = war.getTeamA().getTag();
+                String tag1 = war.getTeamB().getTag();
+                sb.append(tag).append(" ").append(tag1);
+            }
+            respond.thenAccept(res -> {
+                if (false) {
+                    //split into multiple messages - 1000 char max
+                    int i = 0;
+                    res.setContent("Sending multiple...").update();
+                    while (i < sb.length()) {
+                        int end = i + 1000;
+                        if (end > sb.length()) {
+                            end = sb.length();
+                        }
+                        event.getSlashCommandInteraction().createFollowupMessageBuilder().setContent(sb.substring(i, end)).send();
+                        i = end;
                     }
-                    event.getSlashCommandInteraction().createFollowupMessageBuilder().setContent(sb.substring(i, end)).send();
-                    i = end;
+                } else {
+                    res.setContent(sb.toString()).update();
                 }
-           }else {
-               res.setContent(sb.toString()).update();
-           }
-        });
+            });
+        }catch (Exception e) {
+            log.error("Error sending message", e);
+            GeneralService.leagueSlashErrorMessage(event, e);
+        }
     }
 }
