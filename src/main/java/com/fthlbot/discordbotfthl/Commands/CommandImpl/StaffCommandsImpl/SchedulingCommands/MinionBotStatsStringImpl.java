@@ -73,7 +73,7 @@ public class MinionBotStatsStringImpl implements Command {
             sb.append(tag).append(" ").append(tag1);
         }
         respond.thenAccept(res ->{
-           if (sb.length() > 2000){
+           if (false){
                //split into multiple messages - 1000 char max
                 int i = 0;
                res.setContent("Sending multiple...").update();
