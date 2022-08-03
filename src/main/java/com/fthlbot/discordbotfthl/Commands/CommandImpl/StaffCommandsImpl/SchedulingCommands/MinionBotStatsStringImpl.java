@@ -48,8 +48,10 @@ public class MinionBotStatsStringImpl implements Command {
     @Override
     public void execute(SlashCommandCreateEvent event) {
         try {
+            log.info("I am working i think! getting response");
             CompletableFuture<InteractionOriginalResponseUpdater> respond = event.getSlashCommandInteraction().respondLater();
-            int divisionId = event.getSlashCommandInteraction().getArguments().get(0).getLongValue().get().intValue();
+
+            int divisionId = Integer.parseInt(event.getSlashCommandInteraction().getArguments().get(0).getStringValue().get());
 
             DivisionWeeks divWeek = divisionWeekService.getDivWeekByID(divisionId);
 
@@ -58,9 +60,10 @@ public class MinionBotStatsStringImpl implements Command {
             StringBuilder sb = new StringBuilder();
             sb.append(COMMAND_PREFIX).append(" ");
             for (ScheduledWar war : schedule) {
+                log.info("I am working!");
                 String tag = war.getTeamA().getTag();
                 String tag1 = war.getTeamB().getTag();
-                sb.append(tag).append(" ").append(tag1);
+                sb.append(tag).append(" ").append(tag1).append(" ");
             }
             respond.thenAccept(res -> {
                 if (false) {
@@ -82,7 +85,9 @@ public class MinionBotStatsStringImpl implements Command {
         } catch (EntityNotFoundException e) {
             GeneralService.leagueSlashErrorMessage(event, e);
 
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
+            GeneralService.leagueSlashErrorMessage(event, "Invalid division id - Must be a number");
+        }catch (Exception e) {
             log.error("Error sending message", e);
             GeneralService.leagueSlashErrorMessage(event, e);
         }

@@ -114,6 +114,17 @@ public class GeneralService {
         event.getSlashCommandInteraction().createImmediateResponder().addEmbeds(em).respond();
     }
 
+    public static void leagueSlashErrorMessage(SlashCommandCreateEvent event, String e){
+        EmbedBuilder em = new EmbedBuilder()
+                .setTitle("<:deny:934405749881315380>Error! ")
+                .setDescription(e)
+                .setColor(Color.red)
+                .setTimestampToNow();
+        event.getSlashCommandInteraction().createImmediateResponder().addEmbeds(em).respond();
+    }
+
+
+
     @Deprecated
     private static boolean isCommand(String args, String command, MessageCreateEvent event, Invoker invoker ) throws UnsupportedCommandException {
         if (!args.equalsIgnoreCase(command)){
