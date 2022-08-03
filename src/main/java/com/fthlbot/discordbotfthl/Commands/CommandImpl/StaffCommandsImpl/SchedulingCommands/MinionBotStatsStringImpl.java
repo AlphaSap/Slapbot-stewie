@@ -12,6 +12,7 @@ import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.core.Handlers.Command;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
+import org.javacord.api.util.logging.ExceptionLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -46,26 +47,13 @@ public class MinionBotStatsStringImpl implements Command {
 
     @Override
     public void execute(SlashCommandCreateEvent event) {
-        CompletableFuture<InteractionOriginalResponseUpdater> respond = event.getSlashCommandInteraction().respondLater();
-        int divisionId = event.getSlashCommandInteraction().getArguments().get(0).getLongValue().get().intValue();
-
-        DivisionWeeks divWeek;
         try {
-            divWeek = divisionWeekService.getDivWeekByID(divisionId);
-        } catch (EntityNotFoundException e) {
-            GeneralService.leagueSlashErrorMessage(event, e);
-            return;
-        }
+            CompletableFuture<InteractionOriginalResponseUpdater> respond = event.getSlashCommandInteraction().respondLater();
+            int divisionId = event.getSlashCommandInteraction().getArguments().get(0).getLongValue().get().intValue();
 
-        List<ScheduledWar> schedule;
-        try {
-            schedule = scheduleWarService.getScheduleByDivisionWeek(divWeek);
-        } catch (EntityNotFoundException e) {
-            GeneralService.leagueSlashErrorMessage(event, e);
-            return;
-        }
+            DivisionWeeks divWeek = divisionWeekService.getDivWeekByID(divisionId);
 
-        try {
+            List<ScheduledWar> schedule = scheduleWarService.getScheduleByDivisionWeek(divWeek);
 
             StringBuilder sb = new StringBuilder();
             sb.append(COMMAND_PREFIX).append(" ");
@@ -88,10 +76,13 @@ public class MinionBotStatsStringImpl implements Command {
                         i = end;
                     }
                 } else {
-                    res.setContent(sb.toString()).update();
+                    res.setContent(sb.toString()).update().exceptionally(ExceptionLogger.get());
                 }
             });
-        }catch (Exception e) {
+        } catch (EntityNotFoundException e) {
+            GeneralService.leagueSlashErrorMessage(event, e);
+
+        } catch (Exception e) {
             log.error("Error sending message", e);
             GeneralService.leagueSlashErrorMessage(event, e);
         }
