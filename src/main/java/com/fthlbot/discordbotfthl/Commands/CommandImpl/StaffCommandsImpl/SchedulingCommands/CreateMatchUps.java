@@ -181,7 +181,8 @@ public class CreateMatchUps implements Command {
             log.error(e.getMessage());
             e.printStackTrace();
             GeneralService.leagueSlashErrorMessage(respondLater, e);
-        } catch (Exception e) {   //TODO
+        } catch (Exception e) {
+            e.printStackTrace();//TODO
             GeneralService.sendFatalError(respondLater, e);
         }
     }

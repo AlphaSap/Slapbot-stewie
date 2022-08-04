@@ -194,6 +194,7 @@ public class GeneralService {
            //Create an embed with error as title and description to say contact the developer
             EmbedBuilder embed = new EmbedBuilder().setTitle("<:deny:934405749881315380>Error!")
                     .setDescription("An error occurred!\nContact the developer to fix this issue")
+                    .addField("Error", e.getMessage(), false)
                     .setColor(Color.red)
                     .setTimestampToNow();
             //add the embed in response and send it, via the update method
