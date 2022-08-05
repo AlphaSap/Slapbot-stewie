@@ -220,8 +220,7 @@ public class GeneralService {
      * @return Date
      */
     public static String dateToStringInDiscordFormat(Date date) {
-        StringBuilder sb = new StringBuilder();
-        return sb.append("<t:").append(dateToUnix(date)).append(":f>").toString();
+        return "<t:" + dateToUnix(date) + ":f>";
     }
 
     public static void printMemoryUsage(){

@@ -14,6 +14,7 @@ class FilterWordServiceTest {
         assertTrue(filterWordService.checkMessage("Nig*a"));
         assertTrue(filterWordService.checkMessage("N i g g a"));
         assertTrue(filterWordService.checkMessage("Niqq3r"));
+        assertTrue(filterWordService.checkMessage("NNNNNiiiiiiigggggggeeeeeeeerr"));
         assertTrue(filterWordService.checkMessage("n¡gg3\uD835\uDE33"));
         assertFalse(filterWordService.checkMessage("This is a test with a bad word and a bad word"));
     }
