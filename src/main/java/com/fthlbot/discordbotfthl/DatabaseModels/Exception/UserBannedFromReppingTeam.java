@@ -18,7 +18,7 @@ public class UserBannedFromReppingTeam extends LeagueException{
         super(MESSAGE.formatted(
                 bannedRep.getReason().orElse("Null"),
                 bannedRep.getBannedDate().toString(),
-                bannedRep.getDiscordUserID(),
+                bannedRep.getStaffDiscordID(),
                 bannedRep.getNotes().orElse("Null")
                 )
         );
