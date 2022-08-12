@@ -75,10 +75,12 @@ public class BanRepImpl implements Command {
                     notes,
                     new Date(),
                     teamService);
+            log.info("Banned rep created");
         } catch (LeagueException e) {
             GeneralService.leagueSlashErrorMessage(respondLater, e);
             return;
         }
+        log.info("Creating embed");
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle("Rep Ban");
         builder.setDescription("User has been banned from representing a team");
@@ -89,6 +91,7 @@ public class BanRepImpl implements Command {
         builder.setTimestampToNow();
         builder.setColor(Color.CYAN);
 
+        log.info("Responding");
         respondLater.thenAccept(updater -> updater.setContent("Rep banned").update().exceptionally(ExceptionLogger.get())).exceptionally(ExceptionLogger.get());
     }
 }
