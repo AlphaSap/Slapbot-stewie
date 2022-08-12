@@ -1,11 +1,9 @@
 package com.fthlbot.discordbotfthl.DatabaseModels.Team;
 
+import com.fthlbot.discordbotfthl.DatabaseModels.BannedReps.BannedRep;
+import com.fthlbot.discordbotfthl.DatabaseModels.BannedReps.BannedRepService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
-import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityAlreadyExistsException;
-import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;
-import com.fthlbot.discordbotfthl.DatabaseModels.Exception.NoMoreRosterChangesLeftException;
-import com.fthlbot.discordbotfthl.DatabaseModels.Exception.NotTheRepException;
-import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterRepo;
+import com.fthlbot.discordbotfthl.DatabaseModels.Exception.*;
 import org.javacord.api.entity.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,15 +16,21 @@ import java.util.Optional;
 @Service
 public class TeamService {
     private final TeamRepo repo;
+    private final BannedRepService bannedRep;
     private final Logger log = LoggerFactory.getLogger(TeamService.class);
 
    // private final RosterService rosterService;
     @Autowired
-    public TeamService(TeamRepo repo, RosterRepo rosterRepo) {
+    public TeamService(TeamRepo repo, BannedRepService bannedRep) {
         this.repo = repo;
+        this.bannedRep = bannedRep;
     }
-    public Team saveTeam(Team team) throws EntityAlreadyExistsException {
+    public Team saveTeam(Team team) throws EntityAlreadyExistsException, UserBannedFromReppingTeam {
+        checksRep(team.getRep1ID());
+        checksRep(team.getRep2ID());
+
         Optional<Team> teamByTag = repo.findTeamByTagAndDivision(team.getTag(), team.getDivision());
+
         if (teamByTag.isPresent()) {
             throw new EntityAlreadyExistsException(
                     teamByTag.get().getName() + " has already registered with the same clan tag in %s. Please use a different clan tag".formatted(team.getDivision().getAlias())
@@ -79,9 +83,9 @@ public class TeamService {
         return repo.findTeamByDivision(division);
     }
 
-    public Team changeRep(User NewUser, User oldUser, Team team) throws NotTheRepException {
-        log.info("old user: {} new user: {} ", oldUser.getDiscriminatedName(), NewUser.getDiscriminatedName());
+    public Team changeRep(User NewUser, User oldUser, Team team) throws NotTheRepException, UserBannedFromReppingTeam {
 
+        checksRep(NewUser.getId());
         if (oldUser.getId() == team.getRep1ID()){
             team.setRep1ID(NewUser.getId());
         }else if (oldUser.getId() == team.getRep2ID()){
@@ -91,6 +95,13 @@ public class TeamService {
         }
         repo.save(team);
         return team;
+    }
+
+    private void checksRep(Long NewUser) throws UserBannedFromReppingTeam {
+        Optional<BannedRep> repOptional = bannedRep.getBannedRep(NewUser);
+        if (repOptional.isPresent()) {
+            throw new UserBannedFromReppingTeam(repOptional.get()); //throw an exception if the rep is banned...
+        }
     }
 
     public Team changeTag(Team team, String tag, String name) {
