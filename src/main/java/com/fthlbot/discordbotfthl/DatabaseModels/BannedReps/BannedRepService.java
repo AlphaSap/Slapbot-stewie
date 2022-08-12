@@ -52,7 +52,8 @@ public class BannedRepService {
                 notes.orElse("Null")
         );
         log.info("saving banned rep with discordID: " + discordID);
-        return bannedRepRepository.save(b);
+        b = bannedRepRepository.save(b);
+        return b;
     }
 
     public void removeBan(long discordID) throws EntityNotFoundException {
