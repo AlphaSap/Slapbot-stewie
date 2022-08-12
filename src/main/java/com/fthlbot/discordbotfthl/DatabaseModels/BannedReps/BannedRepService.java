@@ -3,6 +3,8 @@ package com.fthlbot.discordbotfthl.DatabaseModels.BannedReps;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityAlreadyExistsException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +14,7 @@ import java.util.Optional;
 @Service
 public class BannedRepService {
     private final BannedRepRepository bannedRepRepository;
-
+    private final Logger log = LoggerFactory.getLogger(BannedRepService.class);
 
     public BannedRepService(BannedRepRepository bannedRepRepository) {
         this.bannedRepRepository = bannedRepRepository;
@@ -28,12 +30,18 @@ public class BannedRepService {
                             Optional<String> notes,
                             Date date,
                             TeamService teamService) throws EntityAlreadyExistsException {
+        log.info("Banning rep with discordID: " + discordID);
 
         if (getBannedRep(discordID).isPresent()) {
+            log.info("Rep with discordID: " + discordID + " is already banned");
             throw new EntityAlreadyExistsException("This user is already banned from being a rep!");
         }
+        log.info("Rep with discordID: " + discordID + " is not banned");
+
+        log.info("getting team for rep with discordID: " + discordID);
         Pair<String, String> repAndDeleteHimFromAllTeam = teamService.findRepAndDeleteHimFromAllTeam(discordID);
 
+        log.info("making banned rep with discordID: " + discordID);
         BannedRep b = new BannedRep(
                 discordID,
                 reason.orElse("Null"),
@@ -43,6 +51,7 @@ public class BannedRepService {
                 repAndDeleteHimFromAllTeam.getSecond(),
                 notes.orElse("Null")
         );
+        log.info("saving banned rep with discordID: " + discordID);
         return bannedRepRepository.save(b);
     }
 
