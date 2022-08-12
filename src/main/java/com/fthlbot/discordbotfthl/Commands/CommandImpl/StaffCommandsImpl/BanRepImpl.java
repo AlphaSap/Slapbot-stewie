@@ -89,6 +89,6 @@ public class BanRepImpl implements Command {
         builder.setTimestampToNow();
         builder.setColor(Color.CYAN);
 
-        respondLater.thenAccept(updater -> updater.addEmbed(builder).update().exceptionally(ExceptionLogger.get())).exceptionally(ExceptionLogger.get());
+        respondLater.thenAccept(updater -> updater.setContent("Rep banned").update().exceptionally(ExceptionLogger.get())).exceptionally(ExceptionLogger.get());
     }
 }
