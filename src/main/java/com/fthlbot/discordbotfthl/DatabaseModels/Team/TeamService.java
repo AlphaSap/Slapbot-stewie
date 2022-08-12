@@ -8,6 +8,7 @@ import org.javacord.api.entity.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -144,5 +145,23 @@ public class TeamService {
 
     public List<Team> getAllTeams() {
         return repo.findAll();
+    }
+
+    public Pair<String, String> findRepAndDeleteHimFromAllTeam(long userID) {
+        List<Team> teams = getTeamByRep(userID);
+        StringBuilder teamName = new StringBuilder("");
+        StringBuilder divName = new StringBuilder("");
+        for (Team team : teams) {
+            if (team.getRep1ID() == userID) {
+                team.setRep1ID(team.getRep2ID());
+            } else if (team.getRep2ID() == userID) {
+                team.setRep2ID(team.getRep1ID());
+            }
+
+            teamName.append(team.getName()).append(", ");
+            divName.append(team.getDivision().getAlias()).append(", ");
+            repo.save(team);
+        }
+        return Pair.of(teamName.toString(), divName.toString());
     }
 }
