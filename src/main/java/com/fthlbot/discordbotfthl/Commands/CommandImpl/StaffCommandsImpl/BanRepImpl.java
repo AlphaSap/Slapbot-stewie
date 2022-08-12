@@ -45,10 +45,13 @@ public class BanRepImpl implements Command {
 
     @Override
     public void execute(SlashCommandCreateEvent event) {
-        List<SlashCommandInteractionOption> arguments = event.getSlashCommandInteraction().getArguments();
 
+        log.info("Getting user from event");
         Optional<User> userValue = event.getSlashCommandInteraction().getOptionUserValueByName("user");
+        log.info("User found: " + userValue.isPresent());
+        log.info("Getting discord-id from event");
         Optional<Long> longValue = event.getSlashCommandInteraction().getOptionLongValueByName("discord-id");
+        log.info("Long found: " + longValue.isPresent());
 
         if (userValue.isEmpty() && longValue.isEmpty()){
             event.getSlashCommandInteraction().createImmediateResponder().setContent("Please provide a user or discord-ID").respond();
@@ -58,10 +61,14 @@ public class BanRepImpl implements Command {
         long userID;
         userID = userValue.map(DiscordEntity::getId).orElseGet(longValue::get);
 
+        log.info("getting reason from event");
         Optional<String> reason = event.getSlashCommandInteraction().getOptionStringValueByName("reason");
+        log.info("reason found: " + reason.isPresent());
+        log.info("getting notes from event");
         Optional<String> notes = event.getSlashCommandInteraction().getOptionStringValueByName("notes");
 
         try {
+            log.info("Creating banned rep");
             bannedRepService.banRep(userID,
                     event.getSlashCommandInteraction().getUser().getName(),
                     reason,
