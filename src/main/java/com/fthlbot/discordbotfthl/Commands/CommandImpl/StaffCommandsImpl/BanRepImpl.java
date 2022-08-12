@@ -14,6 +14,8 @@ import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteractionOption;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.javacord.api.util.logging.ExceptionLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
@@ -34,6 +36,8 @@ public class BanRepImpl implements Command {
     private final BannedRepService bannedRepService;
     private final TeamService teamService;
 
+    private final Logger log = LoggerFactory.getLogger(BanRepImpl.class);
+
     public BanRepImpl(BannedRepService bannedRepService, TeamService teamService) {
         this.bannedRepService = bannedRepService;
         this.teamService = teamService;
@@ -43,8 +47,8 @@ public class BanRepImpl implements Command {
     public void execute(SlashCommandCreateEvent event) {
         List<SlashCommandInteractionOption> arguments = event.getSlashCommandInteraction().getArguments();
 
-        Optional<User> userValue = arguments.get(0).getUserValue();
-        Optional<Long> longValue = arguments.get(1).getLongValue();
+        Optional<User> userValue = event.getSlashCommandInteraction().getOptionUserValueByName("user");
+        Optional<Long> longValue = event.getSlashCommandInteraction().getOptionLongValueByName("discord-id");
 
         if (userValue.isEmpty() && longValue.isEmpty()){
             event.getSlashCommandInteraction().createImmediateResponder().setContent("Please provide a user or discord-ID").respond();
@@ -54,8 +58,8 @@ public class BanRepImpl implements Command {
         long userID;
         userID = userValue.map(DiscordEntity::getId).orElseGet(longValue::get);
 
-        Optional<String> reason = arguments.get(2).getStringValue();
-        Optional<String> notes = arguments.get(3).getStringValue();
+        Optional<String> reason = event.getSlashCommandInteraction().getOptionStringValueByName("reason");
+        Optional<String> notes = event.getSlashCommandInteraction().getOptionStringValueByName("notes");
 
         try {
             bannedRepService.banRep(userID,
