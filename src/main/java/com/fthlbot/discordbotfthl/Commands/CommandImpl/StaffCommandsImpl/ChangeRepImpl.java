@@ -1,5 +1,6 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl;
 
+import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
 import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.StaffCommandListener.ChangeRepListener;
@@ -75,8 +76,9 @@ public class ChangeRepImpl implements ChangeRepListener {
             team = teamService.changeRep(newRep, oldRep, team);
             log.info(team.getRep1ID() + "");
             log.info(team.getRep2ID()+  "");
-        } catch (NotTheRepException e) {
-            e.printStackTrace();
+        } catch (LeagueException e) {
+            GeneralService.leagueSlashErrorMessage(respondLater, e);
+            return;
         }
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
