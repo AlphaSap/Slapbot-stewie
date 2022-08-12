@@ -1,10 +1,7 @@
 package com.fthlbot.discordbotfthl.DatabaseModels.BannedReps;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.Optional;
 
@@ -12,6 +9,8 @@ import java.util.Optional;
 @Table
 public class BannedRep { //this class is used to represent as a list of banned reps who will never be allowed to rep for a team!
     @Id
+    @Column(unique = true)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long ID;
 
     private Long discordUserID;

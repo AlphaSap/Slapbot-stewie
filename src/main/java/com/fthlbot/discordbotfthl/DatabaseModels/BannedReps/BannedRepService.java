@@ -53,7 +53,6 @@ public class BannedRepService {
         );
         log.info("saving banned rep with discordID: " + discordID);
         b = bannedRepRepository.save(b);
-
         return b;
     }
 
