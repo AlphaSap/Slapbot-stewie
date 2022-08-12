@@ -679,6 +679,33 @@ public class SlashCommandBuilder {
         SlashCommand.with("info", "Shows bots information").createGlobal(getApi()).join();
     }
 
+    public void createRepBanCommand(){
+        SlashCommand.with("ban-rep", "bans a user from representing a team").setOptions(
+                List.of(
+                        SlashCommandOption.create(
+                                USER,
+                                "user",
+                                "Mention the user to be banned",
+                                false
+                        ), SlashCommandOption.create(
+                                LONG,
+                                "discord-id",
+                                "discord id of the user to be banned",
+                                false
+                        ), SlashCommandOption.create(
+                                STRING,
+                                "reason",
+                                "Reason of ban",
+                                false
+                        ), SlashCommandOption.create(
+                                STRING,
+                                "notes",
+                                "additional notes",
+                                false
+                        )
+                )
+        ).createGlobal(this.api).join();
+    }
     public void createClanLineupCommand() {
         SlashCommand.with("clan-lineup", "Shows the lineup of a clan")
                 .setOptions(List.of(
