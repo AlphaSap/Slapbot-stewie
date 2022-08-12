@@ -15,13 +15,11 @@ public class BannedRep { //this class is used to represent as a list of banned r
     private Long ID;
 
     private Long discordUserID;
-    @Column(nullable = true)
     private String reason;
     private String staffDiscordID; //the staff member who has banned the person!
     private Date bannedDate;
     private String teamName;
     private String divisionName;
-    @Column(nullable = true)
     private String notes;
 
     public BannedRep() {
