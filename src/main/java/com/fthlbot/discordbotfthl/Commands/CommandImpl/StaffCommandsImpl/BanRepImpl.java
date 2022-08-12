@@ -2,6 +2,7 @@ package com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl;
 
 import com.fthlbot.discordbotfthl.DatabaseModels.BannedReps.BannedRepService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityAlreadyExistsException;
+import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
 import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
@@ -58,8 +59,7 @@ public class BanRepImpl implements Command {
             return;
         }
         CompletableFuture<InteractionOriginalResponseUpdater> respondLater = event.getSlashCommandInteraction().respondLater();
-        long userID;
-        userID = userValue.map(DiscordEntity::getId).orElseGet(longValue::get);
+        long userID = userValue.map(DiscordEntity::getId).orElseGet(longValue::get);
 
         log.info("getting reason from event");
         Optional<String> reason = event.getSlashCommandInteraction().getOptionStringValueByName("reason");
@@ -75,20 +75,20 @@ public class BanRepImpl implements Command {
                     notes,
                     new Date(),
                     teamService);
-        } catch (EntityAlreadyExistsException e) {
+        } catch (LeagueException e) {
             GeneralService.leagueSlashErrorMessage(respondLater, e);
             return;
         }
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle("Rep Ban");
         builder.setDescription("User has been banned from representing a team");
-        builder.addField("User", userValue.map(User::getName).orElseGet(() -> userID + ""), false);
+        builder.addField("User", userValue.map(User::getName).orElseGet(() -> "userID" + userID), false);
         builder.addField("Reason", reason.orElse("None"), false);
         builder.addField("Notes", notes.orElse("None"), false);
-        builder.setFooter("Banned by " + event.getSlashCommandInteraction().getUser().getName());
+        builder.addField("Banned by " , event.getSlashCommandInteraction().getUser().getName());
         builder.setTimestampToNow();
         builder.setColor(Color.CYAN);
 
-        respondLater.thenAccept(updater -> updater.addEmbed(builder).update().exceptionally(ExceptionLogger.get()));
+        respondLater.thenAccept(updater -> updater.addEmbed(builder).update().exceptionally(ExceptionLogger.get())).exceptionally(ExceptionLogger.get());
     }
 }
