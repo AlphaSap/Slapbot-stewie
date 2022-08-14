@@ -1,9 +1,14 @@
 package com.fthlbot.discordbotfthl.core.CommandCreation;
 
-import java.util.List;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class Choice {
+    @SerializedName("key")
+    @Expose
     private String key;
+    @SerializedName("value")
+    @Expose
     private String value;
 
     public String getKey() {

@@ -4,6 +4,7 @@ import Core.JClash;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
 import com.fthlbot.discordbotfthl.Util.SlashCommandBuilder;
 import com.fthlbot.discordbotfthl.core.Bot;
+import com.fthlbot.discordbotfthl.core.CommandCreation.CommandBuilder;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
@@ -52,7 +53,7 @@ public class DiscordBotFthlApplication {
 
         clash = new JClash(env.getProperty("CLASH_EMAIL"), env.getProperty("CLASH_PASS"));
         DiscordApi api = new DiscordApiBuilder()
-                .setToken(env.getProperty("TOKEN_BOT"))
+                .setToken(env.getProperty("TOKEN_TEST"))
                 .setUserCacheEnabled(true)
                 .setAllIntentsExcept(
                         Intent.GUILD_WEBHOOKS,
@@ -78,6 +79,9 @@ public class DiscordBotFthlApplication {
         slashCommandBuilder.setApi(api);
         slashCommandBuilder.createRepBanCommand();
 
+        CommandBuilder commandBuilder = new CommandBuilder();
+        commandBuilder.setApi(api);
+        commandBuilder.init();
 
         GeneralService.printMemoryUsage();
         return api;

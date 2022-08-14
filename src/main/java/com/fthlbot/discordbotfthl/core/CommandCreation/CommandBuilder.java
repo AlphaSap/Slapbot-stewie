@@ -1,10 +1,11 @@
 package com.fthlbot.discordbotfthl.core.CommandCreation;
 
+import com.fthlbot.discordbotfthl.Util.GeneralService;
+import com.google.gson.Gson;
 import org.javacord.api.DiscordApi;
-import org.javacord.api.interaction.SlashCommand;
-import org.javacord.api.interaction.SlashCommandOption;
-import org.javacord.api.interaction.SlashCommandOptionType;
-import org.javacord.api.interaction.SlashCommandUpdater;
+import org.javacord.api.interaction.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -13,25 +14,27 @@ import java.util.List;
 
 public class CommandBuilder {
     private DiscordApi api;
+    private Logger log = LoggerFactory.getLogger(CommandBuilder.class);
 
-    public InputStream yaml() {
-        return getClass().getResourceAsStream("commands.yml");
+    public String json() throws IOException {
+        String resourceAsStream = GeneralService.getFileContent("commands.json");
+        log.info("Yaml file found {}" , resourceAsStream);
+
+        return resourceAsStream;
     }
 
-    public CommandFromYaml getCommands() {
-        Yaml yaml = new Yaml();
-        CommandFromYaml commands = yaml.load(yaml());
-        return commands;
+    public CommandFromJson getCommands() throws IOException {
+        Gson g = new Gson();
+        return g.fromJson(json(), CommandFromJson.class);
     }
 
-    public void init() {
-        Holder holder = checkCommands();
-        deleteCommands(holder);
-        editCommands(holder);
-        //createCommands();
+    public void init() throws IOException {
+        //Holder holder = checkCommands();
+        log.info("Commands loading...");
+        createCommand();
     }
 
-    private Holder checkCommands() {
+    private Holder checkCommands() throws IOException {
         List<SlashCommand> commands = api.getGlobalSlashCommands().join();
 
         List<SlashCommand> toDelete = new ArrayList<>();
@@ -56,7 +59,7 @@ public class CommandBuilder {
         }
     }
 
-    public void editCommands(Holder holder) {
+    public void editCommands(Holder holder) throws IOException {
         for (SlashCommand slashCommand : holder.found) {
             if (!holder.found.contains(slashCommand)) {
                 throw new IllegalArgumentException("Command not found [UNREACHABLE]");
@@ -126,8 +129,8 @@ public class CommandBuilder {
         }
     }
 
-    private boolean checkSlashCommandWithYaml(SlashCommand slashCommand) {
-        CommandFromYaml commands = getCommands();
+    private boolean checkSlashCommandWithYaml(SlashCommand slashCommand) throws IOException {
+        CommandFromJson commands = getCommands();
         for (Command command : commands.getCommand()) {
             if (slashCommand.getName().equals(command.getName())) {
                 //Check Slash Command Name with YAML
@@ -141,7 +144,50 @@ public class CommandBuilder {
         return api;
     }
 
-    private void setApi(DiscordApi api) {
+    public void setApi(DiscordApi api) {
         this.api = api;
+    }
+
+    public void createCommand() throws IOException {
+        CommandFromJson commands = getCommands();
+        for (Command command : commands.getCommand()) {
+            boolean contains = this.api.getGlobalSlashCommands().join()
+                    .stream()
+                    .map(SlashCommand::getName).toList()
+                    .contains(command.getName());
+
+            if (contains) {
+                continue;
+            }
+
+            SlashCommandBuilder slash = SlashCommand.with(command.getName(), command.getDescription());
+
+            if (!command.getOption().isEmpty()){
+                List<SlashCommandOption> options = new ArrayList<>();
+
+                for (Option option : command.getOption()) {
+                    SlashCommandOptionBuilder slashCommandOptionBuilder = new SlashCommandOptionBuilder();
+
+                    slashCommandOptionBuilder.setName(option.getName());
+                    slashCommandOptionBuilder.setDescription(option.getDescription());
+                    slashCommandOptionBuilder.setRequired(option.getRequired());
+                    slashCommandOptionBuilder.setType(getSlashCommandOptionType(option.getType()));
+
+
+                    if (!option.getChoices().isEmpty()){
+                        for (Choice choice : option.getChoices()) {
+                            slashCommandOptionBuilder.addChoice(choice.getKey(), choice.getValue());
+                        }
+                    }
+
+                    options.add(slashCommandOptionBuilder.build());
+                }
+                slash.setOptions(options);
+            }
+            SlashCommand join = slash.createGlobal(api).join();
+            System.out.println("Created" +
+                    "" +
+                    " command: " + join.getName());
+        }
     }
 }
