@@ -77,7 +77,7 @@ public class BanRepImpl implements Command {
         builder.addField("Notes", notes.orElse("None"), false);
         builder.addField("Banned by " , event.getSlashCommandInteraction().getUser().getName());
         builder.setTimestampToNow();
-        builder.setColor(Color.CYAN);
+        builder.setColor(Color.RED);
 
         respondLater.thenAccept(updater -> updater.addEmbed(builder).update().exceptionally(ExceptionLogger.get())).exceptionally(ExceptionLogger.get());
     }
