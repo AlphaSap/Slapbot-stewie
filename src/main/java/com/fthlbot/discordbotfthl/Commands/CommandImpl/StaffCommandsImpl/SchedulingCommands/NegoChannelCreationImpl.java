@@ -170,7 +170,8 @@ public class NegoChannelCreationImpl implements NegoChannelCreationListener {
 
     //is date in the past?
     private boolean isPast(Date date) {
-        return date.before(new Date());
+        //return date.before(new Date());
+        return false;
     }
 
     //A method to convert date to unix timestamp
