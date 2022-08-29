@@ -1,9 +1,5 @@
 {
   "commands": [
-    {
-      "name": "this-is-a-test",
-      "description": "This is a test",
-      "example": [ "this-is-a-test" ]
-    }
+
   ]
 }

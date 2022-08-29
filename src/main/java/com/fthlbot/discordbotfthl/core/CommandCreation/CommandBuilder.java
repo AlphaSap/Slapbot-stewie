@@ -163,9 +163,10 @@ public class CommandBuilder {
             SlashCommandBuilder slash = SlashCommand.with(command.getName(), command.getDescription());
 
             if (!command.getOption().isEmpty()){
-                List<SlashCommandOption> options = new ArrayList<>();
-
+                log.info("Options found");
+                log.info("Options size {}", command.getOption().size());
                 for (Option option : command.getOption()) {
+                    log.info("Option {}", option.getName());
                     SlashCommandOptionBuilder slashCommandOptionBuilder = new SlashCommandOptionBuilder();
 
                     slashCommandOptionBuilder.setName(option.getName());
@@ -179,10 +180,9 @@ public class CommandBuilder {
                             slashCommandOptionBuilder.addChoice(choice.getKey(), choice.getValue());
                         }
                     }
-
-                    options.add(slashCommandOptionBuilder.build());
+                    log.info("Option {}", slashCommandOptionBuilder.build().getName());
+                    slash.addOption(slashCommandOptionBuilder.build());
                 }
-                slash.setOptions(options);
             }
             SlashCommand join = slash.createGlobal(api).join();
             System.out.println("Created" +
