@@ -188,8 +188,8 @@ public class RegistrationImpl implements RegistrationListener {
     private boolean isRegistrationOpen() {
         Date registrationDate;
         try {
-            registrationDate = config.getRegistrationDate();
-            Date leagueStartDate = config.getLeagueStartDate();
+            registrationDate = config.getRegistrationDate(); //start
+            Date leagueStartDate = config.getLeagueStartDate(); //end
 
             if (registrationDate.after(new Date()))
                 return false;

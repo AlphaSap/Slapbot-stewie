@@ -1,5 +1,6 @@
 package com.fthlbot.discordbotfthl.DatabaseModels.Roster;
 
+import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.*;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
@@ -36,9 +37,14 @@ public class RosterService {
     }
     //TODO fp checks
     //check pos
-    public synchronized Roster addToRoster(Roster roster, User user) throws LeagueException {
+    public synchronized Roster addToRoster(Roster roster, User user) throws LeagueException, ParseException {
         Optional<Roster> alreadyAddedAccount = repo.findRosterByPlayerTagAndDivision(roster.getPlayerTag(), roster.getDivision());
         List<Roster> rosterByTeam = repo.findRosterByTeam(roster.getTeam());
+
+        if (isRosterChangeOpen(roster.getDivision())) {
+            throw new UnExpectedLeagueException("Roster Changes for " + roster.getDivision().getAlias() + " is locked!");
+        }
+
         if (alreadyAddedAccount.isPresent()){
             throw new EntityAlreadyExistsException(
                     "`"+alreadyAddedAccount.get().getPlayerTag()+"` is already rostered with the team `"+alreadyAddedAccount.get().getTeam().getName()+
@@ -89,6 +95,57 @@ public class RosterService {
         }
         team.setAllowRosterChangesLeft(allowRosterChangesLeft - 1);
         teamService.updateTeam(team);
+    }
+
+    public boolean isRosterChangeOpen(Division division) throws ParseException {
+        switch (division.getAlias().toLowerCase()) {
+            case "f5" -> {
+                return true;
+            }
+            case "f8" -> {
+                Date startDate = botConfig.getF8StartDate();
+                Date endDate = botConfig.getF8EndDate();
+                if (startDate.after(new Date()))
+                    return false;
+                return !endDate.before(new Date());
+            }
+            case "f9" -> {
+                Date startDate = botConfig.getF9StartDate();
+                Date endDate = botConfig.getF9EndDate();
+                if (startDate.after(new Date()))
+                    return false;
+                return !endDate.before(new Date());
+            }
+            case "f10" -> {
+                Date startDate = botConfig.getF10StartDate();
+                Date endDate = botConfig.getF10EndDate();
+                if (startDate.after(new Date()))
+                    return false;
+                return !endDate.before(new Date());
+            }
+            case "f11" -> {
+                Date startDate = botConfig.getF11StartDate();
+                Date endDate = botConfig.getF11EndDate();
+                if (startDate.after(new Date()))
+                    return false;
+                return !endDate.before(new Date());
+            }
+            case "elite" -> {
+                Date startDate = botConfig.getEliteStartDate();
+                Date endDate = botConfig.getEliteEndDate();
+                if (startDate.after(new Date()))
+                    return false;
+                return !endDate.before(new Date());
+            }
+            case "lite" -> {
+                Date startDate = botConfig.getLiteStartDate();
+                Date endDate = botConfig.getLiteEndDate();
+                if (startDate.after(new Date()))
+                    return false;
+                return !endDate.before(new Date());
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + division.getAlias().toLowerCase());
+        }
     }
     public Roster removeFromRoster(Team team, String tag, User user) throws LeagueException {
         boolean isRep =
