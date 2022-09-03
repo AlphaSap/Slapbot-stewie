@@ -41,7 +41,7 @@ public class RosterService {
         Optional<Roster> alreadyAddedAccount = repo.findRosterByPlayerTagAndDivision(roster.getPlayerTag(), roster.getDivision());
         List<Roster> rosterByTeam = repo.findRosterByTeam(roster.getTeam());
 
-        if (isRosterChangeOpen(roster.getDivision())) {
+        if (!isRosterChangeOpen(roster.getDivision())) {
             throw new UnExpectedLeagueException("Roster Changes for " + roster.getDivision().getAlias() + " is locked!");
         }
 
