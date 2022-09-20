@@ -1,11 +1,9 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl;
 
-import Core.JClash;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.RosterAdd.RosterAddUtilClass;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
-import com.fthlbot.discordbotfthl.DatabaseModels.Roster.Roster;
 import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
@@ -31,11 +29,18 @@ import java.util.stream.Collectors;
 @Component
 @Invoker(alias = "force-push", description = "Pushes account to a teams master roster - will bypass all checks", usage = "/force-push <division> <team alias>", type = CommandType.STAFF)
 public class ForceAddImpl extends RosterAddUtilClass implements Command {
-    private DivisionService divisionService;
-    private TeamService teamService;
-    private RosterService rosterService;
+    private final DivisionService divisionService;
+    private final TeamService teamService;
+    private final RosterService rosterService;
 
-    private BotConfig config;
+    private final BotConfig config;
+
+    public ForceAddImpl(DivisionService divisionService, TeamService teamService, RosterService rosterService, BotConfig config) {
+        this.divisionService = divisionService;
+        this.teamService = teamService;
+        this.rosterService = rosterService;
+        this.config = config;
+    }
 
     @Override
     public void execute(SlashCommandCreateEvent event) {
