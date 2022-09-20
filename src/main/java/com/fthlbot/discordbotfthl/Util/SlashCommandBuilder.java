@@ -679,6 +679,37 @@ public class SlashCommandBuilder {
         SlashCommand.with("info", "Shows bots information").createGlobal(getApi()).join();
     }
 
+    public void createForcePush() {
+        SlashCommand.with("force-push", "Force pushes accounts to a teams roster")
+                .setOptions(List.of(
+                        SlashCommandOption.createWithChoices(STRING,
+                                "division",
+                                "choose from one of the following division",
+                                true,
+                                asList(
+                                        SlashCommandOptionChoice.create("f8", "f8"),
+                                        SlashCommandOptionChoice.create("f9", "f9"),
+                                        SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
+                                        SlashCommandOptionChoice.create("Lite", "Lite"),
+                                        SlashCommandOptionChoice.create("Elite", "Elite")
+                                )
+                        ),
+                        SlashCommandOption.create(
+                                STRING,
+                                "team-identifier",
+                                "Enter your team's alias or name",
+                                true
+                        ),
+                        SlashCommandOption.create(
+                                STRING,
+                                "tags",
+                                "Enter player tags, separated by a space",
+                                true
+                        )
+                )).createGlobal(getApi()).join();
+
+    }
     public void createRepBanCommand(){
         SlashCommand.with("ban-rep", "bans a user from representing a team").setOptions(
                 List.of(

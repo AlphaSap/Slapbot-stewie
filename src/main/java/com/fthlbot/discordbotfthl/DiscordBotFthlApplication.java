@@ -77,11 +77,11 @@ public class DiscordBotFthlApplication {
         bot.Start(api);
 
         slashCommandBuilder.setApi(api);
-        slashCommandBuilder.createRepBanCommand();
+        slashCommandBuilder.createForcePush();
 
-        CommandBuilder commandBuilder = new CommandBuilder();
-        commandBuilder.setApi(api);
-        commandBuilder.init();
+//        CommandBuilder commandBuilder = new CommandBuilder();
+//        commandBuilder.setApi(api);
+//        commandBuilder.init();
 
         GeneralService.printMemoryUsage();
         return api;

@@ -1,6 +1,7 @@
 package com.fthlbot.discordbotfthl.DatabaseModels.Roster;
 
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
+import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.*;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
@@ -193,5 +194,13 @@ public class RosterService {
     @Transactional
     public void removeAllRoster(Team team) {
         repo.deleteRosterByTeam(team);
+    }
+
+    /**
+     *
+     */
+    @Transactional
+    public synchronized void forceAdd (Roster player) {
+        repo.save(player);
     }
 }

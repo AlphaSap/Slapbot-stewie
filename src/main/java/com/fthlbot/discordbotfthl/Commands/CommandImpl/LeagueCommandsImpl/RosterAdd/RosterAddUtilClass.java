@@ -29,14 +29,19 @@ public class RosterAddUtilClass {
     //TODO: https://stackoverflow.com/questions/22561110/equivalent-of-go-channel-in-java
     private final static Logger log = LoggerFactory.getLogger(RosterAddUtilClass.class);
 
-    public void addPlayers(SlashCommandCreateEvent event, SlashCommandInteraction interaction, Set<String> tags, Team team, RosterService service, BotConfig config) {
+    public void addPlayers(SlashCommandCreateEvent event, SlashCommandInteraction interaction, Set<String> tags, Team team, RosterService service, BotConfig config, Boolean checks) {
         for (String tag : tags) {
             CompletableFuture.runAsync(() -> {
                 try {
                     JClash clash = new JClash();
                     Player player = clash.getPlayer(tag).join();
                     Roster roster = new Roster(player.getName(), player.getTag(), player.getTownHallLevel(), team);
-                    service.addToRoster(roster, event.getInteraction().getUser());
+
+                    if (checks) {
+                        service.addToRoster(roster, event.getInteraction().getUser());
+                    } else {
+                        service.forceAdd(roster);
+                    }
                     //send a message for each addition
                     EmbedBuilder embedBuilder = sendMessage(player.getTag(), team.getName(), interaction.getChannel().get(), interaction.getUser());
                     event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(embedBuilder).send().exceptionally(ExceptionLogger.get());
@@ -59,22 +64,22 @@ public class RosterAddUtilClass {
                     interaction.getChannel().get().sendMessage(embedBuilder).exceptionally(ExceptionLogger.get());
                 } catch (IOException e) {
                     event.getApi().getChannelById(899282429678878801L).ifPresent(ch -> {
-                        String s = "they managed to get the most unexpected error! \nIn rosterAddUtillClass, IException:  " + e.getMessage();
+                        String s = "Server probably down IException:  " + e.getMessage();
                         ch.asServerTextChannel().get().sendMessage(s);
                     });
                     Optional<TextChannel> channel = event.getSlashCommandInteraction().getChannel();
-                    channel.ifPresent(textChannel -> textChannel.sendMessage("I don't know how you got this error but I'm going to ignore it ||jk xD||"));
+                    channel.ifPresent(textChannel -> textChannel.sendMessage("Server is down please try again Later!"));
                     e.printStackTrace();
                 } catch (Exception e) {
                     event.getSlashCommandInteraction().createFollowupMessageBuilder()
-                                    .addEmbed(
-                                            new EmbedBuilder()
-                                                    .setTitle("Error")
-                                                    .addField("Error", e.getMessage(), false)
-                                                    .setDescription("Please contact the developer")
-                                                    .setColor(Color.RED)
-                                                    .setTimestampToNow()
-                                    ).send();
+                            .addEmbed(
+                                    new EmbedBuilder()
+                                            .setTitle("Error")
+                                            .addField("Error", e.getMessage(), false)
+                                            .setDescription("Please contact the developer")
+                                            .setColor(Color.RED)
+                                            .setTimestampToNow()
+                            ).send();
                     e.printStackTrace();
                 }
             });
