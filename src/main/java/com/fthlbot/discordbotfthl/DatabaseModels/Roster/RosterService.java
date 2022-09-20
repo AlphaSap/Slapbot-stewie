@@ -200,7 +200,7 @@ public class RosterService {
      *
      */
     @Transactional
-    public synchronized void forceAdd (Roster player) {
-        repo.save(player);
+    public synchronized Roster forceAdd (Roster player) {
+        return repo.save(player);
     }
 }

@@ -57,7 +57,7 @@ public class ForceAddImpl extends RosterAddUtilClass implements Command {
             Team team = teamService.getTeamByDivisionAndAlias(teamAlias, division);
             res.thenAccept(r -> {
                 r.setContent("Roster Addition requested!").update();
-            }).exceptionally(ExceptionLogger.get());
+            }).exceptionally(ExceptionLogger.get()).join();
             addPlayers(event, slashCommandInteraction, collect, team, rosterService, config, false);
 
 
