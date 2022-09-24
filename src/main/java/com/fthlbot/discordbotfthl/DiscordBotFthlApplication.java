@@ -74,10 +74,6 @@ public class DiscordBotFthlApplication {
         api.updateActivity(ActivityType.LISTENING, "Slash commands!");
 
 
-        slashCommandBuilder.setApi(api);
-        slashCommandBuilder.makeAllCommands();
-        log.info("made commands?");
-
         GeneralService.printMemoryUsage();
         bot.Start(api);
         return api;

@@ -238,6 +238,10 @@ public class Bot {
 
         log.info("Added {} Commands!", commandList.size());
 
+        builder.setApi(api);
+        builder.makeAllCommands();
+        log.info("made commands?");
+
         this.commandListener =  new CommandListener(messageHolder, loggerService, config);
     }
 

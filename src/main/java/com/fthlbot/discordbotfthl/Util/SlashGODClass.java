@@ -512,7 +512,7 @@ public class SlashGODClass {
         Method[] methods = this.getClass().getDeclaredMethods();
         ArrayList<SlashCommandBuilder> l = new ArrayList<>();
         for (Method method : methods) {
-            if (method.getName().startsWith("create") && method.getParameterCount() < 1) {
+            if (method.getName().startsWith("create")) {
                 try {
                     System.out.println("Creating command: " + method.getName());
                     SlashCommandBuilder invoke = (SlashCommandBuilder) method.invoke(this);
