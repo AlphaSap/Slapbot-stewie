@@ -2,9 +2,8 @@ package com.fthlbot.discordbotfthl;
 
 import Core.JClash;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
-import com.fthlbot.discordbotfthl.Util.SlashCommandBuilder;
+import com.fthlbot.discordbotfthl.Util.SlashGODClass;
 import com.fthlbot.discordbotfthl.core.Bot;
-import com.fthlbot.discordbotfthl.core.CommandCreation.CommandBuilder;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
@@ -33,9 +32,9 @@ public class DiscordBotFthlApplication {
 
     private Bot bot;
 
-    private final SlashCommandBuilder slashCommandBuilder;
+    private final SlashGODClass slashCommandBuilder;
 
-    public DiscordBotFthlApplication(Environment env, Bot bot, SlashCommandBuilder slashCommandBuilder) {
+    public DiscordBotFthlApplication(Environment env, Bot bot, SlashGODClass slashCommandBuilder) {
         this.env = env;
         this.bot = bot;
         this.slashCommandBuilder = slashCommandBuilder;
@@ -77,11 +76,7 @@ public class DiscordBotFthlApplication {
         bot.Start(api);
 
         slashCommandBuilder.setApi(api);
-        slashCommandBuilder.createForcePush();
-
-//        CommandBuilder commandBuilder = new CommandBuilder();
-//        commandBuilder.setApi(api);
-//        commandBuilder.init();
+        slashCommandBuilder.makeAllCommands();
 
         GeneralService.printMemoryUsage();
         return api;
