@@ -73,13 +73,13 @@ public class DiscordBotFthlApplication {
         //Adding commands to the handle
         api.updateActivity(ActivityType.LISTENING, "Slash commands!");
 
-        bot.Start(api);
 
         slashCommandBuilder.setApi(api);
         slashCommandBuilder.makeAllCommands();
         log.info("made commands?");
 
         GeneralService.printMemoryUsage();
+        bot.Start(api);
         return api;
     }
 }
