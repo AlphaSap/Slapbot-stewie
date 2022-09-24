@@ -77,6 +77,7 @@ public class DiscordBotFthlApplication {
 
         slashCommandBuilder.setApi(api);
         slashCommandBuilder.makeAllCommands();
+        log.info("made commands?");
 
         GeneralService.printMemoryUsage();
         return api;

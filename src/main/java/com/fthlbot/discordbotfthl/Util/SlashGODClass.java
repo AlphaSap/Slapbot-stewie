@@ -3,6 +3,8 @@ package com.fthlbot.discordbotfthl.Util;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.interaction.*;
 import org.javacord.api.util.logging.ExceptionLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
@@ -16,6 +18,8 @@ import static org.javacord.api.interaction.SlashCommandOptionType.*;
 
 @Component
 public class SlashGODClass {
+
+    Logger log = LoggerFactory.getLogger(SlashGODClass.class);
     private DiscordApi api;
 
     private final BotConfig botConfig;
@@ -519,7 +523,7 @@ public class SlashGODClass {
             }
         }
         api.bulkOverwriteGlobalApplicationCommands(l).join();
-        System.out.println("Commands should be done!");
+        log.info("Commands should be done!");
     }
 
     public SlashCommandBuilder createCheckEveryRepJoinedTheServer() {
