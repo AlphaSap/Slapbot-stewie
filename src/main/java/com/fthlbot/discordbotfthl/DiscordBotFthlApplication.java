@@ -11,6 +11,7 @@ import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.interaction.SlashCommandBuilder;
+import org.javacord.api.util.logging.ExceptionLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -59,12 +60,7 @@ public class DiscordBotFthlApplication {
                 .setUserCacheEnabled(true)
                 .setAllIntentsExcept(
                         Intent.GUILD_WEBHOOKS,
-                        Intent.GUILD_INTEGRATIONS,
-                        Intent.DIRECT_MESSAGE_TYPING,
-                        Intent.DIRECT_MESSAGE_REACTIONS,
-                        Intent.DIRECT_MESSAGES,
-                        Intent.DIRECT_MESSAGE_TYPING,
-                        Intent.GUILD_MESSAGE_TYPING
+                        Intent.GUILD_INTEGRATIONS
                 ).login()
                 .join();
 
@@ -80,13 +76,13 @@ public class DiscordBotFthlApplication {
         api.addMessageCreateListener(e -> {
             log.info("Message");
             if (e.getMessageContent().equalsIgnoreCase("!register") && e.getMessageAuthor().isBotOwner()) {
-                slashCommandBuilder.setApi(api);
+                slashCommandBuilder.setApi(e.getApi());
                 slashCommandBuilder.makeAllCommands();
                 e.getChannel().sendMessage(
                         new EmbedBuilder()
                                 .setDescription("Registered commands")
                                 .setColor(Color.green)
-                );
+                ).exceptionally(ExceptionLogger.get());
             }
         });
 
