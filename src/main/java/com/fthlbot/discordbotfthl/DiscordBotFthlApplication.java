@@ -56,7 +56,7 @@ public class DiscordBotFthlApplication {
 
         clash = new JClash(env.getProperty("CLASH_EMAIL"), env.getProperty("CLASH_PASS"));
         DiscordApi api = new DiscordApiBuilder()
-                .setToken("MTAxMTAxMjE1MTkxOTUyMTg0Mw.Gqq2e_.4hzURLZSkjBUml9Zwc6peh8Sz4busF-Si1Fbfo")
+                .setToken(env.getProperty("TOKEN_BOT"))
                 .setUserCacheEnabled(true)
                 .setAllIntentsExcept(
                         Intent.GUILD_WEBHOOKS,
@@ -72,8 +72,17 @@ public class DiscordBotFthlApplication {
         //Adding commands to the handle
         api.updateActivity(ActivityType.LISTENING, "Slash commands!");
 
-        slashCommandBuilder.setApi(api);
-        slashCommandBuilder.makeAllCommands();
+        api.addMessageCreateListener( e -> {
+
+            slashCommandBuilder.setApi(e.getApi());
+            slashCommandBuilder.makeAllCommands();
+
+            e.getChannel().sendMessage(
+                    new EmbedBuilder()
+                            .setDescription("Registered Commands!")
+                            .setColor(Color.green)
+            ).exceptionally(ExceptionLogger.get());
+        });
 
         log.info("I am a new version?");
 
