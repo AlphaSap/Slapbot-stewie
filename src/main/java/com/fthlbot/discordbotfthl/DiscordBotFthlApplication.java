@@ -10,7 +10,6 @@ import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
-import org.javacord.api.interaction.SlashCommandBuilder;
 import org.javacord.api.util.logging.ExceptionLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,14 +73,16 @@ public class DiscordBotFthlApplication {
 
         api.addMessageCreateListener( e -> {
 
-            slashCommandBuilder.setApi(e.getApi());
-            slashCommandBuilder.makeAllCommands();
+            if (e.getMessageContent().equals("!register") && e.getMessageAuthor().isBotOwner()) {
+                slashCommandBuilder.setApi(e.getApi());
+                slashCommandBuilder.makeAllCommands();
 
-            e.getChannel().sendMessage(
-                    new EmbedBuilder()
-                            .setDescription("Registered Commands!")
-                            .setColor(Color.green)
-            ).exceptionally(ExceptionLogger.get());
+                e.getChannel().sendMessage(
+                        new EmbedBuilder()
+                                .setDescription("Registered Commands!")
+                                .setColor(Color.green)
+                ).exceptionally(ExceptionLogger.get());
+            }
         });
 
         log.info("I am a new version?");
