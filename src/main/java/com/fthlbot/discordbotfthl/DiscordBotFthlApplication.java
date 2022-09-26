@@ -78,7 +78,8 @@ public class DiscordBotFthlApplication {
 
         //Register slash commands!
         api.addMessageCreateListener(e -> {
-            if (e.getMessageContent().equals("!register")) {
+            log.info("Message");
+            if (e.getMessageContent().equalsIgnoreCase("!register") && e.getMessageAuthor().isBotOwner()) {
                 slashCommandBuilder.setApi(api);
                 slashCommandBuilder.makeAllCommands();
                 e.getChannel().sendMessage(
