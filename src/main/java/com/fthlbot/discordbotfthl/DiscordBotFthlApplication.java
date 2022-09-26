@@ -72,19 +72,8 @@ public class DiscordBotFthlApplication {
         //Adding commands to the handle
         api.updateActivity(ActivityType.LISTENING, "Slash commands!");
 
-        //Register slash commands!
-        api.addMessageCreateListener(e -> {
-            log.info("Message");
-            if (e.getMessageContent().equalsIgnoreCase("!register") && e.getMessageAuthor().isBotOwner()) {
-                slashCommandBuilder.setApi(e.getApi());
-                slashCommandBuilder.makeAllCommands();
-                e.getChannel().sendMessage(
-                        new EmbedBuilder()
-                                .setDescription("Registered commands")
-                                .setColor(Color.green)
-                ).exceptionally(ExceptionLogger.get());
-            }
-        });
+        slashCommandBuilder.setApi(api);
+        slashCommandBuilder.makeAllCommands();
 
         GeneralService.printMemoryUsage();
         bot.Start(api);
