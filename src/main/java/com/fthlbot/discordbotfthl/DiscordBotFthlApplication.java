@@ -75,6 +75,8 @@ public class DiscordBotFthlApplication {
         slashCommandBuilder.setApi(api);
         slashCommandBuilder.makeAllCommands();
 
+        log.info("I am a new version?");
+
         GeneralService.printMemoryUsage();
         bot.Start(api);
         return api;
