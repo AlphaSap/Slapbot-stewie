@@ -164,4 +164,10 @@ public class TeamService {
         }
         return Pair.of(teamName.toString(), divName.toString());
     }
+
+    public Team editTransaction(Team team, int longToInt) {
+        team.setAllowRosterChangesLeft(longToInt);
+        team = repo.save(team);
+        return team;
+    }
 }

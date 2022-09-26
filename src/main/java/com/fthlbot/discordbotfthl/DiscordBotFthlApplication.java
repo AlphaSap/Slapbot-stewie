@@ -8,7 +8,9 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.intent.Intent;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
+import org.javacord.api.interaction.SlashCommandBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -17,6 +19,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
+import java.awt.*;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.TimeZone;
@@ -52,7 +55,7 @@ public class DiscordBotFthlApplication {
 
         clash = new JClash(env.getProperty("CLASH_EMAIL"), env.getProperty("CLASH_PASS"));
         DiscordApi api = new DiscordApiBuilder()
-                .setToken(env.getProperty("TOKEN_BOT"))
+                .setToken("MTAxMTAxMjE1MTkxOTUyMTg0Mw.Gqq2e_.4hzURLZSkjBUml9Zwc6peh8Sz4busF-Si1Fbfo")
                 .setUserCacheEnabled(true)
                 .setAllIntentsExcept(
                         Intent.GUILD_WEBHOOKS,
@@ -73,6 +76,18 @@ public class DiscordBotFthlApplication {
         //Adding commands to the handle
         api.updateActivity(ActivityType.LISTENING, "Slash commands!");
 
+        //Register slash commands!
+        api.addMessageCreateListener(e -> {
+            if (e.getMessageContent().equals("!register")) {
+                slashCommandBuilder.setApi(api);
+                slashCommandBuilder.makeAllCommands();
+                e.getChannel().sendMessage(
+                        new EmbedBuilder()
+                                .setDescription("Registered commands")
+                                .setColor(Color.green)
+                );
+            }
+        });
 
         GeneralService.printMemoryUsage();
         bot.Start(api);

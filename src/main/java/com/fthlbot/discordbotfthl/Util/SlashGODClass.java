@@ -261,8 +261,8 @@ public class SlashGODClass {
 
     }
 
-    public SlashCommand createChangeClanCommand() {
-        return (SlashCommand) SlashCommand
+    public SlashCommandBuilder createChangeClanCommand() {
+        return SlashCommand
                 .with("change-clan", "staff only command to change clan tag of a team")
                 .setOptions(List.of(
                         SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
@@ -439,10 +439,12 @@ public class SlashGODClass {
                                         SlashCommandOptionChoice.create("Elite", "Elite")
                                 )
                         ),
-                        SlashCommandOption.create(SlashCommandOptionType.STRING,
+                        SlashCommandOption.create(
+                                SlashCommandOptionType.STRING,
                                 "team-identifier",
                                 "Enter the name/alias of the team you want to delete",
-                                true)
+                                true
+                        )
                 ));
     }
 
@@ -507,6 +509,33 @@ public class SlashGODClass {
         return SlashCommand.with("suggestion", "Suggest a new feature");
     }
 
+    public SlashCommandBuilder createEditTransactionCommand() {
+        return SlashCommand.with("edit-transaction", "edit transaction of a team!")
+                .addOption(
+                        SlashCommandOption.createWithChoices(
+                                SlashCommandOptionType.STRING,
+                                "division",
+                                "Enter the division you want to check, it can be found in your negotiation channel topic",
+                                true,
+                                asList(
+                                        SlashCommandOptionChoice.create("f8", "f8"),
+                                        SlashCommandOptionChoice.create("f9", "f9"),
+                                        SlashCommandOptionChoice.create("f10", "f10"),
+                                        SlashCommandOptionChoice.create("f11", "f11"),
+                                        SlashCommandOptionChoice.create("Lite", "Lite"),
+                                        SlashCommandOptionChoice.create("Elite", "Elite")
+                                )
+                        )
+                ).addOption(
+                        SlashCommandOption.create(
+                                SlashCommandOptionType.STRING,
+                                "team-identifier",
+                                "Enter the name/alias of the team you want to delete",
+                                true
+                        )
+                );
+    }
+
     public void makeAllCommands() {
         //Make a Method array
         Method[] methods = this.getClass().getDeclaredMethods();
@@ -514,7 +543,7 @@ public class SlashGODClass {
         for (Method method : methods) {
             if (method.getName().startsWith("create")) {
                 try {
-                    System.out.println("Creating command: " + method.getName());
+                    log.info("Creating command: " + method.getName());
                     SlashCommandBuilder invoke = (SlashCommandBuilder) method.invoke(this);
                     l.add(invoke);
                 } catch (IllegalAccessException | InvocationTargetException e) {

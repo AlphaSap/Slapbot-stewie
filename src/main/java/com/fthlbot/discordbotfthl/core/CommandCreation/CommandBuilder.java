@@ -34,43 +34,6 @@ public class CommandBuilder {
         createCommand();
     }
 
-    private Holder checkCommands() throws IOException {
-        List<SlashCommand> commands = api.getGlobalSlashCommands().join();
-
-        List<SlashCommand> toDelete = new ArrayList<>();
-
-        List<SlashCommand> found = new ArrayList<>();
-
-        for (SlashCommand slashCommand : commands) {
-            if (checkSlashCommandWithYaml(slashCommand)) {
-                found.add(slashCommand);
-            } else {
-                toDelete.add(slashCommand);
-            }
-        }
-        return new Holder(toDelete, found);
-    }
-
-    private void deleteCommands(Holder holder) {
-        for (SlashCommand slashCommand : api.getGlobalSlashCommands().join()) {
-            if (holder.toDelete.contains(slashCommand)) {
-                slashCommand.deleteGlobal();
-            }
-        }
-    }
-
-    public void editCommands(Holder holder) throws IOException {
-        for (SlashCommand slashCommand : holder.found) {
-            if (!holder.found.contains(slashCommand)) {
-                throw new IllegalArgumentException("Command not found [UNREACHABLE]");
-            }
-            for (Command command : getCommands().getCommand()) {
-                if (command.getName().equals(slashCommand.getName())) {
-                    SlashCommandUpdater slashCommandUpdater = slashCommand.createSlashCommandUpdater();
-                }
-            }
-        }
-    }
     private SlashCommandUpdater editSlashCommandToYaml(SlashCommandUpdater slashCommand, Command command) {
         slashCommand.setDescription(command.getDescription());
         slashCommand.setName(command.getName());
@@ -117,16 +80,6 @@ public class CommandBuilder {
             case "UNKNOWN" -> SlashCommandOptionType.UNKNOWN;
             default -> throw new IllegalArgumentException("Invalid option type");
         };
-    }
-
-    class Holder {
-        List<SlashCommand> toDelete;
-        List<SlashCommand> found;
-
-        public Holder(List<SlashCommand> toDelete, List<SlashCommand> found) {
-            this.toDelete = toDelete;
-            this.found = found;
-        }
     }
 
     private boolean checkSlashCommandWithYaml(SlashCommand slashCommand) throws IOException {
