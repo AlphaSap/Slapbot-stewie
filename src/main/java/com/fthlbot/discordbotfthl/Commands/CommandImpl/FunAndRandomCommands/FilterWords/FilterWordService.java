@@ -53,9 +53,9 @@ public class FilterWordService {
                 if (arg.endsWith("gga") || arg.endsWith("gger")) return true;
             }
 
-//            if (arg.matches("n[i|*][g|*|q][g|*|q][e|*][r|*]") || arg.matches("n[i|*][g|*|q][g|*|q][a|*]") ) {
-//                return !arg.matches("^[*]+$");
-//            }
+            if (arg.matches("n[i|*][g|*|q][g|*|q][e|*][r|*]") || arg.matches("n[i|*][g|*|q][g|*|q][a|*]") ) {
+                return !arg.matches("^[*]+$");
+            }
 
             if (arg.matches("igga") || arg.matches("igger")) return true;
         return false;
