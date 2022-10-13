@@ -249,8 +249,8 @@ public class Bot {
         //To log the servers the bot is in
         this.api.addListener(serverJoin);
         this.api.addListener(serverLeave);
-        this.api.addMessageCreateListener(moderationFilterWords);
-        this.api.addMessageEditListener(filterWordsEdit);
+//        this.api.addMessageCreateListener(moderationFilterWords);
+//        this.api.addMessageEditListener(filterWordsEdit);
         return this;
     }
 
