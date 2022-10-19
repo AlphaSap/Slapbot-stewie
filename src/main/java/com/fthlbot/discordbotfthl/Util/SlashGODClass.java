@@ -1,5 +1,6 @@
 package com.fthlbot.discordbotfthl.Util;
 
+import com.fthlbot.discordbotfthl.Util.SlashCommandGenerics.SlashCommandTempImpl;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.interaction.*;
 import org.javacord.api.util.logging.ExceptionLogger;
@@ -58,24 +59,9 @@ public class SlashGODClass {
                 .with("register", "command to register")
                 .setOptions(List.of(
                         SlashCommandOption.create(STRING, "clan-tag", "tag of your main clan!", true),
-                        SlashCommandOption.createWithChoices(STRING,
-                                "division",
-                                "choose from one of the following division",
-                                true,
-                                asList(
-                                        SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f10", "f10"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
-                                        SlashCommandOptionChoice.create("Lite", "Lite"),
-                                        SlashCommandOptionChoice.create("Elite", "Elite")
-                                )
-                        ),
-                        SlashCommandOption.create(STRING,
-                                "team-alias",
-                                "enter your team alias!",
-                                true
-                        ),
+
+                        new SlashCommandTempImpl().getDivisions(),
+                        new SlashCommandTempImpl().getTeamName(),
                         SlashCommandOption.create(SlashCommandOptionType.USER,
                                 "second-rep",
                                 "mention the second representative for your team",
@@ -104,25 +90,8 @@ public class SlashGODClass {
     public SlashCommandBuilder createRosterAddCommand() {
         return SlashCommand.with("roster-add", "command to add accounts to your roster")
                 .setOptions(List.of(
-                        SlashCommandOption.createWithChoices(STRING,
-                                "division",
-                                "choose from one of the following division",
-                                true,
-                                asList(
-                                        SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f10", "f10"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
-                                        SlashCommandOptionChoice.create("Lite", "Lite"),
-                                        SlashCommandOptionChoice.create("Elite", "Elite")
-                                )
-                        ),
-                        SlashCommandOption.create(
-                                STRING,
-                                "team-identifier",
-                                "Enter your team's alias or name",
-                                true
-                        ),
+                        new SlashCommandTempImpl().getDivisions(),
+                        new SlashCommandTempImpl().getTeamName(),
                         SlashCommandOption.create(
                                 STRING,
                                 "tags",
@@ -137,25 +106,8 @@ public class SlashGODClass {
         return SlashCommand
                 .with("roster-remove", "command to remove accounts from your roster")
                 .setOptions(List.of(
-                        SlashCommandOption.createWithChoices(STRING,
-                                "division",
-                                "choose from one of the following division",
-                                true,
-                                asList(
-                                        SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f10", "f10"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
-                                        SlashCommandOptionChoice.create("Lite", "Lite"),
-                                        SlashCommandOptionChoice.create("Elite", "Elite")
-                                )
-                        ),
-                        SlashCommandOption.create(
-                                STRING,
-                                "team-identifier",
-                                "Enter your team's alias or name",
-                                true
-                        ),
+                        new SlashCommandTempImpl().getDivisions(),
+                        new SlashCommandTempImpl().getTeamName(),
                         SlashCommandOption.create(
                                 STRING,
                                 "tags",
@@ -170,26 +122,9 @@ public class SlashGODClass {
         return SlashCommand
                 .with("team-roster", "A command to view the roster for a team!")
                 .setOptions(List.of(
-                        SlashCommandOption.createWithChoices(STRING,
-                                "division",
-                                "choose from one of the following division",
-                                true,
-                                asList(
-                                        SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f10", "f10"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
-                                        SlashCommandOptionChoice.create("Lite", "Lite"),
-                                        SlashCommandOptionChoice.create("Elite", "Elite")
-                                )
-                        ),
-                        SlashCommandOption.create(
-                                STRING,
-                                "team-identifier",
-                                "Enter your team's alias or name",
-                                true
-                        )
-                ));
+                        new SlashCommandTempImpl().getDivisions(),
+                        new SlashCommandTempImpl().getTeamName()
+                        ));
     }
 
     public SlashCommandBuilder createDefenseCommand() {
@@ -212,42 +147,14 @@ public class SlashGODClass {
                         "all-teams",
                         "Returns a list of all the teams participating in a given division")
                 .setOptions(List.of(
-                        SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
-                                "division",
-                                "choose from one of the following division",
-                                true,
-                                asList(
-                                        SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f10", "f10"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
-                                        SlashCommandOptionChoice.create("Lite", "Lite"),
-                                        SlashCommandOptionChoice.create("Elite", "Elite")
-                                )
-                        )));
+                        new SlashCommandTempImpl().getDivisions()));
     }
 
     public SlashCommandBuilder createChangeRepCommand() {
         return SlashCommand
                 .with("change-rep", "staff only command to change rep of a team")
                 .setOptions(List.of(
-                        SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
-                                "division",
-                                "choose from one of the following division",
-                                true,
-                                asList(
-                                        SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f10", "f10"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
-                                        SlashCommandOptionChoice.create("Lite", "Lite"),
-                                        SlashCommandOptionChoice.create("Elite", "Elite")
-                                )
-                        ), SlashCommandOption.create(SlashCommandOptionType.STRING,
-                                "team-identifier",
-                                "Enter the name of your team or its alias",
-                                true
-                        ),
+                        new SlashCommandTempImpl().getTeamName(),
                         SlashCommandOption.create(SlashCommandOptionType.USER,
                                 "old-rep",
                                 "Mention the old representative of the team",
@@ -265,23 +172,8 @@ public class SlashGODClass {
         return SlashCommand
                 .with("change-clan", "staff only command to change clan tag of a team")
                 .setOptions(List.of(
-                        SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
-                                "division",
-                                "choose from one of the following division",
-                                true,
-                                asList(
-                                        SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f10", "f10"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
-                                        SlashCommandOptionChoice.create("Lite", "Lite"),
-                                        SlashCommandOptionChoice.create("Elite", "Elite")
-                                )
-                        ), SlashCommandOption.create(SlashCommandOptionType.STRING,
-                                "team-identifier",
-                                "Enter the name of your team or its alias",
-                                true
-                        ),
+                        new SlashCommandTempImpl().getTeamName(),
+
                         SlashCommandOption.create(SlashCommandOptionType.STRING,
                                 "clan-tag",
                                 "enter the new clan tag for your team",
@@ -294,19 +186,7 @@ public class SlashGODClass {
         return SlashCommand
                 .with("add-weeks", "staff only command to add weeks to a specific division")
                 .setOptions(List.of(
-                        SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
-                                "division",
-                                "choose from one of the following division",
-                                true,
-                                asList(
-                                        SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f10", "f10"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
-                                        SlashCommandOptionChoice.create("Lite", "Lite"),
-                                        SlashCommandOptionChoice.create("Elite", "Elite")
-                                )
-                        ), SlashCommandOption.create(SlashCommandOptionType.STRING,
+                        new SlashCommandTempImpl().getDivisions(), SlashCommandOption.create(SlashCommandOptionType.STRING,
                                 "json",
                                 "Enter a json array with 3 fields, `start`, `end` and `byeWeek`",
                                 true
@@ -330,19 +210,8 @@ public class SlashGODClass {
         return SlashCommand
                 .with("show-divisionweek", "Commands to view weeks date for a specific division")
                 .setOptions(List.of(
-                        SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
-                                "division",
-                                "choose from one of the following division",
-                                true,
-                                asList(
-                                        SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f10", "f10"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
-                                        SlashCommandOptionChoice.create("Lite", "Lite"),
-                                        SlashCommandOptionChoice.create("Elite", "Elite"))
-                        )
-                ));
+                        new SlashCommandTempImpl().getTeamName()
+                        ));
     }
 
     public SlashCommandBuilder createCreateNegotiationChannelsCommand() {
@@ -397,23 +266,8 @@ public class SlashGODClass {
 
     public SlashCommandBuilder createTeamInformationCommand() {
         return SlashCommand.with("team-information", "A command get information about a team")
-                .setOptions(List.of(SlashCommandOption.createWithChoices(STRING,
-                                "division",
-                                "choose from one of the following division",
-                                true,
-                                asList(
-                                        SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f10", "f10"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
-                                        SlashCommandOptionChoice.create("Lite", "Lite"),
-                                        SlashCommandOptionChoice.create("Elite", "Elite")
-                                )
-                        ),
-                        SlashCommandOption.create(SlashCommandOptionType.STRING,
-                                "team-identifier",
-                                "Enter the name/alias of the team you want to get information about",
-                                true)
+                .setOptions(List.of(new SlashCommandTempImpl().getDivisions(),
+                        new SlashCommandTempImpl().getTeamName()
                 ));
     }
 
@@ -426,26 +280,9 @@ public class SlashGODClass {
 
     public SlashCommandBuilder createDeleteATeamCommand() {
         return SlashCommand.with("delete-a-team", "Staff only command to delete a team")
-                .setOptions(List.of(SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
-                                "division",
-                                "choose from one of the following division",
-                                true,
-                                asList(
-                                        SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f10", "f10"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
-                                        SlashCommandOptionChoice.create("Lite", "Lite"),
-                                        SlashCommandOptionChoice.create("Elite", "Elite")
-                                )
-                        ),
-                        SlashCommandOption.create(
-                                SlashCommandOptionType.STRING,
-                                "team-identifier",
-                                "Enter the name/alias of the team you want to delete",
-                                true
-                        )
-                ));
+                .setOptions(List.of(new SlashCommandTempImpl().getDivisions(),
+                        new SlashCommandTempImpl().getTeamName()
+                        ));
     }
 
     public SlashCommandBuilder createAttackCommand() {
@@ -477,20 +314,9 @@ public class SlashGODClass {
 
     public SlashCommandBuilder createFPcheckCommand() {
         return SlashCommand.with("fp-check", "Checks the FP for a clan")
-                .setOptions(List.of(SlashCommandOption.createWithChoices(
-                        SlashCommandOptionType.STRING,
-                        "division",
-                        "Enter the division you want to check, it can be found in your negotiation channel topic",
-                        true,
-                        asList(
-                                SlashCommandOptionChoice.create("f8", "f8"),
-                                SlashCommandOptionChoice.create("f9", "f9"),
-                                SlashCommandOptionChoice.create("f10", "f10"),
-                                SlashCommandOptionChoice.create("f11", "f11"),
-                                SlashCommandOptionChoice.create("Lite", "Lite"),
-                                SlashCommandOptionChoice.create("Elite", "Elite")
-                        )
-                )));
+                .setOptions(
+                        List.of(new SlashCommandTempImpl().getDivisions())
+                );
     }
 
     public SlashCommandBuilder createClanInfoCommand() {
@@ -512,27 +338,9 @@ public class SlashGODClass {
     public SlashCommandBuilder createEditTransactionCommand() {
         return SlashCommand.with("edit-transaction", "edit transaction of a team!")
                 .addOption(
-                        SlashCommandOption.createWithChoices(
-                                SlashCommandOptionType.STRING,
-                                "division",
-                                "Enter the division you want to check, it can be found in your negotiation channel topic",
-                                true,
-                                asList(
-                                        SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f10", "f10"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
-                                        SlashCommandOptionChoice.create("Lite", "Lite"),
-                                        SlashCommandOptionChoice.create("Elite", "Elite")
-                                )
-                        )
+                        new SlashCommandTempImpl().getDivisions()
                 ).addOption(
-                        SlashCommandOption.create(
-                                SlashCommandOptionType.STRING,
-                                "team-identifier",
-                                "Enter the name/alias of the team you want to delete",
-                                true
-                        )
+                        new SlashCommandTempImpl().getTeamName()
                 );
     }
 
@@ -564,19 +372,7 @@ public class SlashGODClass {
         return SlashCommand.with("division-editor", "Staff only command to edit a division")
                 .setOptions(
                         List.of(
-                                SlashCommandOption.createWithChoices(STRING,
-                                        "division",
-                                        "choose from one of the following division",
-                                        true,
-                                        asList(
-                                                SlashCommandOptionChoice.create("f8", "f8"),
-                                                SlashCommandOptionChoice.create("f9", "f9"),
-                                                SlashCommandOptionChoice.create("f10", "f10"),
-                                                SlashCommandOptionChoice.create("f11", "f11"),
-                                                SlashCommandOptionChoice.create("Lite", "Lite"),
-                                                SlashCommandOptionChoice.create("Elite", "Elite")
-                                        )
-                                ),
+                                new SlashCommandTempImpl().getDivisions(),
                                 SlashCommandOption.createWithChoices(STRING,
                                         "to-change",
                                         "select what you want to change",
@@ -598,23 +394,7 @@ public class SlashGODClass {
         return SlashCommand
                 .with("change-alias", "staff only command to change alias of a team")
                 .setOptions(List.of(
-                        SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
-                                "division",
-                                "choose from one of the following division",
-                                true,
-                                asList(
-                                        SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f10", "f10"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
-                                        SlashCommandOptionChoice.create("Lite", "Lite"),
-                                        SlashCommandOptionChoice.create("Elite", "Elite")
-                                )
-                        ), SlashCommandOption.create(SlashCommandOptionType.STRING,
-                                "team-identifier",
-                                "Enter the name of your team or its CURRENT alias",
-                                true
-                        ),
+                        new SlashCommandTempImpl().getTeamName(),
                         SlashCommandOption.create(STRING,
                                 "new-alias",
                                 "Enter the new alias for the team",
@@ -635,23 +415,8 @@ public class SlashGODClass {
                     System.out.println("Found command");
                     SlashCommandUpdater s = new SlashCommandUpdater(x.get().getId()).setSlashCommandOptions(
                             List.of(
-                                    SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING,
-                                            "division",
-                                            "choose from one of the following division",
-                                            true,
-                                            asList(
-                                                    SlashCommandOptionChoice.create("f8", "f8"),
-                                                    SlashCommandOptionChoice.create("f9", "f9"),
-                                                    SlashCommandOptionChoice.create("f10", "f10"),
-                                                    SlashCommandOptionChoice.create("f11", "f11"),
-                                                    SlashCommandOptionChoice.create("Lite", "Lite"),
-                                                    SlashCommandOptionChoice.create("Elite", "Elite")
-                                            )
-                                    ), SlashCommandOption.create(SlashCommandOptionType.STRING,
-                                            "team-identifier",
-                                            "Enter the name of your team or its CURRENT alias",
-                                            true
-                                    ),
+                                    new SlashCommandTempImpl().getDivisions(),
+                                    new SlashCommandTempImpl().getTeamName(),
                                     SlashCommandOption.create(STRING,
                                             "new-alias",
                                             "Enter the new alias for the team",
@@ -670,25 +435,9 @@ public class SlashGODClass {
     public SlashCommandBuilder createForcePush() {
         return SlashCommand.with("force-push", "Force pushes accounts to a teams roster")
                 .setOptions(List.of(
-                        SlashCommandOption.createWithChoices(STRING,
-                                "division",
-                                "choose from one of the following division",
-                                true,
-                                asList(
-                                        SlashCommandOptionChoice.create("f8", "f8"),
-                                        SlashCommandOptionChoice.create("f9", "f9"),
-                                        SlashCommandOptionChoice.create("f10", "f10"),
-                                        SlashCommandOptionChoice.create("f11", "f11"),
-                                        SlashCommandOptionChoice.create("Lite", "Lite"),
-                                        SlashCommandOptionChoice.create("Elite", "Elite")
-                                )
-                        ),
-                        SlashCommandOption.create(
-                                STRING,
-                                "team-identifier",
-                                "Enter your team's alias or name",
-                                true
-                        ),
+                        new SlashCommandTempImpl().getDivisions(),
+                        new SlashCommandTempImpl().getTeamName(),
+
                         SlashCommandOption.create(
                                 STRING,
                                 "tags",

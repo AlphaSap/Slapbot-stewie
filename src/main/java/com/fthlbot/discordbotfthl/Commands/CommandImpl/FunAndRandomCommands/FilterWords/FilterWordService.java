@@ -57,8 +57,7 @@ public class FilterWordService {
                 return !arg.matches("^[*]+$");
             }
 
-            if (arg.matches("igga") || arg.matches("igger")) return true;
-        return false;
+        return arg.matches("igga") || arg.matches("igger");
     }
 
     private static String[] getSplit(String text) {
