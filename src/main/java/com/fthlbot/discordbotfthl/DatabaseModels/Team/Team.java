@@ -3,6 +3,7 @@ package com.fthlbot.discordbotfthl.DatabaseModels.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 
 import javax.persistence.*;
+import java.util.Optional;
 
 @Table
 @Entity
@@ -21,7 +22,18 @@ public class Team {
     private Long rep2ID;
     private Integer allowRosterChangesLeft;
 
-    public Team(Integer ID, String name, String tag, String alias, Division division, Long rep1ID, Long rep2ID, Integer allowRosterChangesLeft) {
+    @Column(nullable = true)
+    private Long registrationChannelID;
+
+    public Team(Integer ID,
+                String name,
+                String tag,
+                String alias,
+                Division division,
+                Long rep1ID,
+                Long rep2ID,
+                Integer allowRosterChangesLeft
+    ) {
         this.ID = ID;
         this.name = name;
         this.tag = tag;
@@ -30,9 +42,17 @@ public class Team {
         this.rep1ID = rep1ID;
         this.rep2ID = rep2ID;
         this.allowRosterChangesLeft = allowRosterChangesLeft;
+        this.registrationChannelID = null;
     }
 
-    public Team(String name, String tag, String alias, Division division, Long rep1ID, Long rep2ID, Integer allowRosterChangesLeft) {
+    public Team(String name,
+                String tag,
+                String alias,
+                Division division,
+                Long rep1ID,
+                Long rep2ID,
+                Integer allowRosterChangesLeft
+    ) {
         this.name = name;
         this.tag = tag;
         this.alias = alias;
@@ -40,6 +60,7 @@ public class Team {
         this.rep1ID = rep1ID;
         this.rep2ID = rep2ID;
         this.allowRosterChangesLeft = allowRosterChangesLeft;
+        this.registrationChannelID = null;
     }
 
     public Team() {
@@ -107,5 +128,18 @@ public class Team {
 
     public void setAllowRosterChangesLeft(Integer allowRosterChangesLeft) {
         this.allowRosterChangesLeft = allowRosterChangesLeft;
+    }
+
+    public Optional<Long> getRegistrationChannelID() {
+        return Optional.ofNullable(registrationChannelID);
+    }
+
+
+    /***
+     * Must set this parameter after creating the Teams object, and not before
+     * @param registrationChannelID - ID of the private registration channel the user will have for his team!
+     */
+    public void setRegistrationChannelID(Long registrationChannelID) {
+        this.registrationChannelID = registrationChannelID;
     }
 }

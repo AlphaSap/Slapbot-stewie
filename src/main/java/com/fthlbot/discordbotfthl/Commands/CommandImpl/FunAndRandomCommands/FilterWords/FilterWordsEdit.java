@@ -25,8 +25,7 @@ public class FilterWordsEdit implements MessageEditListener {
     @Override
     public void onMessageEdit(MessageEditEvent event) {
 
-        Optional<MessageAuthor> messageAuthor = event.getMessageAuthor();
-        if (messageAuthor.isEmpty()) return;
+        Optional<MessageAuthor> messageAuthor = Optional.of(event.getMessageAuthor());
 
         if (!messageAuthor.get().isRegularUser()) return;
 
@@ -34,7 +33,7 @@ public class FilterWordsEdit implements MessageEditListener {
 
         if (event.getServer().get().getId() != botConfig.getFthlServerID()) return;
 
-        if (filterWordService.checkMessage(event.getNewContent())) {
+        if (filterWordService.checkMessage(event.getMessageContent())) {
             filterWordService.timeOutUser(event.getApi(), messageAuthor.get().asUser().get(), event.getServer().get());
             event.deleteMessage();
         }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -359,7 +360,7 @@ public class SlashGODClass {
                 }
             }
         }
-        api.bulkOverwriteGlobalApplicationCommands(l).join();
+        api.bulkOverwriteGlobalApplicationCommands(new HashSet<>(l)).join();
         log.info("Commands should be done!");
     }
 

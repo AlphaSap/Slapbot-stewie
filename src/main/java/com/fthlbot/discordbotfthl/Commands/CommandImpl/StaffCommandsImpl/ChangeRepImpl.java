@@ -1,18 +1,24 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl;
 
-import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
-import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.CommandException.ChangeRepCommandException;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.CommandException.CommandException;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.StaffCommandListener.ChangeRepListener;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
-import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;
-import com.fthlbot.discordbotfthl.DatabaseModels.Exception.NotTheRepException;
+import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
+import org.javacord.api.DiscordApi;
+import org.javacord.api.entity.channel.ServerChannel;
+import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
+import org.javacord.api.entity.permission.PermissionType;
+import org.javacord.api.entity.permission.PermissionsBuilder;
+import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
@@ -23,6 +29,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Invoker(
@@ -55,31 +64,20 @@ public class ChangeRepImpl implements ChangeRepListener {
         User oldRep = slashCommandInteraction.getArguments().get(2).getUserValue().get();
         User newRep = slashCommandInteraction.getArguments().get(3).getUserValue().get();
         Division division = null;
+        Team team = null;
+        List<EmbedBuilder> emb = new ArrayList<>();
         try {
             division = divisionService.getDivisionByAlias(divAlias);
-            log.info(division.getName());
-        } catch (EntityNotFoundException e) {
-            GeneralService.leagueSlashErrorMessage(respondLater, e);
-            e.printStackTrace();
-            return;
-        }
-        Team team = null;
-        try {
-             team = teamService.getTeamByDivisionAndAlias(teamAlias, division);
-             log.info(team.getName());
-        } catch (EntityNotFoundException e) {
-            GeneralService.leagueSlashErrorMessage(respondLater, e);
-            e.printStackTrace();
-            return;
-        }
-        try {
+            team = teamService.getTeamByDivisionAndAlias(teamAlias, division);
             team = teamService.changeRep(newRep, oldRep, team);
-            log.info(team.getRep1ID() + "");
-            log.info(team.getRep2ID()+  "");
-        } catch (LeagueException e) {
+            changeChannelPermissionAndAddUser(team, newRep, event.getApi());
+        } catch (CommandException e) {
+            emb.add(GeneralService.warnSlashErrorMessageAsEmbed(e));
+        }catch (LeagueException e) {
             GeneralService.leagueSlashErrorMessage(respondLater, e);
             return;
         }
+
 
         EmbedBuilder embedBuilder = new EmbedBuilder()
                 .setTitle("Rep change successfully executed!<:check:934403622043783228>")
@@ -91,10 +89,68 @@ public class ChangeRepImpl implements ChangeRepListener {
                 .setTimestampToNow()
                 .setColor(Color.CYAN)
                 .setAuthor(user);
+
         respondLater.thenAccept(res -> {
-            res.addEmbed(embedBuilder).update();
+            res.addEmbed(embedBuilder);
+
+            for (EmbedBuilder builder : emb) {
+                res.addEmbed(builder);
+            }
+            res.update();
         }).exceptionally(ExceptionLogger.get());
     }
 
+    private void changeChannelPermissionAndAddUser(Team team, User newRep, DiscordApi api) throws ChangeRepCommandException {
+        Optional<Server> appServerOpt = api.getServerById(config.getApplicantServerID());
+        if (appServerOpt.isEmpty()){
+            throw new ChangeRepCommandException(
+                    """
+                    Applicant Server is not avaliabe to the Bot.
+                    """
+            );
+        }
+        Server appServer = appServerOpt.get();
 
+        boolean member = appServer.isMember(newRep);
+        if (!member) {
+            throw new ChangeRepCommandException(
+                    """
+                    %s is not present in the application server!
+                    """.formatted(newRep.getDiscriminatedName())
+            );
+        }
+        if (team.getRegistrationChannelID().isEmpty()){
+            throw new ChangeRepCommandException(
+                    """
+                    Unable to find the registration channel ID %s, a Staff member has to manually add the new rep to their application channel!
+                    """.formatted(team.getName())
+            );
+        }
+
+        Optional<ServerChannel> channelById = appServer.getChannelById(team.getRegistrationChannelID().get());
+        if (channelById.isEmpty()) {
+            throw new ChangeRepCommandException(
+                    """
+                    Channel with the ID %d not found!
+                    """.formatted(team.getRegistrationChannelID().get())
+            );
+        }
+
+        Optional<ServerTextChannel> textChannel = channelById.get().asServerTextChannel();
+        if (textChannel.isEmpty()) {
+            throw new ChangeRepCommandException(
+                    """
+                    Channel with the ID %d is not a Text channel.
+                    """.formatted(team.getRegistrationChannelID().get())
+            );
+        }
+
+        boolean b = textChannel.get().hasPermissions(newRep, PermissionType.VIEW_CHANNEL, PermissionType.SEND_MESSAGES);
+        if (b) {
+            return;
+        }
+        PermissionsBuilder rep = new PermissionsBuilder().setAllowed(PermissionType.VIEW_CHANNEL, PermissionType.SEND_MESSAGES);
+
+        textChannel.get().createUpdater().addPermissionOverwrite(newRep, rep.build());
+    }
 }

@@ -1,5 +1,6 @@
 package com.fthlbot.discordbotfthl.Util;
 
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.CommandException.CommandException;
 import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
@@ -231,5 +232,13 @@ public class GeneralService {
         log.info("Max Memory: " + maxMemory);
         log.info("Allocated Memory: " + allocatedMemory);
         log.info("Free Memory: " + freeMemory);
+    }
+
+    public static EmbedBuilder warnSlashErrorMessageAsEmbed(CommandException e) {
+        return new EmbedBuilder()
+                .setColor(Color.yellow)
+                .setTitle("Warning! ⚠")
+                .setDescription(e.getMessage())
+                .setTimestampToNow();
     }
 }

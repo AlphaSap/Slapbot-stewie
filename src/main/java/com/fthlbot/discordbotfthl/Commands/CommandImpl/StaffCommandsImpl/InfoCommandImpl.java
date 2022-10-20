@@ -40,7 +40,7 @@ public class InfoCommandImpl implements Command {
                 .addInlineField("Discord Wrapper", "Javacord")
                 .addInlineField("Library Version", "3.5.0")
                 .addInlineField("Bot Version", "2.0.0")
-                .addInlineField("Bot Author", event.getApi().getOwner().join().getDiscriminatedName())
+                .addInlineField("Bot Author", event.getApi().getOwner().get().join().getDiscriminatedName())
                 .addInlineField("Teams Registered in FTHL", teamService.getAllTeams().size()+  "")
                 .setColor(Color.GREEN)
                 .setFooter("FTHL Bot", event.getApi().getYourself().getAvatar())
