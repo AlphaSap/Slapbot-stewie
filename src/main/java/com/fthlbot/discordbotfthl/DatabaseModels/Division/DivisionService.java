@@ -25,11 +25,11 @@ public class DivisionService {
     public void createDivisions(){
         List<Division> divisions = List.of(
                 //new Division("FORGOTTEN 8", "F8", 30, 15, new Integer[]{8}),
-                new Division("FORGOTTEN 9", "F9", 30, 15, new Integer[]{9}),
-                new Division("FORGOTTEN 10", "F10", 30, 15, new Integer[]{10}),
+                new Division("FORGOTTEN 9", "F9", 40, 20, new Integer[]{9}),
+                new Division("FORGOTTEN 10", "F10", 40, 20, new Integer[]{10}),
                 //new Division("FORGOTTEN 11", "F11", 20, 10, new Integer[]{11}),
-                new Division("Lite", "Lite", 30, 15, new Integer[]{5, 6, 7}),
-                new Division("Elite", "Elite", 40, 20, new Integer[]{11, 10, 9, 8})
+                new Division("Lite", "Lite", 45, 20, new Integer[]{5, 6, 7, 8}),
+                new Division("Elite", "Elite", 55, 25, new Integer[]{12, 11, 10, 9})
         );
         repo.deleteAll();
         repo.saveAll(divisions);
