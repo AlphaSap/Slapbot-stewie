@@ -87,7 +87,8 @@ public class RegistrationImpl implements RegistrationListener {
         CompletableFuture<InteractionOriginalResponseUpdater> respond = slashCommandInteraction.respondLater();
 
         //check if today is between league start date and registration start date from config
-        if (!isRegistrationOpen() && !event.getSlashCommandInteraction().getUser().isBotOwner()) {
+        if (!isRegistrationOpen()) {
+            //TODO: check if the person trying to register is a staff
             respond.thenAccept(res -> res.setContent("Registration is closed").update());
             return;
         }
