@@ -1,7 +1,6 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl;
 
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.CommandException.ChangeRepCommandException;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.CommandException.CommandException;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.StaffCommandListener.ChangeRepListener;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
@@ -29,8 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -65,15 +62,14 @@ public class ChangeRepImpl implements ChangeRepListener {
         User newRep = slashCommandInteraction.getArguments().get(3).getUserValue().get();
         Division division = null;
         Team team = null;
-        List<EmbedBuilder> emb = new ArrayList<>();
         try {
             division = divisionService.getDivisionByAlias(divAlias);
             team = teamService.getTeamByDivisionAndAlias(teamAlias, division);
             team = teamService.changeRep(newRep, oldRep, team);
-            changeChannelPermissionAndAddUser(team, newRep, event.getApi());
-        } catch (CommandException e) {
-            e.printStackTrace();
-            emb.add(GeneralService.warnSlashErrorMessageAsEmbed(e));
+            //changeChannelPermissionAndAddUser(team, newRep, event.getApi());
+//        } catch (CommandException e) {
+//            e.printStackTrace();
+//            emb.add(GeneralService.warnSlashErrorMessageAsEmbed(e));
         }catch (LeagueException e) {
             e.printStackTrace();
             GeneralService.leagueSlashErrorMessage(respondLater, e);
@@ -99,10 +95,6 @@ public class ChangeRepImpl implements ChangeRepListener {
         respondLater.thenAccept(res -> {
             res.addEmbed(embedBuilder).update();
 
-            for (EmbedBuilder builder : emb) {
-                event.getSlashCommandInteraction().createFollowupMessageBuilder()
-                        .addEmbed(builder).send();
-            }
         }).exceptionally(ExceptionLogger.get());
     }
 
