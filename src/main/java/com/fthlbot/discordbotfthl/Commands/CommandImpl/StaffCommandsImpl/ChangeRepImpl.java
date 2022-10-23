@@ -72,9 +72,15 @@ public class ChangeRepImpl implements ChangeRepListener {
             team = teamService.changeRep(newRep, oldRep, team);
             changeChannelPermissionAndAddUser(team, newRep, event.getApi());
         } catch (CommandException e) {
+            e.printStackTrace();
             emb.add(GeneralService.warnSlashErrorMessageAsEmbed(e));
         }catch (LeagueException e) {
+            e.printStackTrace();
             GeneralService.leagueSlashErrorMessage(respondLater, e);
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            GeneralService.leagueSlashErrorMessage(respondLater, e.getMessage());
             return;
         }
 
@@ -91,16 +97,17 @@ public class ChangeRepImpl implements ChangeRepListener {
                 .setAuthor(user);
 
         respondLater.thenAccept(res -> {
-            res.addEmbed(embedBuilder);
+            res.addEmbed(embedBuilder).update();
 
             for (EmbedBuilder builder : emb) {
-                res.addEmbed(builder);
+                event.getSlashCommandInteraction().createFollowupMessageBuilder()
+                        .addEmbed(builder).send();
             }
-            res.update();
         }).exceptionally(ExceptionLogger.get());
     }
 
     private void changeChannelPermissionAndAddUser(Team team, User newRep, DiscordApi api) throws ChangeRepCommandException {
+
         Optional<Server> appServerOpt = api.getServerById(config.getApplicantServerID());
         if (appServerOpt.isEmpty()){
             throw new ChangeRepCommandException(
@@ -119,6 +126,9 @@ public class ChangeRepImpl implements ChangeRepListener {
                     """.formatted(newRep.getDiscriminatedName())
             );
         }
+        boolean admin = appServer.isAdmin(newRep);
+        if (admin) return; // return if the person has admin, they will naturally will be able to see the channel and no need to ping
+
         if (team.getRegistrationChannelID().isEmpty()){
             throw new ChangeRepCommandException(
                     """
@@ -145,7 +155,7 @@ public class ChangeRepImpl implements ChangeRepListener {
             );
         }
 
-        boolean b = textChannel.get().hasPermissions(newRep, PermissionType.VIEW_CHANNEL, PermissionType.SEND_MESSAGES);
+        boolean b = textChannel.get().hasPermissions(newRep, PermissionType.VIEW_CHANNEL);
         if (b) {
             return;
         }

@@ -48,7 +48,9 @@ public class ImageGenCommandImpl implements Command {
         URL profile = getClass().getResource("/snitch/profile.png");
         URL avatar = user.getAvatar().getUrl();
 
+        assert background != null;
         BufferedImage image = ImageIO.read(background);
+        assert profile != null;
         BufferedImage profileImage = ImageIO.read(profile);
         BufferedImage avatarImage = ImageIO.read(avatar);
 

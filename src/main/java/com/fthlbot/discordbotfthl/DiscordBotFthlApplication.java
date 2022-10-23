@@ -85,8 +85,6 @@ public class DiscordBotFthlApplication {
             }
         });
 
-        log.info("I am a new version?");
-
         GeneralService.printMemoryUsage();
         bot.Start(api);
         return api;
