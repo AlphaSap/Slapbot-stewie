@@ -23,6 +23,7 @@ import java.awt.*;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.TimeZone;
+import java.util.concurrent.CompletableFuture;
 
 @SpringBootApplication
 public class DiscordBotFthlApplication {
@@ -71,17 +72,20 @@ public class DiscordBotFthlApplication {
         //Adding commands to the handle
         api.updateActivity(ActivityType.LISTENING, "Slash commands!");
 
-        api.addMessageCreateListener( e -> {
+        api.addMessageCreateListener(e -> {
 
             if (e.getMessageContent().equals("!register") && e.getMessageAuthor().isBotOwner()) {
-                slashCommandBuilder.setApi(e.getApi());
-                slashCommandBuilder.makeAllCommands();
+                CompletableFuture.runAsync(() -> {
 
-                e.getChannel().sendMessage(
-                        new EmbedBuilder()
-                                .setDescription("Registered Commands!")
-                                .setColor(Color.green)
-                ).exceptionally(ExceptionLogger.get());
+                    slashCommandBuilder.setApi(e.getApi());
+                    slashCommandBuilder.makeAllCommands();
+
+                    e.getChannel().sendMessage(
+                            new EmbedBuilder()
+                                    .setDescription("Registered Commands!")
+                                    .setColor(Color.green)
+                    ).exceptionally(ExceptionLogger.get());
+                });
             }
         });
 
