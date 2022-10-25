@@ -14,6 +14,8 @@ import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.javacord.api.listener.interaction.SlashCommandCreateListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.time.LocalDateTime;
@@ -24,6 +26,8 @@ public class CommandListener implements SlashCommandCreateListener {
     private final MessageHolder messageHolder;
     private final CommandLoggerService service;
     private final BotConfig config;
+
+    private final Logger log = LoggerFactory.getLogger(CommandListener.class);
 
     public CommandListener(MessageHolder messageHolder, CommandLoggerService service, BotConfig config) {
         this.messageHolder = messageHolder;

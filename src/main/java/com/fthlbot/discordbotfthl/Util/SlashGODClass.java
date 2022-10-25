@@ -155,6 +155,7 @@ public class SlashGODClass {
         return SlashCommand
                 .with("change-rep", "staff only command to change rep of a team")
                 .setOptions(List.of(
+                        new SlashCommandTempImpl().getDivisions(),
                         new SlashCommandTempImpl().getTeamName(),
                         SlashCommandOption.create(SlashCommandOptionType.USER,
                                 "old-rep",
@@ -173,8 +174,8 @@ public class SlashGODClass {
         return SlashCommand
                 .with("change-clan", "staff only command to change clan tag of a team")
                 .setOptions(List.of(
+                        new SlashCommandTempImpl().getDivisions(),
                         new SlashCommandTempImpl().getTeamName(),
-
                         SlashCommandOption.create(SlashCommandOptionType.STRING,
                                 "clan-tag",
                                 "enter the new clan tag for your team",
@@ -211,7 +212,7 @@ public class SlashGODClass {
         return SlashCommand
                 .with("show-divisionweek", "Commands to view weeks date for a specific division")
                 .setOptions(List.of(
-                        new SlashCommandTempImpl().getTeamName()
+                        new SlashCommandTempImpl().getDivisions()
                         ));
     }
 
@@ -267,7 +268,8 @@ public class SlashGODClass {
 
     public SlashCommandBuilder createTeamInformationCommand() {
         return SlashCommand.with("team-information", "A command get information about a team")
-                .setOptions(List.of(new SlashCommandTempImpl().getDivisions(),
+                .setOptions(List.of(
+                        new SlashCommandTempImpl().getDivisions(),
                         new SlashCommandTempImpl().getTeamName()
                 ));
     }
@@ -281,7 +283,8 @@ public class SlashGODClass {
 
     public SlashCommandBuilder createDeleteATeamCommand() {
         return SlashCommand.with("delete-a-team", "Staff only command to delete a team")
-                .setOptions(List.of(new SlashCommandTempImpl().getDivisions(),
+                .setOptions(List.of(
+                        new SlashCommandTempImpl().getDivisions(),
                         new SlashCommandTempImpl().getTeamName()
                         ));
     }
@@ -395,6 +398,7 @@ public class SlashGODClass {
         return SlashCommand
                 .with("change-alias", "staff only command to change alias of a team")
                 .setOptions(List.of(
+                        new SlashCommandTempImpl().getDivisions(),
                         new SlashCommandTempImpl().getTeamName(),
                         SlashCommandOption.create(STRING,
                                 "new-alias",
