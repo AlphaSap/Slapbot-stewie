@@ -133,7 +133,9 @@ public class Bot {
 
     private final ForceAddImpl forceAdd;
 
-    public Bot(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashGODClass builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemberJoin, ApplicantServerJoinImpl applicantServerJoin, ServerJoinImpl serverJoin, ServerLeaveImpl serverLeave, DivisionEditorImpl divisionEditor, InfoCommandImpl infoCommandImpl, ClanLineup clanLineup, ModerationFilterWords moderationFilterWords, FilterWordsEdit filterWordsEdit, CheckEveryRepHasJoinThisServerImpl checkEveryRepHasJoinThisServer, GiveRolesImpl giveRoles, SchedulingParser schedulingParser, ShowScheduleWars showScheduleWars, MinionBotStatsStringImpl minionBotStatsString, BanRepImpl banRep, ForceAddImpl forceAdd) {
+    private final AddRegistrationChannel addRegistrationChannel;
+
+    public Bot(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashGODClass builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemberJoin, ApplicantServerJoinImpl applicantServerJoin, ServerJoinImpl serverJoin, ServerLeaveImpl serverLeave, DivisionEditorImpl divisionEditor, InfoCommandImpl infoCommandImpl, ClanLineup clanLineup, ModerationFilterWords moderationFilterWords, FilterWordsEdit filterWordsEdit, CheckEveryRepHasJoinThisServerImpl checkEveryRepHasJoinThisServer, GiveRolesImpl giveRoles, SchedulingParser schedulingParser, ShowScheduleWars showScheduleWars, MinionBotStatsStringImpl minionBotStatsString, BanRepImpl banRep, ForceAddImpl forceAdd, AddRegistrationChannel addRegistrationChannel) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -180,6 +182,7 @@ public class Bot {
         this.minionBotStatsString = minionBotStatsString;
         this.banRep = banRep;
         this.forceAdd = forceAdd;
+        this.addRegistrationChannel = addRegistrationChannel;
         log.info("Bot object created");
     }
 
@@ -225,7 +228,8 @@ public class Bot {
                 this.showScheduleWars,
                 this.minionBotStatsString,
                 this.banRep,
-                this.forceAdd
+                this.forceAdd,
+                this.addRegistrationChannel
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);

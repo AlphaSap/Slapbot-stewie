@@ -139,7 +139,8 @@ public class Team {
      * Must set this parameter after creating the Teams object, and not before
      * @param registrationChannelID - ID of the private registration channel the user will have for his team!
      */
-    public void setRegistrationChannelID(Long registrationChannelID) {
+    public Team setRegistrationChannelID(Long registrationChannelID) {
         this.registrationChannelID = registrationChannelID;
+        return this;
     }
 }

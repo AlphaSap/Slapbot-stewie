@@ -170,4 +170,10 @@ public class TeamService {
         team = repo.save(team);
         return team;
     }
+
+    public Team registrationChennelID(Team team, long channelID) {
+        team = team.setRegistrationChannelID(channelID);
+        team = repo.save(team);
+        return team;
+    }
 }

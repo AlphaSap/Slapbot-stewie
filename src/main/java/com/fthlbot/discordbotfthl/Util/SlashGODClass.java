@@ -500,4 +500,18 @@ public class SlashGODClass {
                         )
                 ));
     }
+
+    public SlashCommandBuilder createAddRegistrationChannelForATeam() {
+        return SlashCommand.with( "add-registration-channel", "Adds the registration channel for a team!")
+                .setOptions(
+                        List.of(
+                                new SlashCommandTempImpl().getDivisions(),
+                                new SlashCommandTempImpl().getTeamName(),
+                                SlashCommandOption.createWithChoices(CHANNEL,
+                                        "channel",
+                                        "Select a channel",
+                                        true)
+                        )
+                );
+    }
 }
