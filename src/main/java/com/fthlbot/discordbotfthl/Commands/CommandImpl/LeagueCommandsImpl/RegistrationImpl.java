@@ -132,12 +132,11 @@ public class RegistrationImpl implements RegistrationListener {
                     secondRep.getId(),
                     division.getAllowedRosterChanges()
             );
+            team = teamService.saveTeam(team);
 
             ServerTextChannel applicantChannel =
                     createApplicantChannel(event.getSlashCommandInteraction().getServer().get(), user, secondRep, team);
 
-            team.setRegistrationChannelID(applicantChannel.getId());
-            team = teamService.saveTeam(team);
 
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setTitle("Registration successful")
