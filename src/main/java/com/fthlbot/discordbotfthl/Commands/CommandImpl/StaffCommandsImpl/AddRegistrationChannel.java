@@ -48,11 +48,13 @@ public class AddRegistrationChannel implements Command {
 
             teamService.registrationChennelID(team, serverChannel.getId());
             respondLater.thenAccept(e -> {
-                e.setContent("Registration channel Changed!").update();
+                e.setContent("Registration channel updated").update();
             });
 
         } catch (LeagueException e) {
             GeneralService.leagueSlashErrorMessage(respondLater, e);
+        } catch (Exception e ) {
+            GeneralService.leagueSlashErrorMessage(respondLater, e.getMessage());
         }
     }
 }
