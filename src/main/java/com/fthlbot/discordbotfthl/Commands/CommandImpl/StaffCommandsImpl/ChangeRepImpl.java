@@ -164,6 +164,9 @@ public class ChangeRepImpl implements ChangeRepListener {
         }
         PermissionsBuilder rep = new PermissionsBuilder().setAllowed(PermissionType.VIEW_CHANNEL, PermissionType.SEND_MESSAGES);
 
-        textChannel.get().createUpdater().addPermissionOverwrite(newRep, rep.build());
+        textChannel.get()
+                .createUpdater()
+                .addPermissionOverwrite(newRep, rep.build())
+                .update();
     }
 }
