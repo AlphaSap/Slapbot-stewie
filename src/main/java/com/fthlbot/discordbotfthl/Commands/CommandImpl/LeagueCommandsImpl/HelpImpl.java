@@ -1,10 +1,10 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl;
 
+import com.fthlbot.discordbotfthl.Commands.CommandListener.HelpListener;
+import com.fthlbot.discordbotfthl.Util.Pagination.Pagination;
 import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
-import com.fthlbot.discordbotfthl.Commands.CommandListener.HelpListener;
 import com.fthlbot.discordbotfthl.core.Handlers.Command;
-import com.fthlbot.discordbotfthl.Util.Pagination.Pagination;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteractionOption;
@@ -19,13 +19,12 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.fthlbot.discordbotfthl.core.Annotation.CommandType.*;
-import static com.fthlbot.discordbotfthl.core.Annotation.CommandType.IGNORE;
 
 @Invoker(
         alias = "help",
         description = "You need help with \"help\" for `help` command",
         usage = "/help",
-        type = IGNORE
+        type = INFO
 )
 public class HelpImpl implements HelpListener {
     private final List<Command> commands;
@@ -44,22 +43,22 @@ public class HelpImpl implements HelpListener {
             Optional<Invoker> commandFromInvoker = findCommandFromInvoker(commandName);
             if (commandFromInvoker.isEmpty()) {
                 response.thenAccept(
-                        res -> {
-                            res.addEmbed(
-                                    new EmbedBuilder()
-                                            .setDescription("Command not found")
-                                            .setColor(Color.RED)
-                            ).update();
-                        }
+                    res -> {
+                        res.addEmbed(
+                                new EmbedBuilder()
+                                        .setDescription("Command not found")
+                                        .setColor(Color.RED)
+                        ).update();
+                    }
                 );
                 return;
             }
             Invoker command = commandFromInvoker.get();
             EmbedBuilder embedBuilder = makeEmbed(command);
             response.thenAccept(
-                    res -> {
-                        res.addEmbed(embedBuilder).update();
-                    }
+                res -> {
+                    res.addEmbed(embedBuilder).update();
+                }
             );
             return;
         }
@@ -105,6 +104,9 @@ public class HelpImpl implements HelpListener {
         em.put(SCHEDULE, new ArrayList<>());
         em.put(MISC, new ArrayList<>());
         em.put(STAFF, new ArrayList<>());
+        em.put(TEAM, new ArrayList<>());
+        em.put(CLASH, new ArrayList<>());
+        em.put(DEV, new ArrayList<>());
 
         for (Command command : commands) {
             Annotation[] annotations = command.getClass().getAnnotations();
@@ -118,6 +120,7 @@ public class HelpImpl implements HelpListener {
             }
         }
         List<EmbedBuilder> embedBuilders = new ArrayList<>();
+        int i = 0;
         em.forEach((key, value) -> {
             StringBuilder sb = new StringBuilder();
             for (Invoker invoker : value) {
@@ -128,10 +131,9 @@ public class HelpImpl implements HelpListener {
                             .setTitle(key.toString())
                             .setDescription(sb.toString())
                             .setColor(Color.GREEN)
+                            .setFooter("Pages %d/%d".formatted(i, embedBuilders.size()))
             );
         });
         return embedBuilders;
     }
-
-
 }
