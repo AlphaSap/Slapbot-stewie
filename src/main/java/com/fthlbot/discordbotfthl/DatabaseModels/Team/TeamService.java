@@ -171,7 +171,7 @@ public class TeamService {
         return team;
     }
 
-    public Team registrationChennelID(Team team, long channelID) {
+    public Team registrationChannelID(Team team, long channelID) {
         team = team.setRegistrationChannelID(channelID);
         team = repo.save(team);
         return team;

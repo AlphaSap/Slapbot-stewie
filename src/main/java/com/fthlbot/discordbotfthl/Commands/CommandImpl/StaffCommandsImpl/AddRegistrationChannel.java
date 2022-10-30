@@ -46,7 +46,7 @@ public class AddRegistrationChannel implements Command {
             Division division = divisionService.getDivisionByAlias(divAlias);
             Team team = teamService.getTeamByDivisionAndAlias(teamName, division);
 
-            teamService.registrationChennelID(team, serverChannel.getId());
+            teamService.registrationChannelID(team, serverChannel.getId());
             respondLater.thenAccept(e -> {
                 e.setContent("Registration channel updated").update();
             });

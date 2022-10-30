@@ -137,6 +137,7 @@ public class RegistrationImpl implements RegistrationListener {
             ServerTextChannel applicantChannel =
                     createApplicantChannel(event.getSlashCommandInteraction().getServer().get(), user, secondRep, team);
 
+            teamService.registrationChannelID(team, applicantChannel.getId());
 
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setTitle("Registration successful")
