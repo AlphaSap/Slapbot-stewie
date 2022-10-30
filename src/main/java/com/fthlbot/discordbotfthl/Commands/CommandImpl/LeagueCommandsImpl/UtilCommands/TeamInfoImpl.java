@@ -73,6 +73,7 @@ public class TeamInfoImpl implements TeamInfoListener {
                 .addInlineField("Representatives", user.getName() + " \n " + user2.getName())
                 .addInlineField("Roster Size", roster.size() + "")
                 .addInlineField("Transaction left", teamByDivisionAndAlias.getAllowRosterChangesLeft() + "")
+                .addInlineField("Registration Channel ID", teamByDivisionAndAlias.getRegistrationChannelID().orElse(0L) + "")
                 .setColor(Color.GREEN);
 
         //Send the embedBuilder
