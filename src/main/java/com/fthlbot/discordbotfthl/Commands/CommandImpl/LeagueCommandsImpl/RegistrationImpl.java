@@ -95,12 +95,12 @@ public class RegistrationImpl implements RegistrationListener {
         long registrationChannelID = config.getRegistrationChannelID();
         Optional<TextChannel> channel = event.getSlashCommandInteraction().getChannel();
 
-        if (channel.isEmpty()){
+        if (channel.isEmpty()) {
             respond.thenAccept(res -> res.setContent("This command can only be executed in a Text Channel").update());
             return;
         }
 
-        if (channel.get().getId() != registrationChannelID){
+        if (channel.get().getId() != registrationChannelID) {
             respond.thenAccept(res -> res.setContent("This command is restricted to <#%d>".formatted(registrationChannelID)).update());
             return;
         }
@@ -137,7 +137,8 @@ public class RegistrationImpl implements RegistrationListener {
             ServerTextChannel applicantChannel =
                     createApplicantChannel(event.getSlashCommandInteraction().getServer().get(), user, secondRep, team);
 
-            teamService.registrationChannelID(team, applicantChannel.getId());
+            Team finalTeam = team;
+            CompletableFuture.runAsync(() -> teamService.registrationChannelID(finalTeam, applicantChannel.getId()));
 
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setTitle("Registration successful")
