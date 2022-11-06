@@ -521,11 +521,11 @@ public class SlashGODClass {
                         List.of(
                                 new SlashCommandTempImpl().getDivisions(),
                                 new SlashCommandTempImpl().getTeamName(),
-                                SlashCommandOption.create(LONG,
+                                SlashCommandOption.create(STRING,
                                         "old-rep-id",
                                         "enter the ID of old rep",
                                         true),
-                                SlashCommandOption.create(LONG,
+                                SlashCommandOption.create(STRING,
                                         "new-rep-id",
                                         "enter the ID of new rep",
                                         true)

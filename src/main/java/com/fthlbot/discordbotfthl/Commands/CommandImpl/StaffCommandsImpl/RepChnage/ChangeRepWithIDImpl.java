@@ -41,8 +41,8 @@ public class ChangeRepWithIDImpl implements Command {
         String divAlias = slashCommandInteraction.getArguments().get(0).getStringValue().get();
         String teamAlias = slashCommandInteraction.getArguments().get(1).getStringValue().get();
 
-        Long oldRepID = slashCommandInteraction.getArguments().get(2).getLongValue().get();
-        Long newRepID = slashCommandInteraction.getArguments().get(3).getLongValue().get();
+        Long oldRepID = Long.valueOf(slashCommandInteraction.getArguments().get(2).getStringValue().get());
+        Long newRepID = Long.valueOf(slashCommandInteraction.getArguments().get(3).getStringValue().get());
 
         User oldRep;
         try {
