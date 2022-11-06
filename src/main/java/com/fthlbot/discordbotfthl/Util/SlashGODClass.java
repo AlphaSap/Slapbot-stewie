@@ -514,4 +514,22 @@ public class SlashGODClass {
                         )
                 );
     }
+
+    public SlashCommandBuilder createChangeRepWithID() {
+        return SlashCommand.with("change-rep-with-id",  "changed Rep of a team with ID")
+                .setOptions(
+                        List.of(
+                                new SlashCommandTempImpl().getDivisions(),
+                                new SlashCommandTempImpl().getTeamName(),
+                                SlashCommandOption.create(LONG,
+                                        "old-rep-id",
+                                        "enter the ID of old rep",
+                                        true),
+                                SlashCommandOption.create(LONG,
+                                        "new-rep-id",
+                                        "enter the ID of new rep",
+                                        true)
+                        )
+                );
+    }
 }

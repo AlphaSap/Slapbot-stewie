@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 @Component
 @Invoker(
         alias = "info",
-        description = "Shows the informatio of the bot",
+        description = "Shows the information of the bot",
         usage = "/info"
 )
 public class InfoCommandImpl implements Command {
