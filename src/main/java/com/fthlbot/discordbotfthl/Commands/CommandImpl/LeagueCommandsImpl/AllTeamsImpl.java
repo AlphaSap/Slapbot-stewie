@@ -100,7 +100,7 @@ public class AllTeamsImpl implements AllTeamsListener {
                                 false
                         )
                         .setTimestampToNow()
-                        .setColor(Color.GREEN)
+                        .setColor(Color.BLUE)
                         .setFooter("Page " + (i + 1) + " of " + sb.size())
                 );
             }

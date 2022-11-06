@@ -1,5 +1,6 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl;
 
+import com.fthlbot.discordbotfthl.Util.Pagination.Pagination;
 import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
 import com.fthlbot.discordbotfthl.core.Handlers.Command;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 @Component
@@ -43,13 +46,30 @@ public class InfoCommandImpl implements Command {
                 .addInlineField("Bot Author", event.getApi().getOwner().get().join().getDiscriminatedName())
                 .addInlineField("Teams Registered in FTHL", teamService.getAllTeams().size()+  "")
                 .setColor(Color.GREEN)
-                .setFooter("FTHL Bot", event.getApi().getYourself().getAvatar())
+                .setFooter("1/2")
                 .setTimestampToNow();
 
-        res.thenAccept( r -> {
-            r.addEmbed(em).update();
-        });
+        Pagination pagination = new Pagination();
 
+        pagination.buttonPagination(List.of(em, getSystemInfo()), res, event.getApi());
+    }
 
+    /**
+     * @return an embed with system information
+     */
+    private EmbedBuilder getSystemInfo() {
+        String file = Objects.requireNonNull(this.getClass().getResource("ubuntu.png")).getFile();
+        assert file != null;
+
+        return new EmbedBuilder()
+                .setTitle("Host information")
+                .addField("OS", System.getenv("os.name"))
+                .addField("Version", System.getenv("os.version"))
+                .addField("Architecture", System.getProperty("os.arch"))
+                .addField("Java Version", "java.version")
+                .setColor(Color.green)
+                .setTimestampToNow()
+                .setFooter("2/2")
+                .setThumbnail(file);
     }
 }
