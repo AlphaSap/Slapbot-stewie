@@ -1,12 +1,5 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl;
 
-import Core.Enitiy.clan.ClanModel;
-import Core.Enitiy.player.League;
-import Core.Enitiy.player.Player;
-import Core.JClash;
-import Core.exception.ClashAPIException;
-import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.ClashCommandListener.PlayerListener;
 import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
@@ -14,6 +7,13 @@ import com.fthlbot.discordbotfthl.MinionBotAPI.MinionBotClient;
 import com.fthlbot.discordbotfthl.MinionBotAPI.MinionBotPlayer;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import com.fthlbot.discordbotfthl.Util.Pagination.Pagination;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
+import com.sahhiill.clashapi.core.ClashAPI;
+import com.sahhiill.clashapi.core.exception.ClashAPIException;
+import com.sahhiill.clashapi.models.league.League;
+import com.sahhiill.clashapi.models.player.Player;
+import com.sahhiill.clashapi.models.player.PlayerClan;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
@@ -45,10 +45,10 @@ public class PlayerImpl implements PlayerListener {
     @Override
     public void execute(SlashCommandCreateEvent event) {
         CompletableFuture<InteractionOriginalResponseUpdater> responder = event.getSlashCommandInteraction().respondLater();
-        JClash clash = new JClash();
+        ClashAPI clash = new ClashAPI();
         String s = event.getSlashCommandInteraction().getArguments().get(0).getStringValue().get();
         try {
-            Player player = clash.getPlayer(s).join();
+            Player player = clash.getPlayer(s);
             List<EmbedBuilder> embed = createEmbed(player);
             Pagination pagination = new Pagination();
             pagination.buttonPagination(embed, responder, event.getApi());
@@ -94,9 +94,9 @@ public class PlayerImpl implements PlayerListener {
                 .addInlineField("Team Registered in Fthl", teams)
                 .setTimestampToNow()
                 .setColor(Color.GREEN);
-        Optional<ClanModel> clan = Optional.ofNullable(player.getClan());
-        String clanName = clan.map(ClanModel::getName).orElse("No clan found!");
-        String clanTag = clan.map(ClanModel::getTag).orElse("No clan found!");
+        Optional<PlayerClan> clan = Optional.ofNullable(player.getClan());
+        String clanName = clan.map(PlayerClan::getName).orElse("No clan found!");
+        String clanTag = clan.map(PlayerClan::getTag).orElse("No clan found!");
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle(player.getName())
                 .addField("TownHall Level", player.getTownHallLevel() + "")

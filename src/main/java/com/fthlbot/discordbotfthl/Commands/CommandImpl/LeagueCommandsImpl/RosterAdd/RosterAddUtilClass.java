@@ -1,8 +1,6 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl.RosterAdd;
 
-import Core.Enitiy.player.Player;
-import Core.JClash;
-import Core.exception.ClashAPIException;
+
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Roster.Roster;
 import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterService;
@@ -10,6 +8,9 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
+import com.sahhiill.clashapi.core.ClashAPI;
+import com.sahhiill.clashapi.core.exception.ClashAPIException;
+import com.sahhiill.clashapi.models.player.Player;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
@@ -33,8 +34,8 @@ public class RosterAddUtilClass {
         for (String tag : tags) {
             CompletableFuture.runAsync(() -> {
                 try {
-                    JClash clash = new JClash();
-                    Player player = clash.getPlayer(tag).join();
+                    ClashAPI clash = new ClashAPI();
+                    Player player = clash.getPlayer(tag);
                     Roster roster = new Roster(player.getName(), player.getTag(), player.getTownHallLevel(), team);
 
                     if (checks) {

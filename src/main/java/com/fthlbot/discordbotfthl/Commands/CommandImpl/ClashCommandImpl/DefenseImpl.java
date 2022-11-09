@@ -1,16 +1,17 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl;
 
-import Core.Enitiy.clan.ClanModel;
-import Core.Enitiy.clanwar.Attack;
-import Core.Enitiy.clanwar.ClanWarMember;
-import Core.Enitiy.clanwar.WarInfo;
-import Core.JClash;
-import Core.exception.ClashAPIException;
-import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
+
 import com.fthlbot.discordbotfthl.Commands.CommandListener.ClashCommandListener.DefenseListener;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import com.fthlbot.discordbotfthl.Util.Utils;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
+import com.sahhiill.clashapi.core.ClashAPI;
+import com.sahhiill.clashapi.core.exception.ClashAPIException;
+import com.sahhiill.clashapi.models.clan.Clan;
+import com.sahhiill.clashapi.models.war.War;
+import com.sahhiill.clashapi.models.war.WarAttack;
+import com.sahhiill.clashapi.models.war.WarMember;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
@@ -42,17 +43,17 @@ public class DefenseImpl implements DefenseListener {
         CompletableFuture<InteractionOriginalResponseUpdater> respondLater = interaction.respondLater();
         String tag = interaction.getArguments().get(0).getStringValue().get();
 
-        JClash clash = new JClash();
+        ClashAPI clash = new ClashAPI();
 
         try {
-            ClanModel join = clash.getClan(tag).join();
+            Clan join = clash.getClan(tag);
             if (!join.isWarLogPublic()){
                 respondLater.thenAccept(res -> {
                    res.setContent("War log is not public").update();
                 });
                 return;
             }
-            clash.getCurrentWar(tag).thenAccept(c -> {
+            War c = clash.getCurrentWar(tag);
                 EmbedBuilder em = getDefEmbed(interaction, c);
                 //EmbedBuilder finalEm = em;
 
@@ -71,7 +72,6 @@ public class DefenseImpl implements DefenseListener {
 
                 });
 
-            });
         } catch (ClashAPIException | IOException e) {
             new ClashExceptionHandler()
                     .setResponder(respondLater.join())
@@ -80,8 +80,8 @@ public class DefenseImpl implements DefenseListener {
         }
     }
 
-    private EmbedBuilder getDefEmbed(SlashCommandInteraction interaction, WarInfo c) {
-        Map<ClanWarMember, List<Attack>> defAndAttacks = this.getDefAndAttacks(c);
+    private EmbedBuilder getDefEmbed(SlashCommandInteraction interaction, War c) {
+        Map<WarMember, List<WarAttack>> defAndAttacks = this.getDefAndAttacks(c);
         StringBuilder stringBuilder = setDefense(defAndAttacks);
         EmbedBuilder em = new EmbedBuilder();
         em = em.setTitle("Defenses for " + c.getClan().getName())
@@ -93,19 +93,19 @@ public class DefenseImpl implements DefenseListener {
     }
 
     class tempWarMember {
-        private final List<Attack> attacks;
-        private final ClanWarMember clanWarMember;
+        private final List<WarAttack> attacks;
+        private final WarMember WarMember;
 
-        public tempWarMember(List<Attack> attacks, ClanWarMember clanWarMember) {
+        public tempWarMember(List<WarAttack> attacks, WarMember WarMember) {
             this.attacks = attacks;
-            this.clanWarMember = clanWarMember;
+            this.WarMember = WarMember;
         }
 
-        public ClanWarMember getClanWarMember() {
-            return clanWarMember;
+        public WarMember getWarMember() {
+            return WarMember;
         }
 
-        public List<Attack> getAttacks() {
+        public List<WarAttack> getAttacks() {
             return attacks;
         }
 
@@ -113,7 +113,7 @@ public class DefenseImpl implements DefenseListener {
         public String toString() {
             return "tempWarMember{" +
                     "attacks=" + attacks +
-                    ", clanWarMember=" + clanWarMember +
+                    ", WarMember=" + WarMember +
                     '}';
         }
     }
@@ -124,7 +124,7 @@ public class DefenseImpl implements DefenseListener {
     }
 
     //perfect  example for setting fresh hits just add a spark after the attack lenght is 1 and is a 3 star
-    private StringBuilder setDefense(Map<ClanWarMember, List<Attack>> defence) {
+    private StringBuilder setDefense(Map<WarMember, List<WarAttack>> defence) {
         List<tempWarMember> tempWarMembers = new ArrayList<>();
         defence.forEach((x, y) -> {
             tempWarMember e = new tempWarMember(y, x);
@@ -132,7 +132,7 @@ public class DefenseImpl implements DefenseListener {
         });
 
         List<tempWarMember> collect = tempWarMembers.stream()
-                .sorted(Comparator.comparingInt(x -> x.getClanWarMember().getMapPosition()))
+                .sorted(Comparator.comparingInt(x -> x.getWarMember().getMapPosition()))
                 .toList();
         StringBuilder s = new StringBuilder();
         for (tempWarMember x : collect) {
@@ -140,39 +140,39 @@ public class DefenseImpl implements DefenseListener {
                 continue;
             }
             final int[] defWon = {0};
-            for (Attack attack : x.getAttacks()) {
+            for (WarAttack attack : x.getAttacks()) {
                 if (attack.getStars() <= 0)
                     defWon[0]++;
             }
             String defwonstats = "`  " + defWon[0] + "/" + x.getAttacks().size();
-            x.attacks.sort(Comparator.comparingInt(Attack::getStars));//.stream().anyMatch(a -> a.getStars().equals(3));
+            x.attacks.sort(Comparator.comparingInt(WarAttack::getStars));//.stream().anyMatch(a -> a.getStars().equals(3));
             defwonstats += "⭐".repeat(x.attacks.get(x.attacks.size() - 1).getStars());
 
 
             if (x.getAttacks().size() == 1) {
-                if (x.getAttacks().get(0).getStars().equals(3)) {
+                if (x.getAttacks().get(0).getStars() == 3) {
                     defwonstats += "\uD83D\uDCA5";
                 }
             }
-            String temp = formatRow(Utils.getTownHallEmote(x.getClanWarMember().getTownhallLevel()), defwonstats, x.getClanWarMember().getName() + "`", " ");
+            String temp = formatRow(Utils.getTownHallEmote(x.getWarMember().getTownhallLevel()), defwonstats, x.getWarMember().getName() + "`", " ");
             s.append(temp).append("\n");
         }
         return s;
     }
 
-    private Map<ClanWarMember, List<Attack>> getDefAndAttacks(WarInfo war) {
-        List<ClanWarMember> homeWarMembers = war.getClan().getWarMembers();
-        List<ClanWarMember> enemyWarMembers = war.getEnemy().getWarMembers();
+    private Map<WarMember, List<WarAttack>> getDefAndAttacks(War war) {
+        List<WarMember> homeWarMembers = war.getClan().getMembers();
+        List<WarMember> enemyWarMembers = war.getOpponent().getMembers();
 
-        Map<ClanWarMember, List<Attack>> defence = new HashMap<>();
+        Map<WarMember, List<WarAttack>> defence = new HashMap<>();
 
         enemyWarMembers.stream()
                 .filter(member -> member.getAttacks() != null)
                 .forEach(member -> {
                     member.getAttacks().forEach(attack -> {
-                        ClanWarMember homeWarMember = null;
+                        WarMember homeWarMember = null;
                         String defenderTag = attack.getDefenderTag();
-                        for (ClanWarMember warMember : homeWarMembers) {
+                        for (WarMember warMember : homeWarMembers) {
                             if (warMember.getTag().equalsIgnoreCase(defenderTag)) {
                                 homeWarMember = warMember;
                                 break;
@@ -180,11 +180,11 @@ public class DefenseImpl implements DefenseListener {
                         }
 
                         if (defence.containsKey(homeWarMember)) {
-                            List<Attack> attacks = defence.get(homeWarMember);
+                            List<WarAttack> attacks = defence.get(homeWarMember);
                             attacks.add(attack);
                             defence.replace(homeWarMember, attacks);
                         } else {
-                            List<Attack> newAttacks = new ArrayList<>();
+                            List<WarAttack> newAttacks = new ArrayList<>();
                             newAttacks.add(attack);
                             defence.put(homeWarMember, newAttacks);
                         }

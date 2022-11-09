@@ -1,9 +1,10 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.Stats;
 
-import Core.Enitiy.clan.ClanModel;
-import Core.Enitiy.clanwar.ClanWarMember;
-import Core.Enitiy.clanwar.ClanWarModel;
-import Core.Enitiy.clanwar.WarInfo;
+import com.fthlbot.discordbotfthl.Util.ClashUtils;
+import com.sahhiill.clashapi.models.clan.Clan;
+import com.sahhiill.clashapi.models.war.War;
+import com.sahhiill.clashapi.models.war.WarClan;
+import com.sahhiill.clashapi.models.war.WarMember;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -12,10 +13,10 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ClanStats {
-    private ClanModel clan;
-    private WarInfo war;
+    private Clan clan;
+    private War war;
 
-    public ClanStats(ClanModel clan, WarInfo war) {
+    public ClanStats(Clan clan, War war) {
         this.clan = clan;
         this.war = war;
     }
@@ -30,7 +31,7 @@ public class ClanStats {
 
         StringBuilder sb = new StringBuilder();
 
-        ClanWarModel enemy = this.war.getEnemy();
+        WarClan enemy = this.war.getOpponent();
 
         AtomicInteger homeThree = new AtomicInteger();
         AtomicInteger homeTwo = new AtomicInteger();
@@ -40,7 +41,7 @@ public class ClanStats {
         List<Integer> homeTime = new ArrayList<>();
         List<Integer> opponentTime = new ArrayList<>();
 
-        enemy.getWarMembers().stream().filter(x -> x.getBestOpponentAttack() != null).map(ClanWarMember::getBestOpponentAttack).forEach(x -> {
+        enemy.getMembers().stream().filter(x -> x.getBestOpponentAttack() != null).map(WarMember::getBestOpponentAttack).forEach(x -> {
             if (x.getStars() == 3) {
                 homeThree.incrementAndGet();
             } else if (x.getStars() == 2) {
@@ -48,7 +49,7 @@ public class ClanStats {
             }
             homeTime.add(x.getDuration());
         });
-        this.war.getClan().getWarMembers().stream().filter(x -> x.getBestOpponentAttack() != null).map(ClanWarMember::getBestOpponentAttack).forEach(x -> {
+        this.war.getClan().getMembers().stream().filter(x -> x.getBestOpponentAttack() != null).map(WarMember::getBestOpponentAttack).forEach(x -> {
             if (x.getStars() == 3) {
                 opponentThree.incrementAndGet();
             } else if (x.getStars() == 2) {
@@ -57,7 +58,7 @@ public class ClanStats {
             opponentTime.add(x.getDuration());
         });
         int homeTotal = this.war.getClan().getAttacks();
-        int opponentTotal = this.war.getEnemy().getAttacks();
+        int opponentTotal = this.war.getOpponent().getAttacks();
 
         //Calculating Average Time
         //Home
@@ -72,8 +73,8 @@ public class ClanStats {
         Date BattleTime_start;
         String to_join = "";
         try {
-            BattleTime_end = this.war.getEndTimeAsDate();
-            BattleTime_start = this.war.getStartTimeAsDate();
+            BattleTime_end = ClashUtils.getEndTimeAsDate(this.war);
+            BattleTime_start = ClashUtils.getStartTimeAsDate(this.war);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -103,7 +104,7 @@ public class ClanStats {
             } else
                 to_join = "War ends in " + difference_In_Hours + " hours " + difference_In_Minute + " minutes";
         } else if (this.war.getState().equalsIgnoreCase("warEnded")) {
-            to_join = this.war.getStatus();
+            to_join = ClashUtils.getStatus(this.war);
         }
         String s = """
                 %-5s     VS     %5s
@@ -117,13 +118,13 @@ public class ClanStats {
                 %d/%d -  %d%%    HR     %d%% -  %d/%d
                 """.formatted(
                 this.war.getClan().getName(),
-                this.war.getEnemy().getName(),
+                this.war.getOpponent().getName(),
                 this.war.getClan().getStars(),
-                this.war.getEnemy().getStars(),
+                this.war.getOpponent().getStars(),
                 this.war.getClan().getDestructionPercentage(),
-                this.war.getEnemy().getDestructionPercentage(),
+                this.war.getOpponent().getDestructionPercentage(),
                 this.war.getClan().getAttacks(),
-                this.war.getEnemy().getAttacks(),
+                this.war.getOpponent().getAttacks(),
                 homeThree.get(), opponentThree.get(), homeTwo.get(), opponentTwo.get(),
                 convertSecondsToMinutes(homeTimeAsInt), convertSecondsToMinutes(opponentTimeAsInt),
                 homeThree.get(), homeTotal, avgHR, avgHR_opponent, opponentThree.get(), opponentTotal

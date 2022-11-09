@@ -1,17 +1,18 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl;
 
-import Core.Enitiy.clanwar.Attack;
-import Core.Enitiy.clanwar.ClanWarMember;
-import Core.Enitiy.clanwar.WarInfo;
+
 import com.fthlbot.discordbotfthl.Util.Utils;
+import com.sahhiill.clashapi.models.war.War;
+import com.sahhiill.clashapi.models.war.WarAttack;
+import com.sahhiill.clashapi.models.war.WarMember;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class DefenseForOpponent {
     private static final Logger log = LoggerFactory.getLogger(DefenseForOpponent.class);
@@ -19,11 +20,11 @@ public class DefenseForOpponent {
 
 
 
-    public EmbedBuilder getDefEmbed(User user, WarInfo c) {
-        Map<ClanWarMember, List<Attack>> defAndAttacks = this.getDefAndAttacks(c);
+    public EmbedBuilder getDefEmbed(User user, War c) {
+        Map<WarMember, List<WarAttack>> defAndAttacks = this.getDefAndAttacks(c);
         StringBuilder stringBuilder = setDefense(defAndAttacks);
         EmbedBuilder em = new EmbedBuilder();
-        em = em.setTitle("Defenses for " + c.getEnemy().getName())
+        em = em.setTitle("Defenses for " + c.getOpponent().getName())
                 .setDescription(stringBuilder.toString())
                 .setColor(Color.cyan)
                 .setAuthor(user)
@@ -32,19 +33,19 @@ public class DefenseForOpponent {
     }
 
     class tempWarMember {
-        private final List<Attack> attacks;
-        private final ClanWarMember clanWarMember;
+        private final List<WarAttack> attacks;
+        private final WarMember WarMember;
 
-        public tempWarMember(List<Attack> attacks, ClanWarMember clanWarMember) {
+        public tempWarMember(List<WarAttack> attacks, WarMember WarMember) {
             this.attacks = attacks;
-            this.clanWarMember = clanWarMember;
+            this.WarMember = WarMember;
         }
 
-        public ClanWarMember getClanWarMember() {
-            return clanWarMember;
+        public WarMember getWarMember() {
+            return WarMember;
         }
 
-        public List<Attack> getAttacks() {
+        public List<WarAttack> getAttacks() {
             return attacks;
         }
 
@@ -52,7 +53,7 @@ public class DefenseForOpponent {
         public String toString() {
             return "tempWarMember{" +
                     "attacks=" + attacks +
-                    ", clanWarMember=" + clanWarMember +
+                    ", WarMember=" + WarMember +
                     '}';
         }
     }
@@ -63,7 +64,7 @@ public class DefenseForOpponent {
     }
 
     //perfect  example for setting fresh hits just add a spark after the attack lenght is 1 and is a 3 star
-    private StringBuilder setDefense(Map<ClanWarMember, List<Attack>> defence) {
+    private StringBuilder setDefense(Map<WarMember, List<WarAttack>> defence) {
         List<tempWarMember> tempWarMembers = new ArrayList<>();
         defence.forEach((x, y) -> {
             tempWarMember e = new tempWarMember(y, x);
@@ -71,7 +72,7 @@ public class DefenseForOpponent {
         });
 
         List<tempWarMember> collect = tempWarMembers.stream()
-                .sorted(Comparator.comparingInt(x -> x.getClanWarMember().getMapPosition()))
+                .sorted(Comparator.comparingInt(x -> x.getWarMember().getMapPosition()))
                 .toList();
         StringBuilder s = new StringBuilder();
         for (tempWarMember x : collect) {
@@ -79,39 +80,39 @@ public class DefenseForOpponent {
                 continue;
             }
             final int[] defWon = {0};
-            for (Attack attack : x.getAttacks()) {
+            for (WarAttack attack : x.getAttacks()) {
                 if (attack.getStars() <= 0)
                     defWon[0]++;
             }
             String defwonstats = "`  " + defWon[0] + "/" + x.getAttacks().size();
-            x.attacks.sort(Comparator.comparingInt(Attack::getStars));//.stream().anyMatch(a -> a.getStars().equals(3));
+            x.attacks.sort(Comparator.comparingInt(WarAttack::getStars));//.stream().anyMatch(a -> a.getStars().equals(3));
             defwonstats += "⭐".repeat(x.attacks.get(x.attacks.size() - 1).getStars());
 
 
             if (x.getAttacks().size() == 1) {
-                if (x.getAttacks().get(0).getStars().equals(3)) {
+                if (x.getAttacks().get(0).getStars() == (3)) {
                     defwonstats += "\uD83D\uDCA5";
                 }
             }
-            String temp = formatRow(Utils.getTownHallEmote(x.getClanWarMember().getTownhallLevel()), defwonstats, x.getClanWarMember().getName() + "`", " ");
+            String temp = formatRow(Utils.getTownHallEmote(x.getWarMember().getTownhallLevel()), defwonstats, x.getWarMember().getName() + "`", " ");
             s.append(temp).append("\n");
         }
         return s;
     }
 
-    private Map<ClanWarMember, List<Attack>> getDefAndAttacks(WarInfo war) {
-        List<ClanWarMember> homeWarMembers =  war.getEnemy().getWarMembers();
-        List<ClanWarMember> enemyWarMembers =war.getClan().getWarMembers();
+    private Map<WarMember, List<WarAttack>> getDefAndAttacks(War war) {
+        List<WarMember> homeWarMembers =  war.getOpponent().getMembers();
+        List<WarMember> enemyWarMembers =war.getClan().getMembers();
 
-        Map<ClanWarMember, List<Attack>> defence = new HashMap<>();
+        Map<WarMember, List<WarAttack>> defence = new HashMap<>();
 
         enemyWarMembers.stream()
                 .filter(member -> member.getAttacks() != null)
                 .forEach(member -> {
                     member.getAttacks().forEach(attack -> {
-                        ClanWarMember homeWarMember = null;
+                        WarMember homeWarMember = null;
                         String defenderTag = attack.getDefenderTag();
-                        for (ClanWarMember warMember : homeWarMembers) {
+                        for (WarMember warMember : homeWarMembers) {
                             if (warMember.getTag().equalsIgnoreCase(defenderTag)) {
                                 homeWarMember = warMember;
                                 break;
@@ -119,11 +120,11 @@ public class DefenseForOpponent {
                         }
 
                         if (defence.containsKey(homeWarMember)) {
-                            List<Attack> attacks = defence.get(homeWarMember);
+                            List<WarAttack> attacks = defence.get(homeWarMember);
                             attacks.add(attack);
                             defence.replace(homeWarMember, attacks);
                         } else {
-                            List<Attack> newAttacks = new ArrayList<>();
+                            List<WarAttack> newAttacks = new ArrayList<>();
                             newAttacks.add(attack);
                             defence.put(homeWarMember, newAttacks);
                         }
@@ -131,8 +132,4 @@ public class DefenseForOpponent {
                 });
         return defence;
     }
-
-
-
-
 }

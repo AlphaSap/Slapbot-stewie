@@ -1,5 +1,3 @@
-package com.fthlbot.discordbotfthl.DatabaseModels.OffSeason.OffSeasonRoster;
-
 import com.fthlbot.discordbotfthl.DatabaseModels.OffSeason.OffSeasonDivision.OffSeasonDivision;
 import com.fthlbot.discordbotfthl.DatabaseModels.OffSeason.OffSeasonTeam.OffSeasonTeam;
 

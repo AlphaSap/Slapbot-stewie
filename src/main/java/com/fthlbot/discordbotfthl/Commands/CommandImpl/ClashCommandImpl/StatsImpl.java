@@ -1,13 +1,13 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl;
 
-import Core.Enitiy.clan.ClanModel;
-import Core.JClash;
-import Core.exception.ClashAPIException;
+import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.Stats.ClanStats;
+import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
-import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.Stats.ClanStats;
 import com.fthlbot.discordbotfthl.core.Handlers.Command;
-import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
+import com.sahhiill.clashapi.core.ClashAPI;
+import com.sahhiill.clashapi.core.exception.ClashAPIException;
+import com.sahhiill.clashapi.models.clan.Clan;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.springframework.stereotype.Component;
@@ -28,16 +28,16 @@ public class StatsImpl implements Command {
         CompletableFuture<InteractionOriginalResponseUpdater> responder = event.getSlashCommandInteraction().respondLater();
         String tag = event.getSlashCommandInteraction().getArguments().get(0).getStringValue().get();
 
-        JClash clash = new JClash();
+        ClashAPI clash = new ClashAPI();
         try {
-            ClanModel join = clash.getClan(tag).join();
+            Clan join = clash.getClan(tag);
             if (!join.isWarLogPublic()) {
                 responder.thenAccept(res -> {
                     res.setContent("War log is not public").update();
                 });
                 return;
             }
-            String s = new ClanStats(join, clash.getCurrentWar(tag).join()).clanStats();
+            String s = new ClanStats(join, clash.getCurrentWar(tag)).clanStats();
             responder.thenAccept(response -> {
                 response.setContent(s).update();
             });

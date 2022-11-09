@@ -1,18 +1,17 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl;
 
-import Core.Enitiy.clan.ClanModel;
-import Core.JClash;
-import Core.exception.ClashAPIException;
-import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.StaffCommandListener.ChangeClanListener;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
-import com.fthlbot.discordbotfthl.DiscordBotFthlApplication;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
+import com.sahhiill.clashapi.core.ClashAPI;
+import com.sahhiill.clashapi.core.exception.ClashAPIException;
+import com.sahhiill.clashapi.models.clan.Clan;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
@@ -47,7 +46,8 @@ public class ChangeClanImpl implements ChangeClanListener {
         String teamAlias = event.getSlashCommandInteraction().getArguments().get(1).getStringValue().get();
         String clanTag = event.getSlashCommandInteraction().getArguments().get(2).getStringValue().get();
 
-        JClash clash = DiscordBotFthlApplication.clash;
+        ClashAPI clash = new ClashAPI();
+
         Division division = null;
         try {
             division = divisionService.getDivisionByAlias(divAlias);
@@ -62,9 +62,9 @@ public class ChangeClanImpl implements ChangeClanListener {
             GeneralService.leagueSlashErrorMessage(respondLater, e);
             return;
         }
-        ClanModel clan;
+        Clan clan;
         try {
-            clan = clash.getClan(clanTag).join();
+            clan = clash.getClan(clanTag);
         } catch (ClashAPIException | IOException e) {
             e.printStackTrace();
             return;
@@ -85,6 +85,5 @@ public class ChangeClanImpl implements ChangeClanListener {
             res.addEmbed(embedBuilder);
             res.update();
         });
-
     }
 }

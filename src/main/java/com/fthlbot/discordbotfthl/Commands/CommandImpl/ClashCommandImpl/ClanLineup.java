@@ -1,14 +1,14 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl;
 
-import Core.Enitiy.clanwar.ClanWarMember;
-import Core.Enitiy.clanwar.WarInfo;
-import Core.JClash;
-import Core.exception.ClashAPIException;
+import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
+import com.fthlbot.discordbotfthl.Util.Pagination.Pagination;
 import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.core.Handlers.Command;
-import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
-import com.fthlbot.discordbotfthl.Util.Pagination.Pagination;
+import com.sahhiill.clashapi.core.ClashAPI;
+import com.sahhiill.clashapi.core.exception.ClashAPIException;
+import com.sahhiill.clashapi.models.war.War;
+import com.sahhiill.clashapi.models.war.WarMember;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
@@ -30,19 +30,19 @@ import java.util.concurrent.CompletableFuture;
 public class ClanLineup implements Command {
     @Override
     public void execute(SlashCommandCreateEvent event) {
-        JClash jClash = new JClash();
+        ClashAPI clashAPI = new ClashAPI();
         String clanTag = event.getSlashCommandInteraction().getArguments().get(0).getStringValue().get();
         CompletableFuture<InteractionOriginalResponseUpdater> res = event.getSlashCommandInteraction().respondLater();
         try {
-            boolean isWarLogPublic = jClash.getClan(clanTag).join().isWarLogPublic();
+            boolean isWarLogPublic = clashAPI.getClan(clanTag).isWarLogPublic();
 
             if (!isWarLogPublic) {
                 res.thenAccept(r -> r.setContent("Clan war log is not public!").update());
                 return;
             }
-            WarInfo join = jClash.getCurrentWar(clanTag).join();
-            List<ClanWarMember> clanLineup = join.getClan().getWarMembers();
-            List<ClanWarMember> warMembers = join.getEnemy().getWarMembers();
+            War join = clashAPI.getCurrentWar(clanTag);
+            List<WarMember> clanLineup = join.getClan().getMembers();
+            List<WarMember> warMembers = join.getOpponent().getMembers();
 
             List<String> strings = formatLineup(clanLineup);
             List<String> strings1 = formatLineup(warMembers);
@@ -55,7 +55,7 @@ public class ClanLineup implements Command {
 
             EmbedBuilder embedBuilder1 = new EmbedBuilder()
                     .setDescription(String.join("\n", strings1))
-                    .setTitle("Clan Lineup for " + join.getEnemy().getName())
+                    .setTitle("Clan Lineup for " + join.getOpponent().getName())
                     .setColor(Color.RED)
                     .setTimestampToNow();
 
@@ -74,9 +74,9 @@ public class ClanLineup implements Command {
 
     }
 
-    private List<String> formatLineup(List<ClanWarMember> clanLineup) {
+    private List<String> formatLineup(List<WarMember> clanLineup) {
         return clanLineup.stream()
-                .sorted(Comparator.comparingInt(ClanWarMember::getMapPosition))
+                .sorted(Comparator.comparingInt(WarMember::getMapPosition))
                 .map(x -> "%-8s  %d  %s".formatted(x.getTag(), x.getTownhallLevel(), x.getName()))
                 .toList();
     }

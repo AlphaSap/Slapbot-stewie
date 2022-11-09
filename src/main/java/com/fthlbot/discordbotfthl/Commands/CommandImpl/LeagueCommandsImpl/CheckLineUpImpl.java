@@ -1,13 +1,5 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl;
 
-import Core.Enitiy.clan.ClanModel;
-import Core.Enitiy.clanwar.ClanWarMember;
-import Core.Enitiy.clanwar.WarInfo;
-import Core.JClash;
-import Core.exception.ClashAPIException;
-import com.fthlbot.discordbotfthl.core.Annotation.AllowedChannel;
-import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.CheckLineUpListener;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
@@ -18,6 +10,14 @@ import com.fthlbot.discordbotfthl.DatabaseModels.ScheduleWar.Schedule.ScheduledW
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
+import com.fthlbot.discordbotfthl.core.Annotation.AllowedChannel;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
+import com.sahhiill.clashapi.core.ClashAPI;
+import com.sahhiill.clashapi.core.exception.ClashAPIException;
+import com.sahhiill.clashapi.models.clan.Clan;
+import com.sahhiill.clashapi.models.war.War;
+import com.sahhiill.clashapi.models.war.WarMember;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
@@ -73,12 +73,12 @@ public class CheckLineUpImpl implements CheckLineUpListener {
             GeneralService.leagueSlashErrorMessage(respond, e);
             return;
         }
-        JClash clash = new JClash();
+        ClashAPI clash = new ClashAPI();
 
-        ClanModel clan1;
-        ClanModel clan2;
+        Clan clan1;
+        Clan clan2;
         try {
-            clan1 = clash.getClan(scheduleById.getTeamA().getTag()).join();
+            clan1 = clash.getClan(scheduleById.getTeamA().getTag());
         } catch (IOException e) {
             e.printStackTrace();
             GeneralService.leagueSlashErrorMessage(respond, "An error occurred while fetching the line up: " + e.getMessage());
@@ -93,7 +93,7 @@ public class CheckLineUpImpl implements CheckLineUpListener {
         }
 
         try {
-            clan2 = clash.getClan(scheduleById.getTeamB().getTag()).join();
+            clan2 = clash.getClan(scheduleById.getTeamB().getTag());
         } catch (IOException e) {
             e.printStackTrace();
             GeneralService.leagueSlashErrorMessage(respond, "An error occurred while fetching the line up: " + e.getMessage());
@@ -112,22 +112,22 @@ public class CheckLineUpImpl implements CheckLineUpListener {
             return;
         }
 
-        WarInfo join = null;
+        War join = null;
         try {
-            join = clash.getCurrentWar(clan1.getTag()).join();
+            join = clash.getCurrentWar(clan1.getTag());
 
             if (join.getState().equalsIgnoreCase("notInWar")) {
                 respond.thenAccept(updater -> updater.setContent("No war is currently ongoing").update());
                 return;
             }
 
-            if (!(join.getEnemy().getTag().equalsIgnoreCase(scheduleById.getTeamB().getTag()))) {
+            if (!(join.getOpponent().getTag().equalsIgnoreCase(scheduleById.getTeamB().getTag()))) {
                 GeneralService.leagueSlashErrorMessage(respond, "The war is not currently ongoing for the team you specified");
                 return;
             }
 
-            List<String> homeTeam = checkPlayersFromWarModel(join.getClan().getWarMembers(), scheduleById.getTeamA());
-            List<String> enemyTeam = checkPlayersFromWarModel(join.getEnemy().getWarMembers(), scheduleById.getTeamB());
+            List<String> homeTeam = checkPlayersFromWarModel(join.getClan().getMembers(), scheduleById.getTeamA());
+            List<String> enemyTeam = checkPlayersFromWarModel(join.getOpponent().getMembers(), scheduleById.getTeamB());
 
             if (homeTeam.isEmpty() && enemyTeam.isEmpty()) {
                 respond.thenApply(updater -> updater.setContent("Lineups from both teams is OK! No Unregistered accounts found!").update());
@@ -194,7 +194,7 @@ public class CheckLineUpImpl implements CheckLineUpListener {
                 .send();
     }
 
-    public List<String> checkPlayersFromWarModel(List<ClanWarMember> warMembers, Team team) throws EntityNotFoundException {
+    public List<String> checkPlayersFromWarModel(List<WarMember> warMembers, Team team) throws EntityNotFoundException {
         List<String> unregisteredAccounts = new ArrayList<>();
         List<Roster> rosterForATeam = rosterService.getRosterForATeam(team);
 

@@ -1,15 +1,13 @@
 package com.fthlbot.discordbotfthl.Util.Exception;
 
-import Core.JClash;
+import com.sahhiill.clashapi.core.ClashAPI;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
-import org.javacord.api.util.logging.ExceptionLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.io.IOException;
 import java.time.LocalDateTime;
 
 public class ClashExceptionHandler {
@@ -69,11 +67,7 @@ public class ClashExceptionHandler {
             }
             case 403 -> {
                 log.error("Clash API key was revoked! {}", LocalDateTime.now());
-                try {
-                    new JClash(System.getenv("CLASH_EMAIL"), System.getenv("CLASH_PASS"));
-                } catch (IOException e) {
-                    log.error("Error Making API key {}", e.getMessage());
-                }
+                new ClashAPI(System.getenv("CLASH_EMAIL"), System.getenv("CLASH_PASS"));
                 return this.setEmbedBuilder(
                         new EmbedBuilder()
                                 .setDescription("Invalid request! `API Key was revoked` Please contact the developer.")

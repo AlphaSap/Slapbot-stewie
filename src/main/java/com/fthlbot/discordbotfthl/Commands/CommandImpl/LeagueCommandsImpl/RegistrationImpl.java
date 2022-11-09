@@ -1,10 +1,5 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl;
 
-import Core.Enitiy.clan.ClanModel;
-import Core.exception.ClashAPIException;
-import com.fthlbot.discordbotfthl.core.Annotation.AllowedChannel;
-import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.Commands.CommandListener.RegistrationListener;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
@@ -13,6 +8,11 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
+import com.fthlbot.discordbotfthl.core.Annotation.AllowedChannel;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
+import com.sahhiill.clashapi.core.exception.ClashAPIException;
+import com.sahhiill.clashapi.models.clan.Clan;
 import org.javacord.api.entity.channel.ChannelCategory;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.entity.channel.ServerTextChannelBuilder;
@@ -39,7 +39,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import static com.fthlbot.discordbotfthl.DiscordBotFthlApplication.clash;
-import static com.fthlbot.discordbotfthl.Util.GeneralService.*;
+import static com.fthlbot.discordbotfthl.Util.GeneralService.leagueSlashErrorMessage;
 
 @Component
 @Invoker(
@@ -120,7 +120,7 @@ public class RegistrationImpl implements RegistrationListener {
                 return;
             }
             Division division = divisionService.getDivisionByAlias(divisionAlias);
-            ClanModel clan = clash.getClan(clanTag).join();
+            Clan clan = clash.getClan(clanTag);
 
             //Make team
             Team team = new Team(

@@ -1,12 +1,13 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl;
 
-import Core.Enitiy.clan.ClanModel;
-import Core.JClash;
-import Core.exception.ClashAPIException;
+import com.fthlbot.discordbotfthl.Commands.CommandListener.ClashCommandListener.ClanInfoListener;
+import com.fthlbot.discordbotfthl.Util.ClashUtils;
+import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
-import com.fthlbot.discordbotfthl.Commands.CommandListener.ClashCommandListener.ClanInfoListener;
-import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
+import com.sahhiill.clashapi.core.ClashAPI;
+import com.sahhiill.clashapi.core.exception.ClashAPIException;
+import com.sahhiill.clashapi.models.clan.Clan;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
@@ -40,8 +41,8 @@ public class ClanInfoImpl implements ClanInfoListener {
         String tag = slash.getArguments().get(0).getStringValue().get();
 
         try {
-            JClash clash = new JClash();
-            ClanModel clan = clash.getClan(tag).join();
+            ClashAPI clash = new ClashAPI();
+            Clan clan = clash.getClan(tag);
             sendCLanInfo(clan, slash, responder.join());
         } catch (ClashAPIException ce){
             logger.error("Error getting clan info",ce);
@@ -57,7 +58,7 @@ public class ClanInfoImpl implements ClanInfoListener {
     }
 
     private void sendCLanInfo(
-            ClanModel clan,
+            Clan clan,
             SlashCommandInteraction slashInter,
             InteractionOriginalResponseUpdater responseUpdater){
 
@@ -69,9 +70,9 @@ public class ClanInfoImpl implements ClanInfoListener {
                 .setDescription(clan.getTag())
                 .setThumbnail(clan.getBadgeUrls().getMedium())
                 .addField("Description",clan.getDescription(),false)
-                .addField("Level",clan.getClanLevel().toString(),true)
+                .addField("Level",clan.getClanLevel() + "", true)
                 .addField("Members",String.format("%d/50",clan.getMembers()),true)
-                .addField("Public War Log",clan.isWarLogPublic().toString(),false)
+                .addField("Public War Log",clan.isWarLogPublic() +"",false)
                 .addField("War League",clan.getWarLeague().getName(),false)
                 .addField("Location",clan.getLocation().getName(),false)
                 .setTimestampToNow()
@@ -80,7 +81,7 @@ public class ClanInfoImpl implements ClanInfoListener {
         responseUpdater
                 .addEmbed(emb)
                 .addComponents(
-                        ActionRow.of(Button.link(clan.getLink(),"Clan Link"))
+                        ActionRow.of(Button.link(ClashUtils.getClanLink(clan),"Clan Link"))
                 )
                 .update();
     }

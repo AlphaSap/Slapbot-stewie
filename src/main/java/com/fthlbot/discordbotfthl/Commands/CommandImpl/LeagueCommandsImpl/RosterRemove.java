@@ -1,22 +1,22 @@
 package com.fthlbot.discordbotfthl.Commands.CommandImpl.LeagueCommandsImpl;
 
-import Core.Enitiy.player.Player;
-import Core.JClash;
-import Core.exception.ClashAPIException;
-import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
-import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;
+import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
 import com.fthlbot.discordbotfthl.DatabaseModels.Roster.Roster;
 import com.fthlbot.discordbotfthl.DatabaseModels.Roster.RosterService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
-import com.fthlbot.discordbotfthl.core.Handlers.Command;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
+import com.fthlbot.discordbotfthl.core.Handlers.Command;
+import com.sahhiill.clashapi.core.ClashAPI;
+import com.sahhiill.clashapi.core.exception.ClashAPIException;
+import com.sahhiill.clashapi.models.player.Player;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
@@ -67,17 +67,17 @@ public class RosterRemove implements Command {
             res.setContent("Removing " + tags.length + " accounts from " + team.getName() + "...");
             res.update();
         });
-        JClash jClash = new JClash();
+        ClashAPI clashAPI = new ClashAPI();
         for (String tag : tags) {
             try {
-                Player join = jClash.getPlayer(tag).join();
-                Roster roster = rosterService.removeFromRoster(team, join.getTag(), event.getSlashCommandInteraction().getUser());
+                Player player = clashAPI.getPlayer(tag);
+                Roster roster = rosterService.removeFromRoster(team, player.getTag(), event.getSlashCommandInteraction().getUser());
                 EmbedBuilder embedBuilder = new EmbedBuilder()
-                        .setTitle("Removed " + join.getName() + " from " + team.getName())
+                        .setTitle("Removed " + player.getName() + " from " + team.getName())
                         .setTimestampToNow()
-                        .setDescription("Tag: " + join.getTag() + "\n" +
-                                "Name: " + join.getName() + "\n" +
-                                "Level: " + join.getTownHallLevel()
+                        .setDescription("Tag: " + player.getTag() + "\n" +
+                                "Name: " + player.getName() + "\n" +
+                                "Level: " + player.getTownHallLevel()
                         ).setColor(Color.GREEN).setAuthor(event.getSlashCommandInteraction().getUser());
                 event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(embedBuilder).send();
 

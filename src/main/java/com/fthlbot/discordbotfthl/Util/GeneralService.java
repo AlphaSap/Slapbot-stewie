@@ -1,11 +1,11 @@
 package com.fthlbot.discordbotfthl.Util;
 
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.CommandException.CommandException;
-import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
-import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.LeagueException;
 import com.fthlbot.discordbotfthl.DiscordBotFthlApplication;
 import com.fthlbot.discordbotfthl.Util.Exception.UnsupportedCommandException;
+import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
+import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
@@ -241,4 +241,6 @@ public class GeneralService {
                 .setDescription(e.getMessage())
                 .setTimestampToNow();
     }
+
+
 }

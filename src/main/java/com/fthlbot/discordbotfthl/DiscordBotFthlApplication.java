@@ -1,9 +1,9 @@
 package com.fthlbot.discordbotfthl;
 
-import Core.JClash;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
 import com.fthlbot.discordbotfthl.Util.SlashGODClass;
 import com.fthlbot.discordbotfthl.core.Bot;
+import com.sahhiill.clashapi.core.ClashAPI;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
@@ -22,6 +22,7 @@ import org.springframework.core.env.Environment;
 import java.awt.*;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.CompletableFuture;
 
@@ -32,7 +33,7 @@ public class DiscordBotFthlApplication {
 
     private static final Logger log = LoggerFactory.getLogger(DiscordBotFthlApplication.class);
 
-    public static JClash clash;
+    public static ClashAPI clash;
 
     private Bot bot;
 
@@ -54,7 +55,7 @@ public class DiscordBotFthlApplication {
 
         TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
 
-        clash = new JClash(env.getProperty("CLASH_EMAIL"), env.getProperty("CLASH_PASS"));
+        clash = new ClashAPI(Objects.requireNonNull(env.getProperty("CLASH_EMAIL")), Objects.requireNonNull(env.getProperty("CLASH_PASS")));
         DiscordApi api = new DiscordApiBuilder()
                 .setToken(env.getProperty("TOKEN_BOT"))
                 .setUserCacheEnabled(true)
