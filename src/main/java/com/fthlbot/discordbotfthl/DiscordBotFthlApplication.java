@@ -70,6 +70,7 @@ public class DiscordBotFthlApplication {
         log.info("Logged in as {}", api.getYourself().getDiscriminatedName());
         log.info("Watching servers {}", servers.size());
 
+
         //Adding commands to the handle
         api.updateActivity(ActivityType.LISTENING, "Slash commands!");
 
