@@ -36,7 +36,7 @@ public class DiscordBotFthlApplication {
     public static ClashAPI clash;
 
     private Bot bot;
-
+    //slash command builder class
     private final SlashGODClass slashCommandBuilder;
 
     public DiscordBotFthlApplication(Environment env, Bot bot, SlashGODClass slashCommandBuilder) {
@@ -56,14 +56,15 @@ public class DiscordBotFthlApplication {
         TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
 
         clash = new ClashAPI(Objects.requireNonNull(env.getProperty("CLASH_EMAIL")), Objects.requireNonNull(env.getProperty("CLASH_PASS")));
+        //logging in discord
         DiscordApi api = new DiscordApiBuilder()
                 .setToken(env.getProperty("TOKEN_BOT"))
-                .setUserCacheEnabled(true)
+                .setUserCacheEnabled(true) // enabling user cache so users will be valid on startup, reduces API calls but increases memory usage
                 .setAllIntentsExcept(
                         Intent.GUILD_WEBHOOKS,
                         Intent.GUILD_INTEGRATIONS
                 ).login()
-                .join();
+                .join(); //blocking the future
 
         ArrayList<Server> servers = new ArrayList<>(api.getServers());
 
@@ -74,6 +75,7 @@ public class DiscordBotFthlApplication {
         //Adding commands to the handle
         api.updateActivity(ActivityType.LISTENING, "Slash commands!");
 
+        //command to add all slash commands
         api.addMessageCreateListener(e -> {
 
             if (e.getMessageContent().equals("!register") && e.getMessageAuthor().isBotOwner()) {
@@ -92,6 +94,7 @@ public class DiscordBotFthlApplication {
         });
 
         GeneralService.printMemoryUsage();
+        //starting the bot
         bot.Start(api);
         return api;
     }
