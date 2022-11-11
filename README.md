@@ -15,11 +15,6 @@ clash of clans leagues bot.
 ## Where can I find it?
 Either by joining [FTHL](https://discord.gg/x5jKUVkMWm) or by inviting the bot to your own server
 
-## When will it be public?
-
-As of right now I have no plans to make the project open source. It will stay a close
-project for some time before I figure out what to do!?
-
 ## What technology does SlapBot uses?
 Slapbot always uses the latest public release of [javacord](https://javacord.org/), development may use 
 Snapshot version of javacord for testing, but it's not recommenced to use the dev branch to 
