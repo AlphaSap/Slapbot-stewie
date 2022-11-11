@@ -74,3 +74,9 @@ will have an int divWeek, and an array of schedule wars, the array will have two
   ]
 }
 ```
+
+# How to build and run?
+for the most part you can run this project in [Intellij](https://www.jetbrains.com/idea/), but you can build/run it via [gradle](https://gradle.org/install/) 
+to build 
+```$ gradle build```
+then extract the zip in `/target/build/distribution/` and run the binary according to your operating system
