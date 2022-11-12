@@ -22,9 +22,6 @@ public the bot.
 
 SlapBot also used the latest version of spring boot to manage dependency injection.
 
-Lastly it uses JClash, a custom open source java clash of clans wrapper with dynamic key handling which was developed by me 
-after not having a static Ip for my home testing environment. Read more about JClash [here](https://github.com/SaHHiiLL/JClash).
-
 
 ## Required JSONs
 ### To add division week.
@@ -74,9 +71,3 @@ will have an int divWeek, and an array of schedule wars, the array will have two
   ]
 }
 ```
-
-# How to build and run?
-for the most part you can run this project in [Intellij](https://www.jetbrains.com/idea/), but you can build/run it via [gradle](https://gradle.org/install/) 
-to build 
-```$ gradle build```
-then extract the zip in `/target/build/distribution/` and run the binary according to your operating system
