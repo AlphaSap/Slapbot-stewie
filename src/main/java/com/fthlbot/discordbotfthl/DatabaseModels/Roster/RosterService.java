@@ -85,7 +85,7 @@ public class RosterService {
     private void decrementAllowedRosterChanges(Team team) throws NoMoreRosterChangesLeftException, ParseException {
         //decrement allowed roster changes
         //check if today is after the leagueStartDate in botConfig
-        if (botConfig.getLeagueStartDate().after(new Date())){
+        if (!canDecrement(team.getDivision()))
             return;
         }
         int allowRosterChangesLeft = team.getAllowRosterChangesLeft();
@@ -97,8 +97,40 @@ public class RosterService {
         team.setAllowRosterChangesLeft(allowRosterChangesLeft - 1);
         teamService.updateTeam(team);
     }
-
     public boolean isRosterChangeOpen(Division division) throws ParseException {
+        switch (division.getAlias().toLowerCase()) {
+            case "f5" -> {
+                return true;
+            }
+            case "f8" -> {
+                Date endDate = botConfig.getF8EndDate();
+                return !endDate.before(new Date());
+            }
+            case "f9" -> {
+                Date endDate = botConfig.getF9EndDate();
+                return !endDate.before(new Date());
+            }
+            case "f10" -> {
+                Date endDate = botConfig.getF10EndDate();
+                return !endDate.before(new Date());
+            }
+            case "f11" -> {
+                Date endDate = botConfig.getF11EndDate();
+                return !endDate.before(new Date());
+            }
+            case "elite" -> {
+                Date endDate = botConfig.getEliteEndDate();
+                return !endDate.before(new Date());
+            }
+            case "lite" -> {
+                Date endDate = botConfig.getLiteEndDate();
+                return !endDate.before(new Date());
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + division.getAlias().toLowerCase());
+        }
+    }
+
+    public boolean canDecrement(Division division) throws ParseException {
         switch (division.getAlias().toLowerCase()) {
             case "f5" -> {
                 return true;
