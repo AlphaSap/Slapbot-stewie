@@ -23,7 +23,7 @@ import java.util.concurrent.CompletableFuture;
 @Invoker(
         alias = "edit-transaction",
         description = "Edit transaction of a Team",
-        usage = "/edit-transaction <division> <team-alias>" ,
+        usage = "/edit-transaction <division> <team-alias> <new-value>" ,
         type = CommandType.STAFF
 )
 public class EditTransaction implements Command {

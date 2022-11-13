@@ -345,6 +345,13 @@ public class SlashGODClass {
                         new SlashCommandTempImpl().getDivisions()
                 ).addOption(
                         new SlashCommandTempImpl().getTeamName()
+                ).addOption(
+                        SlashCommandOption.create(
+                                LONG,
+                                "new-transaction-points",
+                                "A new value for the transaction",
+                                true
+                        )
                 );
     }
 
