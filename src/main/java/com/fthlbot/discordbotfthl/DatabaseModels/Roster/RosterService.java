@@ -1,7 +1,6 @@
 package com.fthlbot.discordbotfthl.DatabaseModels.Roster;
 
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
-import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.*;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
@@ -85,7 +84,7 @@ public class RosterService {
     private void decrementAllowedRosterChanges(Team team) throws NoMoreRosterChangesLeftException, ParseException {
         //decrement allowed roster changes
         //check if today is after the leagueStartDate in botConfig
-        if (!canDecrement(team.getDivision()))
+        if (!canDecrement(team.getDivision())){
             return;
         }
         int allowRosterChangesLeft = team.getAllowRosterChangesLeft();
@@ -104,27 +103,27 @@ public class RosterService {
             }
             case "f8" -> {
                 Date endDate = botConfig.getF8EndDate();
-                return !endDate.before(new Date());
+                return isTodayBetweenTwoDates(botConfig.getLeagueStartDate(), endDate);
             }
             case "f9" -> {
                 Date endDate = botConfig.getF9EndDate();
-                return !endDate.before(new Date());
+                return isTodayBetweenTwoDates(botConfig.getLeagueStartDate(), endDate);
             }
             case "f10" -> {
                 Date endDate = botConfig.getF10EndDate();
-                return !endDate.before(new Date());
+                return isTodayBetweenTwoDates(botConfig.getLeagueStartDate(), endDate);
             }
             case "f11" -> {
                 Date endDate = botConfig.getF11EndDate();
-                return !endDate.before(new Date());
+                return isTodayBetweenTwoDates(botConfig.getLeagueStartDate(), endDate);
             }
             case "elite" -> {
                 Date endDate = botConfig.getEliteEndDate();
-                return !endDate.before(new Date());
+                return isTodayBetweenTwoDates(botConfig.getLeagueStartDate(), endDate);
             }
             case "lite" -> {
                 Date endDate = botConfig.getLiteEndDate();
-                return !endDate.before(new Date());
+                return isTodayBetweenTwoDates(botConfig.getLeagueStartDate(), endDate);
             }
             default -> throw new IllegalStateException("Unexpected value: " + division.getAlias().toLowerCase());
         }
@@ -138,48 +137,43 @@ public class RosterService {
             case "f8" -> {
                 Date startDate = botConfig.getF8StartDate();
                 Date endDate = botConfig.getF8EndDate();
-                if (startDate.after(new Date()))
-                    return false;
-                return !endDate.before(new Date());
+                return isTodayBetweenTwoDates(startDate, endDate);
             }
             case "f9" -> {
                 Date startDate = botConfig.getF9StartDate();
                 Date endDate = botConfig.getF9EndDate();
-                if (startDate.after(new Date()))
-                    return false;
-                return !endDate.before(new Date());
+                return isTodayBetweenTwoDates(startDate, endDate);
             }
             case "f10" -> {
                 Date startDate = botConfig.getF10StartDate();
                 Date endDate = botConfig.getF10EndDate();
-                if (startDate.after(new Date()))
-                    return false;
-                return !endDate.before(new Date());
+                return isTodayBetweenTwoDates(startDate, endDate);
             }
             case "f11" -> {
                 Date startDate = botConfig.getF11StartDate();
                 Date endDate = botConfig.getF11EndDate();
-                if (startDate.after(new Date()))
-                    return false;
-                return !endDate.before(new Date());
+                return isTodayBetweenTwoDates(startDate, endDate);
             }
             case "elite" -> {
                 Date startDate = botConfig.getEliteStartDate();
                 Date endDate = botConfig.getEliteEndDate();
-                if (startDate.after(new Date()))
-                    return false;
-                return !endDate.before(new Date());
+                return isTodayBetweenTwoDates(startDate, endDate);
             }
             case "lite" -> {
                 Date startDate = botConfig.getLiteStartDate();
                 Date endDate = botConfig.getLiteEndDate();
-                if (startDate.after(new Date()))
-                    return false;
-                return !endDate.before(new Date());
+                return isTodayBetweenTwoDates(startDate, endDate);
             }
             default -> throw new IllegalStateException("Unexpected value: " + division.getAlias().toLowerCase());
         }
     }
+
+    private static boolean isTodayBetweenTwoDates(Date startDate, Date endDate) {
+        if (startDate.after(new Date()))
+            return false;
+        return !endDate.before(new Date());
+    }
+
     public Roster removeFromRoster(Team team, String tag, User user) throws LeagueException {
         boolean isRep =
                 team.getRep1ID().equals(user.getId())
