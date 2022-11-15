@@ -103,27 +103,27 @@ public class RosterService {
             }
             case "f8" -> {
                 Date endDate = botConfig.getF8EndDate();
-                return isTodayBetweenTwoDates(botConfig.getLeagueStartDate(), endDate);
+                return isTodayBetweenTwoDates(botConfig.getLeagueRegistrationEndDate(), endDate);
             }
             case "f9" -> {
                 Date endDate = botConfig.getF9EndDate();
-                return isTodayBetweenTwoDates(botConfig.getLeagueStartDate(), endDate);
+                return isTodayBetweenTwoDates(botConfig.getLeagueRegistrationEndDate(), endDate);
             }
             case "f10" -> {
                 Date endDate = botConfig.getF10EndDate();
-                return isTodayBetweenTwoDates(botConfig.getLeagueStartDate(), endDate);
+                return isTodayBetweenTwoDates(botConfig.getLeagueRegistrationEndDate(), endDate);
             }
             case "f11" -> {
                 Date endDate = botConfig.getF11EndDate();
-                return isTodayBetweenTwoDates(botConfig.getLeagueStartDate(), endDate);
+                return isTodayBetweenTwoDates(botConfig.getLeagueRegistrationEndDate(), endDate);
             }
             case "elite" -> {
                 Date endDate = botConfig.getEliteEndDate();
-                return isTodayBetweenTwoDates(botConfig.getLeagueStartDate(), endDate);
+                return isTodayBetweenTwoDates(botConfig.getLeagueRegistrationEndDate(), endDate);
             }
             case "lite" -> {
                 Date endDate = botConfig.getLiteEndDate();
-                return isTodayBetweenTwoDates(botConfig.getLeagueStartDate(), endDate);
+                return isTodayBetweenTwoDates(botConfig.getLeagueRegistrationEndDate(), endDate);
             }
             default -> throw new IllegalStateException("Unexpected value: " + division.getAlias().toLowerCase());
         }

@@ -87,7 +87,7 @@ public class RegistrationImpl implements RegistrationListener {
         CompletableFuture<InteractionOriginalResponseUpdater> respond = slashCommandInteraction.respondLater();
 
         //check if today is between league start date and registration start date from config
-        if (!isRegistrationOpen()) {
+        if (!isRegistrationOpen(slashCommandInteraction.getUser())) {
             //TODO: check if the person trying to register is a staff
             respond.thenAccept(res -> res.setContent("Registration is closed").update());
             return;
@@ -189,11 +189,14 @@ public class RegistrationImpl implements RegistrationListener {
         }
     }
 
-    private boolean isRegistrationOpen() {
+    private boolean isRegistrationOpen(User user) {
+        //if the user is a bot owner then it will return and carry on with the registration
+        if (user.isBotOwner()) return true;
+
         Date registrationDate;
         try {
             registrationDate = config.getRegistrationDate(); //start
-            Date leagueStartDate = config.getLeagueStartDate(); //end
+            Date leagueStartDate = config.getLeagueRegistrationEndDate(); //end
 
             if (registrationDate.after(new Date()))
                 return false;

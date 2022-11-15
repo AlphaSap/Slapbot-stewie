@@ -86,8 +86,8 @@ public class BotConfig {
     @Value("${lite.endTime}")
     private String liteEndDate;
 
-    @Value("${league.startDate}")
-    private String leagueStartDate;
+    @Value("${league.RegistrationEndDate}")
+    private String leagueRegistrationEndDate;
     @Value("${league.RegistrationStartDate}")
     private String leagueRegistrationStartDate;
 
@@ -229,8 +229,8 @@ public class BotConfig {
      return dates;
     }
 
-    public Date getLeagueStartDate() throws ParseException {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(leagueStartDate);
+    public Date getLeagueRegistrationEndDate() throws ParseException {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(leagueRegistrationEndDate);
     }
     public Date getRegistrationDate() throws ParseException {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(leagueRegistrationStartDate);
