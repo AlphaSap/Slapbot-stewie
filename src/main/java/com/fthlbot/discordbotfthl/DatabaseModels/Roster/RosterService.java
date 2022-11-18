@@ -41,7 +41,13 @@ public class RosterService {
         Optional<Roster> alreadyAddedAccount = repo.findRosterByPlayerTagAndDivision(roster.getPlayerTag(), roster.getDivision());
         List<Roster> rosterByTeam = repo.findRosterByTeam(roster.getTeam());
 
+        // check if roster change is open, does not include the grey period
         if (!isRosterChangeOpen(roster.getDivision())) {
+            throw new UnExpectedLeagueException("Roster Changes for " + roster.getDivision().getAlias() + " is locked!");
+        }
+
+        // throw an exception if we are in grey period.
+        if (isGreyPeriod(roster.getDivision())) {
             throw new UnExpectedLeagueException("Roster Changes for " + roster.getDivision().getAlias() + " is locked!");
         }
 
@@ -124,6 +130,26 @@ public class RosterService {
             case "lite" -> {
                 Date endDate = botConfig.getLiteEndDate();
                 return isTodayBetweenTwoDates(botConfig.getLeagueRegistrationEndDate(), endDate);
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + division.getAlias().toLowerCase());
+        }
+    }
+
+    /**
+     * No roster addition are allowed during this period.
+     * @param division
+     * @return true if today's date is between
+     * @throws ParseException
+     */
+    public boolean isGreyPeriod(Division division) throws ParseException {
+        switch (division.getAlias().toLowerCase()) {
+            case "f5" -> {
+                return true;
+            }
+            case "f8", "f10", "f9", "f11", "elite", "lite" -> {
+                Date startDate = botConfig.getLeagueGrepPeriodStartDate();
+                Date endDate = botConfig.getLeagueGrepPeriodEndDate();
+                return isTodayBetweenTwoDates(startDate, endDate);
             }
             default -> throw new IllegalStateException("Unexpected value: " + division.getAlias().toLowerCase());
         }

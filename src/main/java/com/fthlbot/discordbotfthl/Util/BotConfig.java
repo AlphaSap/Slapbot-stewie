@@ -91,6 +91,11 @@ public class BotConfig {
     @Value("${league.RegistrationStartDate}")
     private String leagueRegistrationStartDate;
 
+    @Value("${league.GreyPeriodStartDate}")
+    private String leagueGrepPeriodStartDate;
+
+     @Value("${league.GreyPeriodEndDate}")
+    private String leagueGrepPeriodEndDate;
 
     public Date getF8StartDate() throws ParseException {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(f8StartDate);
@@ -246,5 +251,13 @@ public class BotConfig {
 
     public Date getLiteEndDate() throws ParseException {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(liteEndDate);
+    }
+
+    public Date getLeagueGrepPeriodStartDate() throws ParseException {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(leagueGrepPeriodStartDate);
+    }
+
+    public Date getLeagueGrepPeriodEndDate() throws ParseException {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(leagueGrepPeriodEndDate);
     }
 }
