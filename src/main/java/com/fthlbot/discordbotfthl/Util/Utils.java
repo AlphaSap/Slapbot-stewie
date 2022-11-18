@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,7 +41,9 @@ public class Utils {
             default -> null;
         };
     }
-    public JSONArray getJsonArray(DiscordApi api, CompletableFuture<InteractionOriginalResponseUpdater> respondLater, String json) {
+    public JSONArray getJsonArray(DiscordApi api,
+                                  CompletableFuture<InteractionOriginalResponseUpdater> respondLater,
+                                  String json) throws ExecutionException, InterruptedException {
         JSONArray s;
         Pattern messageLink = DiscordRegexPattern.MESSAGE_LINK;
 
@@ -52,7 +55,7 @@ public class Utils {
                 List<MessageAttachment> attachments = message.getAttachments();
 
                 if (attachments.size() >= 1) {
-                    byte[] join = attachments.get(0).downloadAsByteArray().join();
+                    byte[] join = attachments.get(0).asByteArray().get();
                     String s1 = new String(join, StandardCharsets.UTF_8);
                     s = new JSONArray(s1);
                 } else {
@@ -73,7 +76,9 @@ public class Utils {
         return s;
     }
 
-    public JSONObject getJsonObject(SlashCommandCreateEvent event, CompletableFuture<InteractionOriginalResponseUpdater> respondLater, String json) {
+    public JSONObject getJsonObject(SlashCommandCreateEvent event,
+                                    CompletableFuture<InteractionOriginalResponseUpdater> respondLater,
+                                    String json) {
         JSONObject s;
         Pattern messageLink = DiscordRegexPattern.MESSAGE_LINK;
 
@@ -86,7 +91,7 @@ public class Utils {
                     List<MessageAttachment> attachments = message.getAttachments();
 
                     if (attachments.size() >= 1) {
-                        byte[] join = attachments.get(0).downloadAsByteArray().join();
+                        byte[] join = attachments.get(0).asByteArray().get();
                         String s1 = new String(join, StandardCharsets.UTF_8);
                         s = new JSONObject(s1);
                     } else {

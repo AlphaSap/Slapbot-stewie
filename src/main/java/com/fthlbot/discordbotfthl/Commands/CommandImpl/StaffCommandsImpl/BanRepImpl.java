@@ -43,9 +43,9 @@ public class BanRepImpl implements Command {
     @Override
     public void execute(SlashCommandCreateEvent event) {
 
-        Optional<User> userValue = event.getSlashCommandInteraction().getOptionUserValueByName("user");
+        Optional<User> userValue = event.getSlashCommandInteraction().getArgumentUserValueByName("user");
 
-        Optional<Long> longValue = event.getSlashCommandInteraction().getOptionLongValueByName("discord-id");
+        Optional<Long> longValue = event.getSlashCommandInteraction().getArgumentLongValueByName("discord-id");
 
         if (userValue.isEmpty() && longValue.isEmpty()){
             event.getSlashCommandInteraction().createImmediateResponder().setContent("Please provide a user or discord-ID").respond();
@@ -54,9 +54,9 @@ public class BanRepImpl implements Command {
         CompletableFuture<InteractionOriginalResponseUpdater> respondLater = event.getSlashCommandInteraction().respondLater();
         long userID = userValue.map(DiscordEntity::getId).orElseGet(longValue::get);
 
-        Optional<String> reason = event.getSlashCommandInteraction().getOptionStringValueByName("reason");
+        Optional<String> reason = event.getSlashCommandInteraction().getArgumentStringValueByName("reason");
 
-        Optional<String> notes = event.getSlashCommandInteraction().getOptionStringValueByName("notes");
+        Optional<String> notes = event.getSlashCommandInteraction().getArgumentStringValueByName("notes");
 
         try {
             bannedRepService.banRep(userID,
