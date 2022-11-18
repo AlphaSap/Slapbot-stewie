@@ -68,7 +68,16 @@ public class AddDivisionWeeksImpl implements AddDivisionWeekListener {
         String json = arguments.get(1).getStringValue().get();
         JSONArray s = null;
 
-        s = utils.getJsonArray(event.getApi(), respondLater, json);
+        try {
+            s = utils.getJsonArray(event.getApi(), respondLater, json);
+        }catch (Exception e) {
+            String message = """
+                    Check the json format. If the format is correct than look at the following message
+                    Message: %s
+                    """.formatted(e.getMessage());
+           GeneralService.leagueSlashErrorMessage(respondLater, message);
+           return;
+        }
 
         //Return because the error message will be sent via the getJsonArray method
         if (s == null) return;
