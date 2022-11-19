@@ -194,10 +194,9 @@ public class RosterService {
         }
     }
 
-    private static boolean isTodayBetweenTwoDates(Date startDate, Date endDate) {
-        if (startDate.after(new Date()))
-            return false;
-        return !endDate.before(new Date());
+    private static boolean isTodayBetweenTwoDates(Date startDate, Date endDate)  {
+        Date today = new Date();
+        return startDate.before(today) && endDate.after(today);
     }
 
     public Roster removeFromRoster(Team team, String tag, User user) throws LeagueException {
