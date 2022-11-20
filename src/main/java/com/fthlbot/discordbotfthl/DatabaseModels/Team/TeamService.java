@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TeamService {
@@ -181,5 +182,16 @@ public class TeamService {
         if (division.isPresent())
             return repo.searchByNameOrAliasAndDivision(query, query, division.get());
         return repo.searchByNameOrAlias(query, query);
+    }
+
+    public List<Team> searchTeamWithDepth(String query, Optional<Division> division){
+        return repo.findAll().stream()
+                .filter(x -> {
+                    if (division.isEmpty()) return true;
+                    return x.getDivision().getName().equals(division.get().getName());
+                }).toList()
+                .stream()
+                .filter(x -> x.getName().toLowerCase().startsWith(query.toLowerCase()))
+                .toList();
     }
 }

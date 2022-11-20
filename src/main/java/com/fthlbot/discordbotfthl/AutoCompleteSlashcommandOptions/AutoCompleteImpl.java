@@ -40,7 +40,7 @@ public class AutoCompleteImpl implements AutocompleteCreateListener {
     }
 
     private List<String> getTeamNames(String query, Division division) {
-        List<Team> teams = teamService.searchTeam(query, Optional.ofNullable(division));
+        List<Team> teams = teamService.searchTeamWithDepth(query, Optional.ofNullable(division));
         return teams.stream()
                 .map(Team::getName)
                 .limit(20)
