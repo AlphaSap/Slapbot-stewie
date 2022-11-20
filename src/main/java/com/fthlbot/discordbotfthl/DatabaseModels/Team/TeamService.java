@@ -189,9 +189,7 @@ public class TeamService {
                 .filter(x -> {
                     if (division.isEmpty()) return true;
                     return x.getDivision().getName().equals(division.get().getName());
-                }).toList()
-                .stream()
-                .filter(x -> x.getName().toLowerCase().startsWith(query.toLowerCase()) || x.getAlias().toLowerCase().startsWith(query.toLowerCase()))
+                }).filter(x -> x.getName().toLowerCase().startsWith(query.toLowerCase()) || x.getAlias().toLowerCase().startsWith(query.toLowerCase()))
                 .toList();
     }
 }
