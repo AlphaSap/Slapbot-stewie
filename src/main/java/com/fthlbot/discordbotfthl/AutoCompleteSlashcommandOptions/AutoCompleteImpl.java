@@ -20,23 +20,24 @@ public class AutoCompleteImpl implements AutocompleteCreateListener {
         this.teamService = teamService;
     }
 
-    @Override
-    public void onAutocompleteCreate(AutocompleteCreateEvent event) {
-       String name = event.getAutocompleteInteraction().getFocusedOption().getName();
-       if (!name.equalsIgnoreCase("team-identifier")) {
-           return;
-       }
-
-       Optional<String> stringValue = event.getAutocompleteInteraction().getFocusedOption().getStringValue();
-       if (stringValue.isEmpty()){
-           System.out.println("No input yet!");
-           return;
-       }
-
-       List<String> teams = getTeamNames(stringValue.get(), null);
-       List<SlashCommandOptionChoice> options = parseOptionFromListOfString(teams);
-       event.getAutocompleteInteraction().respondWithChoices(options);
-    }
+//    @Override
+//    public void onAutocompleteCreate(AutocompleteCreateEvent event) {
+//       String name = event.getAutocompleteInteraction().getFocusedOption().getName();
+//       if (!name.equalsIgnoreCase("team-identifier")) {
+//           return;
+//       }
+//
+//       Optional<String> stringValue = event.getAutocompleteInteraction().getFocusedOption().getStringValue();
+//       if (stringValue.isEmpty()){
+//           System.out.println("No input yet!");
+//           return;
+//       }
+//
+//       List<String> teams = getTeamNames(stringValue.get(), null);
+//        System.out.println(teams);
+//       List<SlashCommandOptionChoice> options = parseOptionFromListOfString(teams);
+//       event.getAutocompleteInteraction().respondWithChoices(options);
+//    }
 
     private List<String> getTeamNames(String query, Division division) {
         List<Team> teams = teamService.searchTeam(query, Optional.ofNullable(division));
@@ -51,5 +52,10 @@ public class AutoCompleteImpl implements AutocompleteCreateListener {
         return query.stream()
                 .map(x -> SlashCommandOptionChoice.create(x, i))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void onAutocompleteCreate(AutocompleteCreateEvent event) {
+        System.out.println(event.getAutocompleteInteraction().getFocusedOption().getStringValue().orElse("Nothing xd"));
     }
 }
