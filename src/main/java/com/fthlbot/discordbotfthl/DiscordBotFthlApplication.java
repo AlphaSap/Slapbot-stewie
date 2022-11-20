@@ -40,10 +40,13 @@ public class DiscordBotFthlApplication {
     //slash command builder class
     private final SlashGODClass slashCommandBuilder;
 
-    public DiscordBotFthlApplication(Environment env, Bot bot, SlashGODClass slashCommandBuilder) {
+    private final AutoCompleteImpl autoCompleteListener;
+
+    public DiscordBotFthlApplication(Environment env, Bot bot, SlashGODClass slashCommandBuilder, AutoCompleteImpl autoCompleteListener) {
         this.env = env;
         this.bot = bot;
         this.slashCommandBuilder = slashCommandBuilder;
+        this.autoCompleteListener = autoCompleteListener;
     }
 
     public static void main(String[] args) {
@@ -94,7 +97,7 @@ public class DiscordBotFthlApplication {
             }
         });
 
-        api.addAutocompleteCreateListener(new AutoCompleteImpl(teamService));
+        api.addAutocompleteCreateListener(autoCompleteListener);
 
         GeneralService.printMemoryUsage();
         //starting the bot
