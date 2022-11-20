@@ -176,4 +176,10 @@ public class TeamService {
         team = repo.save(team);
         return team;
     }
+
+    public List<Team> searchTeam(String query, Optional<Division> division) {
+        if (division.isPresent())
+            return repo.searchByNameOrAliasAndDivision(query, query, division.get());
+        return repo.searchByNameOrAlias(query, query);
+    }
 }

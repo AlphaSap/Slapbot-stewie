@@ -20,4 +20,8 @@ public interface TeamRepo extends JpaRepository<Team, Integer> {
     List<Team> findTeamByDivision(Division division);
 
     List<Team> findTeamByRep1IDOrRep2ID(long id, long id2);
+
+    List<Team> searchByNameOrAliasAndDivision(String  name, String alias, Division division);
+
+    List<Team> searchByNameOrAlias(String  name, String alias);
 }

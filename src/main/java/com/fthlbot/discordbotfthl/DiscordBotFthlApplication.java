@@ -94,7 +94,7 @@ public class DiscordBotFthlApplication {
             }
         });
 
-        api.addAutocompleteCreateListener(new AutoCompleteImpl());
+        api.addAutocompleteCreateListener(new AutoCompleteImpl(teamService));
 
         GeneralService.printMemoryUsage();
         //starting the bot
