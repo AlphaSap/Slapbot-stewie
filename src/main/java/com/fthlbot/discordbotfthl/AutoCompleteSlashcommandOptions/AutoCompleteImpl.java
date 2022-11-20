@@ -1,4 +1,4 @@
-package com.fthlbot.discordbotfthl;
+package com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions;
 
 import org.javacord.api.event.interaction.AutocompleteCreateEvent;
 import org.javacord.api.interaction.SlashCommandOptionChoice;
@@ -11,12 +11,6 @@ import java.util.List;
 public class AutoCompleteImpl implements AutocompleteCreateListener {
     @Override
     public void onAutocompleteCreate(AutocompleteCreateEvent event) {
-        String commandName = event.getAutocompleteInteraction().getCommandName();
-
         System.out.println("Autocomplete created");
-
-        event.getAutocompleteInteraction().respondWithChoices(List.of(
-                SlashCommandOptionChoice.create("!help", "Shows the list of commands")
-        ));
     }
 }

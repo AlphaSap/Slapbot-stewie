@@ -230,7 +230,6 @@ public class RosterService {
     /**
      * used for removing fp check command
      * @see com.fthlbot.discordbotfthl.Commands.CommandImpl.StaffCommandsImpl.FairPlayCheckOnAllTeamImpl
-     * @param roster
      */
     public void removeRoster(Roster roster) {
         repo.delete(roster);

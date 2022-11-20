@@ -15,5 +15,4 @@ package com.fthlbot.discordbotfthl.core.Annotation;
  */
 public enum CommandType {
     REGISTRATION, ROSTER_MANAGEMENT, STAFF, INFO, SCHEDULE, MISC, UNSUPPORTED, IGNORE, TEAM, CLASH, DEV
-
 }

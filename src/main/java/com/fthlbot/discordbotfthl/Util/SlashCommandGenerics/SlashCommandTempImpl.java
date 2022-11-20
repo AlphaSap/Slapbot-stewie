@@ -28,10 +28,10 @@ public class SlashCommandTempImpl implements SlashCommandTemp {
 
     @Override
     public SlashCommandOption getTeamName() {
-        return SlashCommandOption.create(
-                SlashCommandOptionType.STRING,
+        return SlashCommandOption.createStringOption(
                 "team-identifier",
                 "Enter the name/alias of the team you want to delete",
+                true,
                 true
         );
     }

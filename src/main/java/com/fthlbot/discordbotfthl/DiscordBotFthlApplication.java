@@ -1,5 +1,6 @@
 package com.fthlbot.discordbotfthl;
 
+import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.AutoCompleteImpl;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
 import com.fthlbot.discordbotfthl.Util.SlashGODClass;
 import com.fthlbot.discordbotfthl.core.Bot;
@@ -92,6 +93,8 @@ public class DiscordBotFthlApplication {
                 });
             }
         });
+
+        api.addAutocompleteCreateListener(new AutoCompleteImpl());
 
         GeneralService.printMemoryUsage();
         //starting the bot
