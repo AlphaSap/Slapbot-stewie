@@ -39,7 +39,7 @@ public class BannedRepService {
         log.info("Rep with discordID: " + discordID + " is not banned");
 
         log.info("getting team for rep with discordID: " + discordID);
-        Pair<String, String> repAndDeleteHimFromAllTeam = teamService.findRepAndDeleteHimFromAllTeam(discordID);
+        Pair<String, String> repAndDeleteHimFromAllTeam = teamService.findRepAndDeleteFromAllTeam(discordID);
 
         log.info("making banned rep with discordID: " + discordID);
         BannedRep b = new BannedRep(

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TeamService {
@@ -148,7 +147,7 @@ public class TeamService {
         return repo.findAll();
     }
 
-    public Pair<String, String> findRepAndDeleteHimFromAllTeam(long userID) {
+    public Pair<String, String> findRepAndDeleteFromAllTeam(long userID) {
         List<Team> teams = getTeamByRep(userID);
         StringBuilder teamName = new StringBuilder("");
         StringBuilder divName = new StringBuilder("");
@@ -178,12 +177,23 @@ public class TeamService {
         return team;
     }
 
+    /**
+     * this method relies on JPA to find the match
+     * @param query search term, can be the teams name or the alias.
+     * @param division will match if division-option is present.
+     * @return a list of possible teams the user should be searching for.
+     */
     public List<Team> searchTeam(String query, Optional<Division> division) {
         if (division.isPresent())
             return repo.searchByNameOrAliasAndDivision(query, query, division.get());
         return repo.searchByNameOrAlias(query, query);
     }
-
+    /**
+     * this method relies on a custom filter to narrow down the list of teams
+     * @param query search term, can be the teams name or the alias.
+     * @param division will match if division-option is present.
+     * @return a list of possible teams the user should be searching for.
+     */
     public List<Team> searchTeamWithDepth(String query, Optional<Division> division){
         return repo.findAll().stream()
                 .filter(x -> {
