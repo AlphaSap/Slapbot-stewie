@@ -53,6 +53,7 @@ public class AutoCompleteImpl implements AutocompleteCreateListener {
        }
 
        List<String> teams = getTeamNames(stringValue.get(), division, event.getAutocompleteInteraction().getUser());
+        System.out.println(teams);
        List<SlashCommandOptionChoice> options = parseOptionFromListOfString(teams);
        event.getAutocompleteInteraction().respondWithChoices(options);
     }
