@@ -30,6 +30,9 @@ public class RosterAddUtilClass {
     //TODO: https://stackoverflow.com/questions/22561110/equivalent-of-go-channel-in-java
     private final static Logger log = LoggerFactory.getLogger(RosterAddUtilClass.class);
 
+    /*
+     * Come back and re-implement this!!
+     */
     public void addPlayers(SlashCommandCreateEvent event, SlashCommandInteraction interaction, Set<String> tags, Team team, RosterService service, BotConfig config, Boolean checks) {
         for (String tag : tags) {
             CompletableFuture.runAsync(() -> {

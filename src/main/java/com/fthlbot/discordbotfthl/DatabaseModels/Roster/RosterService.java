@@ -250,7 +250,15 @@ public class RosterService {
      *
      */
     @Transactional
-    public synchronized Roster forceAdd (Roster player) {
+    public synchronized Roster forceAdd (Roster player) throws EntityAlreadyExistsException {
+        Optional<Roster> alreadyAddedAccount = repo.findRosterByPlayerTagAndDivision(player.getPlayerTag(), player.getDivision());
+
+        if (alreadyAddedAccount.isPresent()){
+            throw new EntityAlreadyExistsException(
+                    "`"+alreadyAddedAccount.get().getPlayerTag()+"` is already rostered with the team `"+alreadyAddedAccount.get().getTeam().getName()+
+                            "`"
+            );
+        }
         return repo.save(player);
     }
 }
