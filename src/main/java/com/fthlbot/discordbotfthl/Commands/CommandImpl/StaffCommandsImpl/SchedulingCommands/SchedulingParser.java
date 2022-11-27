@@ -57,9 +57,10 @@ public class SchedulingParser implements Command {
             String sb = parse(toParseString);
             response.thenAccept(r -> r.setContent("```" + sb.toString() + "```").update());
         }catch (ArrayIndexOutOfBoundsException e) {
-            response.thenAccept(r -> r.setContent("```" + "Please enter the text as Text example:\n" +
-                    "TEAMIDvTEAMID\n" +
-                    "TEAMIDvTEAMID" + "```").update());
+            response.thenAccept(r -> r.setContent("""
+                    ```Please enter the text as example:
+                    TEAM_IDvTEAM_ID
+                    TEAM_IDvTEAM_ID```""").update());
         }catch (Exception e) {
             response.thenAccept(r -> r.setContent("```" + "Error: " + e.getMessage() + "```").update());
         }

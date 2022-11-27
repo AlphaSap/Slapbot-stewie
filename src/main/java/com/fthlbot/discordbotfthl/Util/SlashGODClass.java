@@ -55,6 +55,16 @@ public class SlashGODClass {
         );
     }
 
+    public SlashCommandBuilder createRemoveChannelsFromCategoryExceptOne() {
+        return SlashCommand.with("delete-category-with-channel", "Deletes multiple channels")
+                .setOptions(
+                        List.of(
+                                SlashCommandOption.create(STRING, "categories", "categories to except", false)
+
+                        )
+                );
+    }
+
     public SlashCommandBuilder createRegistrationCommand() {
         return SlashCommand
                 .with("register", "command to register")

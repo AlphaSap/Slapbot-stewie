@@ -141,7 +141,9 @@ public class Bot {
 
     private final EditTransaction editTransaction;
 
-    public Bot(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashGODClass builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemberJoin, ApplicantServerJoinImpl applicantServerJoin, ServerJoinImpl serverJoin, ServerLeaveImpl serverLeave, DivisionEditorImpl divisionEditor, InfoCommandImpl infoCommandImpl, ClanLineup clanLineup, ModerationFilterWords moderationFilterWords, FilterWordsEdit filterWordsEdit, CheckEveryRepHasJoinThisServerImpl checkEveryRepHasJoinThisServer, GiveRolesImpl giveRoles, SchedulingParser schedulingParser, ShowScheduleWars showScheduleWars, MinionBotStatsStringImpl minionBotStatsString, BanRepImpl banRep, ForceAddImpl forceAdd, AddRegistrationChannel addRegistrationChannel, ChangeRepWithIDImpl changeRepWithID, EditTransaction editTransaction) {
+    private final RemoveChannelsFromCategoryExceptOne removeChannelsFromCategoryExceptOne;
+
+    public Bot(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashGODClass builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemberJoin, ApplicantServerJoinImpl applicantServerJoin, ServerJoinImpl serverJoin, ServerLeaveImpl serverLeave, DivisionEditorImpl divisionEditor, InfoCommandImpl infoCommandImpl, ClanLineup clanLineup, ModerationFilterWords moderationFilterWords, FilterWordsEdit filterWordsEdit, CheckEveryRepHasJoinThisServerImpl checkEveryRepHasJoinThisServer, GiveRolesImpl giveRoles, SchedulingParser schedulingParser, ShowScheduleWars showScheduleWars, MinionBotStatsStringImpl minionBotStatsString, BanRepImpl banRep, ForceAddImpl forceAdd, AddRegistrationChannel addRegistrationChannel, ChangeRepWithIDImpl changeRepWithID, EditTransaction editTransaction, RemoveChannelsFromCategoryExceptOne removeChannelsFromCategoryExceptOne) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -191,6 +193,7 @@ public class Bot {
         this.addRegistrationChannel = addRegistrationChannel;
         this.changeRepWithID = changeRepWithID;
         this.editTransaction = editTransaction;
+        this.removeChannelsFromCategoryExceptOne = removeChannelsFromCategoryExceptOne;
         log.info("Bot object created");
     }
 
@@ -239,7 +242,8 @@ public class Bot {
                 this.forceAdd,
                 this.addRegistrationChannel,
                 this.changeRepWithID,
-                this.editTransaction
+                this.editTransaction,
+                this.removeChannelsFromCategoryExceptOne
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
