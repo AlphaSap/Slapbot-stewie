@@ -60,7 +60,7 @@ public class RosterAdditionImpl extends RosterAddUtilClass implements RosterAddL
             String[] tags = arguments.get(2).getStringValue().get().split("\\s+");
 
             //Conversion to set is necessary to remove duplicates - which would go un notice inside the database when queried at the same time.
-            Set<String> collect = Arrays.stream(tags).collect(Collectors.toSet());
+            Set<String> collect = Arrays.stream(tags).map(x -> x.trim().toLowerCase()).collect(Collectors.toSet());
 
             Division division = divisionService.getDivisionByAlias(divisionAlias);
             Team team = teamService.getTeamByDivisionAndAlias(teamAlias, division);

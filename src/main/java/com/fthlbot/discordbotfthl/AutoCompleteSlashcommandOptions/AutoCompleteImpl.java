@@ -38,7 +38,6 @@ public class AutoCompleteImpl implements AutocompleteCreateListener {
 
        Optional<String> stringValue = event.getAutocompleteInteraction().getFocusedOption().getStringValue();
        if (stringValue.isEmpty()){
-           System.out.println("No input yet!");
            return;
        }
        Division division = null;
@@ -53,7 +52,6 @@ public class AutoCompleteImpl implements AutocompleteCreateListener {
        }
 
        List<String> teams = getTeamNames(stringValue.get(), division, event.getAutocompleteInteraction().getUser());
-        System.out.println(teams);
        List<SlashCommandOptionChoice> options = parseOptionFromListOfString(teams);
        event.getAutocompleteInteraction().respondWithChoices(options);
     }

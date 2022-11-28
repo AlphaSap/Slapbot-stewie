@@ -54,7 +54,7 @@ public class RemoveChannelsFromCategoryExceptOne implements Command {
             desMessage = desMessage + "\nYou have chosen all the categories to be removed!";
         } else {
             String ids = exceptionChannels.stream().map(String::valueOf).toList().toString();
-            desMessage = desMessage + "\n" + ids;
+            desMessage = desMessage + "\nFollowing categories will not be deleted!\n" + ids;
         }
         em.setDescription(desMessage);
         em.setColor(Color.red);

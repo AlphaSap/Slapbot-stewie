@@ -30,7 +30,7 @@ dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
     implementation 'com.google.code.gson:gson:2.10'
-    implementation 'com.github.SaHHiiLL:clash-api:42540cfc93'
+    implementation  'com.github.SaHHiiLL:clash-api:dev-fa5591cc78-1'
     implementation group: 'org.json', name: 'json', version: '20220320'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
