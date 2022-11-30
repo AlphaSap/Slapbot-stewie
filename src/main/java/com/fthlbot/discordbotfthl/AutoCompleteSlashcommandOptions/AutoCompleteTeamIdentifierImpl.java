@@ -19,10 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@AutoCompleteMetaData(
-        optionName = "team-identifier",
-        ignoreCommands = {}
-)
+@AutoCompleteMetaData(optionName = "team-identifier")
 @Component
 public class AutoCompleteTeamIdentifierImpl implements AutoCompleter {
 private final TeamService teamService;
@@ -39,14 +36,9 @@ private final TeamService teamService;
      @Override
     public void execute(AutocompleteCreateEvent event) {
        String name = event.getAutocompleteInteraction().getFocusedOption().getName();
-       if (!name.equalsIgnoreCase("team-identifier")) {
-           return;
-       }
 
        Optional<String> stringValue = event.getAutocompleteInteraction().getFocusedOption().getStringValue();
-       if (stringValue.isEmpty()){
-           return;
-       }
+
        Division division = null;
        var div = event.getAutocompleteInteraction().getArgumentStringValueByName("division");
        if (div.isPresent()) {
@@ -58,12 +50,12 @@ private final TeamService teamService;
            }
        }
 
-       List<String> teams = getTeamNames(stringValue.get(), division, event.getAutocompleteInteraction().getUser());
+       List<String> teams = getTeamNames(stringValue, division, event.getAutocompleteInteraction().getUser());
        List<SlashCommandOptionChoice> options = parseOptionFromListOfString(teams);
        event.getAutocompleteInteraction().respondWithChoices(options);
     }
 
-    private List<String> getTeamNames(String query, Division division, User user) {
+    private List<String> getTeamNames(Optional<String> query, Division division, User user) {
         List<Team> teams = teamService.searchTeamWithDepth(query, Optional.ofNullable(division));
         return teams.stream()
                 .map(Team::getName)

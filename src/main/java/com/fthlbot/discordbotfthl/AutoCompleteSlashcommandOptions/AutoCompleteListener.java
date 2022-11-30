@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Component
@@ -23,11 +22,18 @@ public class AutoCompleteListener implements AutocompleteCreateListener {
     private final HashMap<String, AutoCompleter> autoCompleteMap = new HashMap<>();
     private final Logger log = LoggerFactory.getLogger(AutoCompleteListener.class);
 
-    public AutoCompleteListener(List<AutoCompleter> autoCompleteMap) {
-        for (AutoCompleter autoComplete : autoCompleteMap) {
-            for (Annotation annotation : autoComplete.getClass().getAnnotations()) {
-                if (annotation instanceof AutoCompleteMetaData) {
-                    this.autoCompleteMap.put(((AutoCompleteMetaData) annotation).optionName(), (AutoCompleter) annotation);
+    public AutoCompleteListener(List<AutoCompleter> autoCompleters) {
+        log.info("hi");
+
+        for (AutoCompleter autoCompleter : autoCompleters) {
+            Annotation[] annotations = autoCompleter.getClass().getAnnotations();
+            log.info("length= {}", annotations.length);
+            for (Annotation annotation : annotations) {
+                log.info(autoCompleter.getClass().getName());
+                log.info(annotation.getClass().getName());
+                if (annotation instanceof AutoCompleteMetaData metaData) {
+                    log.info("hi again!");
+                    this.autoCompleteMap.put(metaData.optionName(), autoCompleter);
                 }
             }
         }
@@ -37,27 +43,14 @@ public class AutoCompleteListener implements AutocompleteCreateListener {
     @Override
     public void onAutocompleteCreate(AutocompleteCreateEvent event) {
         CompletableFuture.runAsync(() -> {
-            Optional<String> stringValue = event.getAutocompleteInteraction().getFocusedOption().getStringValue();
-            if (stringValue.isEmpty()) {
-                log.warn("An autocomplete listener was fired, but cannot find the focused string value.");
-                return;
-            }
+           String stringValue = event.getAutocompleteInteraction().getFocusedOption().getName();
 
-            log.info(stringValue.get());
-            AutoCompleter autoCompleter = autoCompleteMap.get(stringValue.get());
+            AutoCompleter autoCompleter = autoCompleteMap.get(stringValue);
             if (autoCompleter == null) {
-                log.warn("An autocomplete listener was fired, with no handler loaded! {}", stringValue.get());
+                log.warn("An autocomplete listener was fired, with no handler loaded! {}", stringValue);
                 return;
             }
-            if (autoCompleter instanceof AutoCompleteMetaData) {
-                //TODO: this part is probably not important as I can just set a specific command to not listen to autocomplete, should be removed after testing.
-                if (((AutoCompleteMetaData) autoCompleter).ignoreCommands().length != 0) {
-                    for (String s : ((AutoCompleteMetaData) autoCompleter).ignoreCommands()) {
-                        if (s.equalsIgnoreCase(event.getAutocompleteInteraction().getCommandName())) return;
-                    }
-                }
-                autoCompleter.execute(event);
-            }
+            autoCompleter.execute(event);
         });
     }
 }

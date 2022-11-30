@@ -194,12 +194,21 @@ public class TeamService {
      * @param division will match if division-option is present.
      * @return a list of possible teams the user should be searching for.
      */
-    public List<Team> searchTeamWithDepth(String query, Optional<Division> division){
+    public List<Team> searchTeamWithDepth(Optional<String> query, Optional<Division> division){
+        if (query.isEmpty()) {
+            return repo
+                    .findAll()
+                    .stream()
+                    .filter(x -> {
+                        if (division.isEmpty()) return true;
+                        return x.getName().equalsIgnoreCase(division.get().getName());
+                    }).toList();
+        }
         return repo.findAll().stream()
                 .filter(x -> {
                     if (division.isEmpty()) return true;
                     return x.getDivision().getName().equals(division.get().getName());
-                }).filter(x -> x.getName().toLowerCase().startsWith(query.toLowerCase()) || x.getAlias().toLowerCase().startsWith(query.toLowerCase()))
+                }).filter(x -> x.getName().toLowerCase().startsWith(query.get().toLowerCase()) || x.getAlias().toLowerCase().startsWith(query.get().toLowerCase()))
                 .toList();
     }
 }
