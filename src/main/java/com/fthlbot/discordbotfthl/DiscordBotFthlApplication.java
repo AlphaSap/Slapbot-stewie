@@ -45,7 +45,6 @@ public class DiscordBotFthlApplication {
         this.env = env;
         this.bot = bot;
         this.slashCommandBuilder = slashCommandBuilder;
-        this.autoCompleteListener = autoCompleteListener;
     }
 
     public static void main(String[] args) {
