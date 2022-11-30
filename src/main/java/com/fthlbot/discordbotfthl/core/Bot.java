@@ -1,5 +1,8 @@
 package com.fthlbot.discordbotfthl.core;
 
+import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.AutoCompleteHandler.AutoCompleter;
+import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.AutoCompleteListener;
+import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.AutoCompleteTeamIdentifierImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands.FilterWords.FilterWordsEdit;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands.FilterWords.ModerationFilterWords;
@@ -143,7 +146,8 @@ public class Bot {
 
     private final RemoveChannelsFromCategoryExceptOne removeChannelsFromCategoryExceptOne;
 
-    public Bot(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashGODClass builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemberJoin, ApplicantServerJoinImpl applicantServerJoin, ServerJoinImpl serverJoin, ServerLeaveImpl serverLeave, DivisionEditorImpl divisionEditor, InfoCommandImpl infoCommandImpl, ClanLineup clanLineup, ModerationFilterWords moderationFilterWords, FilterWordsEdit filterWordsEdit, CheckEveryRepHasJoinThisServerImpl checkEveryRepHasJoinThisServer, GiveRolesImpl giveRoles, SchedulingParser schedulingParser, ShowScheduleWars showScheduleWars, MinionBotStatsStringImpl minionBotStatsString, BanRepImpl banRep, ForceAddImpl forceAdd, AddRegistrationChannel addRegistrationChannel, ChangeRepWithIDImpl changeRepWithID, EditTransaction editTransaction, RemoveChannelsFromCategoryExceptOne removeChannelsFromCategoryExceptOne) {
+    private final AutoCompleteTeamIdentifierImpl autoCompleteTeamIdentifier;
+    public Bot(Environment env, PingImpl pingImpl, RegistrationImpl registration, RosterAdditionImpl rosterAddition, CommandLoggerService loggerService, RosterRemove rosterRemove, TeamRoster teamRoster, DefenseImpl attack, AllTeamsImpl allTeams, ChangeClanImpl changeClan, BotConfig config, ChangeRepImpl changeRep, ChangeAliasImpl changeAlias, AddDivisionWeeksImpl addDivisionWeeks, CreateMatchUps createMatchUps, NegoChannelCreationImpl negoChannelCreation, ShowDivisionWeekImpl showDivisionWeek, PlayerImpl player, RemoveAllChannelFromACategoryImpl removeAllChannelFromACategory, TeamInfoImpl teamInfo, SlashGODClass builder, CreateAllDivisionsImpl createAllDivisions, DeleteATeamImpl deleteATeam, StatsImpl stats, AttackImpl attackImpl, ImageGenCommandImpl imageGenCommand, FairPlayCheckOnAllTeamImpl fairPlayCheckOnAllTeam, CheckLineUpImpl checkLineUp, ClanInfoImpl clanInfo, SuggestionImpl suggestionImpl, NegoServerMemberjoinImpl serverMemberJoin, ApplicantServerJoinImpl applicantServerJoin, ServerJoinImpl serverJoin, ServerLeaveImpl serverLeave, DivisionEditorImpl divisionEditor, InfoCommandImpl infoCommandImpl, ClanLineup clanLineup, ModerationFilterWords moderationFilterWords, FilterWordsEdit filterWordsEdit, CheckEveryRepHasJoinThisServerImpl checkEveryRepHasJoinThisServer, GiveRolesImpl giveRoles, SchedulingParser schedulingParser, ShowScheduleWars showScheduleWars, MinionBotStatsStringImpl minionBotStatsString, BanRepImpl banRep, ForceAddImpl forceAdd, AddRegistrationChannel addRegistrationChannel, ChangeRepWithIDImpl changeRepWithID, EditTransaction editTransaction, RemoveChannelsFromCategoryExceptOne removeChannelsFromCategoryExceptOne, AutoCompleteTeamIdentifierImpl autoCompleteTeamIdentifier) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -194,6 +198,7 @@ public class Bot {
         this.changeRepWithID = changeRepWithID;
         this.editTransaction = editTransaction;
         this.removeChannelsFromCategoryExceptOne = removeChannelsFromCategoryExceptOne;
+        this.autoCompleteTeamIdentifier = autoCompleteTeamIdentifier;
         log.info("Bot object created");
     }
 
@@ -259,8 +264,15 @@ public class Bot {
         this.commandListener =  new CommandListener(messageHolder, loggerService, config);
     }
 
+    private void registerAutoComplete() {
+        List<AutoCompleter> autoCompleters = List.of(this.autoCompleteTeamIdentifier);
+        AutoCompleteListener autoCompleteListener = new AutoCompleteListener(autoCompleters);
+        this.api.addAutocompleteCreateListener(autoCompleteListener);
+    }
+
     private Bot setListeners(){
-        this.registerCommands();
+        this.registerCommands(); // loading slash commands into memory
+        this.registerAutoComplete(); // loading auto completed into memory
         this.api.addListener(this.commandListener);
         this.api.addListener(serverMemberJoin);
         this.api.addListener(applicantServerJoin);

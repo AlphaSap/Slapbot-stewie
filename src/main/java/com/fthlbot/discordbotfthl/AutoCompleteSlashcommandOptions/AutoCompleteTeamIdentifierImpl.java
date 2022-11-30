@@ -1,5 +1,7 @@
 package com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions;
 
+import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.Anotation.AutoCompleteMetaData;
+import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.AutoCompleteHandler.AutoCompleter;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;
@@ -8,7 +10,6 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
 import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.AutocompleteCreateEvent;
 import org.javacord.api.interaction.SlashCommandOptionChoice;
-import org.javacord.api.listener.interaction.AutocompleteCreateListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -18,19 +19,25 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@AutoCompleteMetaData(
+        optionName = "team-identifier",
+        ignoreCommands = {}
+)
 @Component
-public class AutoCompleteImpl implements AutocompleteCreateListener {
-    private final TeamService teamService;
+public class AutoCompleteTeamIdentifierImpl implements AutoCompleter {
+private final TeamService teamService;
     private final DivisionService divisionService;
 
-    private final Logger log = LoggerFactory.getLogger(AutoCompleteImpl.class);
-    public AutoCompleteImpl(TeamService teamService, DivisionService divisionService) {
+    private final Logger log = LoggerFactory.getLogger(AutoCompleteListener.class);
+
+    public AutoCompleteTeamIdentifierImpl(TeamService teamService, DivisionService divisionService) {
         this.teamService = teamService;
         this.divisionService = divisionService;
     }
 
-    @Override
-    public void onAutocompleteCreate(AutocompleteCreateEvent event) {
+
+     @Override
+    public void execute(AutocompleteCreateEvent event) {
        String name = event.getAutocompleteInteraction().getFocusedOption().getName();
        if (!name.equalsIgnoreCase("team-identifier")) {
            return;
@@ -79,5 +86,6 @@ public class AutoCompleteImpl implements AutocompleteCreateListener {
         teams.removeAll(teamCopy);
         teams.addAll(teamCopy);
         return teams;
+
     }
 }

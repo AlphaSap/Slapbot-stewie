@@ -43,35 +43,47 @@ public class Utils {
     }
     public JSONArray getJsonArray(DiscordApi api,
                                   CompletableFuture<InteractionOriginalResponseUpdater> respondLater,
-                                  String json) throws ExecutionException, InterruptedException {
+                                  String json) {
         JSONArray s;
         Pattern messageLink = DiscordRegexPattern.MESSAGE_LINK;
 
         Matcher matcher = messageLink.matcher(json);
-        if (matcher.matches()) {
-            Optional<CompletableFuture<Message>> messageByLink = api.getMessageByLink(json);
-            if (messageByLink.isPresent()) {
-                Message message = messageByLink.get().join();
-                List<MessageAttachment> attachments = message.getAttachments();
+        try {
+            if (matcher.matches()) {
+                Optional<CompletableFuture<Message>> messageByLink = api.getMessageByLink(json);
+                if (messageByLink.isPresent()) {
+                    Message message = messageByLink.get().join();
+                    List<MessageAttachment> attachments = message.getAttachments();
 
-                if (attachments.size() >= 1) {
-                    byte[] join = attachments.get(0).asByteArray().get();
-                    String s1 = new String(join, StandardCharsets.UTF_8);
-                    s = new JSONArray(s1);
+                    if (attachments.size() >= 1) {
+                        byte[] join = attachments.get(0).asByteArray().get();
+                        String s1 = new String(join, StandardCharsets.UTF_8);
+                        s = new JSONArray(s1);
+                    } else {
+                        respondLater.thenAccept(res -> {
+                            res.setContent("No file found!").update();
+                        });
+                        return null;
+                    }
                 } else {
                     respondLater.thenAccept(res -> {
-                        res.setContent("No file found!").update();
+                        res.setContent("Unable to find the message, if the bot cannot see the message it cannot access it's content.").update();
                     });
                     return null;
                 }
             } else {
-                respondLater.thenAccept(res -> {
-                    res.setContent("Unable to find the message, if the bot cannot see the message it cannot access it's content.").update();
-                });
-                return null;
+                s = new JSONArray(json);
             }
-        }else{
-            s = new JSONArray(json);
+        }catch (JSONException e) {
+            respondLater.thenAccept(res -> {
+                res.setContent("Invalid JSON! " + e.getMessage()).update();
+            });
+            return null;
+        } catch (Exception e) {
+            respondLater.thenAccept(res -> {
+                res.setContent("An error occurred! " + e.getMessage()).update();
+            });
+            return null;
         }
         return s;
     }

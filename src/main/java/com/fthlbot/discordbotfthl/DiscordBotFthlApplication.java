@@ -1,6 +1,6 @@
 package com.fthlbot.discordbotfthl;
 
-import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.AutoCompleteImpl;
+import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.AutoCompleteListener;
 import com.fthlbot.discordbotfthl.Util.GeneralService;
 import com.fthlbot.discordbotfthl.Util.SlashGODClass;
 import com.fthlbot.discordbotfthl.core.Bot;
@@ -40,9 +40,8 @@ public class DiscordBotFthlApplication {
     //slash command builder class
     private final SlashGODClass slashCommandBuilder;
 
-    private final AutoCompleteImpl autoCompleteListener;
 
-    public DiscordBotFthlApplication(Environment env, Bot bot, SlashGODClass slashCommandBuilder, AutoCompleteImpl autoCompleteListener) {
+    public DiscordBotFthlApplication(Environment env, Bot bot, SlashGODClass slashCommandBuilder, AutoCompleteListener autoCompleteListener) {
         this.env = env;
         this.bot = bot;
         this.slashCommandBuilder = slashCommandBuilder;
@@ -96,8 +95,6 @@ public class DiscordBotFthlApplication {
                 });
             }
         });
-
-        api.addAutocompleteCreateListener(autoCompleteListener);
 
         GeneralService.printMemoryUsage();
         //starting the bot
