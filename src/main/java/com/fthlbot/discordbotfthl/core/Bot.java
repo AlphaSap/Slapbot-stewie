@@ -2,6 +2,7 @@ package com.fthlbot.discordbotfthl.core;
 
 import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.AutoCompleteHandler.AutoCompleter;
 import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.AutoCompleteListener;
+import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.autoCompleteSuggestions.AutoCompleteDivisionWeek;
 import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.autoCompleteSuggestions.AutoCompleteTeamIdentifierImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands.FilterWords.FilterWordsEdit;
@@ -147,6 +148,8 @@ public class Bot {
     private final RemoveChannelsFromCategoryExceptOne removeChannelsFromCategoryExceptOne;
 
     private final AutoCompleteTeamIdentifierImpl autoCompleteTeamIdentifier;
+
+    private final AutoCompleteDivisionWeek autoCompleteDivisionWeek;
     public Bot(Environment env,
                PingImpl pingImpl,
                RegistrationImpl registration,
@@ -197,8 +200,8 @@ public class Bot {
                ChangeRepWithIDImpl changeRepWithID,
                EditTransaction editTransaction,
                RemoveChannelsFromCategoryExceptOne removeChannelsFromCategoryExceptOne,
-               AutoCompleteTeamIdentifierImpl autoCompleteTeamIdentifier
-    ) {
+               AutoCompleteTeamIdentifierImpl autoCompleteTeamIdentifier,
+               AutoCompleteDivisionWeek autoCompleteDivisionWeek) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -250,6 +253,7 @@ public class Bot {
         this.editTransaction = editTransaction;
         this.removeChannelsFromCategoryExceptOne = removeChannelsFromCategoryExceptOne;
         this.autoCompleteTeamIdentifier = autoCompleteTeamIdentifier;
+        this.autoCompleteDivisionWeek = autoCompleteDivisionWeek;
         log.info("Bot object created");
     }
 
@@ -316,7 +320,10 @@ public class Bot {
     }
 
     private void registerAutoComplete() {
-        List<AutoCompleter> autoCompleters = List.of(this.autoCompleteTeamIdentifier);
+        List<AutoCompleter> autoCompleters = List.of(
+                this.autoCompleteTeamIdentifier,
+                this.autoCompleteDivisionWeek
+        );
         AutoCompleteListener autoCompleteListener = new AutoCompleteListener(autoCompleters);
         this.api.addAutocompleteCreateListener(autoCompleteListener);
     }
