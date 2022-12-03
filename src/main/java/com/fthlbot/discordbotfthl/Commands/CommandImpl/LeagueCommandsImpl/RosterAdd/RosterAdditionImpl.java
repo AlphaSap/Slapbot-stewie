@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -60,7 +61,9 @@ public class RosterAdditionImpl extends RosterAddUtilClass implements RosterAddL
             String[] tags = arguments.get(2).getStringValue().get().split("\\s+");
 
             //Conversion to set is necessary to remove duplicates - which would go un notice inside the database when queried at the same time.
-            Set<String> collect = Arrays.stream(tags).map(x -> x.trim().toLowerCase()).collect(Collectors.toSet());
+            Set<String> collect = Arrays.stream(tags)
+                    .map(x -> x.trim().toUpperCase(Locale.ROOT).replace(" ", ""))
+                    .collect(Collectors.toSet());
 
             Division division = divisionService.getDivisionByAlias(divisionAlias);
             Team team = teamService.getTeamByDivisionAndAlias(teamAlias, division);
