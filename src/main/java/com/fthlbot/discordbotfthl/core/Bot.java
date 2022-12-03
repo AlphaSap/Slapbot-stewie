@@ -2,7 +2,7 @@ package com.fthlbot.discordbotfthl.core;
 
 import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.AutoCompleteHandler.AutoCompleter;
 import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.AutoCompleteListener;
-import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.AutoCompleteTeamIdentifierImpl;
+import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.autoCompleteSuggestions.AutoCompleteTeamIdentifierImpl;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.ClashCommandImpl.*;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands.FilterWords.FilterWordsEdit;
 import com.fthlbot.discordbotfthl.Commands.CommandImpl.FunAndRandomCommands.FilterWords.ModerationFilterWords;

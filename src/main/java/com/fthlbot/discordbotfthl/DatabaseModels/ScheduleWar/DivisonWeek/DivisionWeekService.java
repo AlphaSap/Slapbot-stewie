@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DivisionWeekService {
@@ -38,5 +39,23 @@ public class DivisionWeekService {
             throw new EntityNotFoundException("No Weeks found for this division!");
         }
         return divisionWeeksByDivision;
+    }
+
+    public List<DivisionWeeks> searchQuery(Optional<String> query, Optional<Division> opDiv) {
+        List<DivisionWeeks> all = repo.findAll();
+        if (query.isEmpty()) return all;
+
+        all = all.stream().filter(x -> {
+            if (opDiv.isEmpty()) return true;
+            return x.getDivision().getName().equalsIgnoreCase(opDiv.get().getName());
+        }).toList();
+
+        all.forEach(x -> {
+            String s = x.getWeekStartDate().toString();
+            System.out.println(s);
+        });
+
+        return all;
+
     }
 }

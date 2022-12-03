@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static org.javacord.api.interaction.SlashCommandOptionType.*;
@@ -428,7 +429,7 @@ public class SlashGODClass {
     public void e() {
         CompletableFuture<Void> voidCompletableFuture = this.getApi().getGlobalSlashCommands()
                 .thenApply(x -> x.stream().filter(e -> e.getName().equalsIgnoreCase("change-alias")))
-                .thenApply(x -> x.findFirst())
+                .thenApply(Stream::findFirst)
                 .thenAccept(x -> {
                     if (x.isEmpty()) {
                         System.out.println("No command found");
@@ -546,6 +547,27 @@ public class SlashGODClass {
                                         "new-rep-id",
                                         "enter the ID of new rep",
                                         true)
+                        )
+                );
+    }
+
+    public SlashCommandBuilder createCreateMatchUpNewCommand() {
+        return SlashCommand.with("create-match-ups-new", "A new way to create match ups, without json!")
+                .setOptions(
+                        List.of(
+                                new SlashCommandTempImpl().getDivisions(),
+                                SlashCommandOption.createStringOption(
+                                        "div-week",
+                                        "enter the div week!",
+                                        true,
+                                        true
+                                ),
+                                SlashCommandOption.create(
+                                        STRING,
+                                        "parsable-string",
+                                        "TEAM_IDvTEAM_ID...",
+                                        true
+                                )
                         )
                 );
     }

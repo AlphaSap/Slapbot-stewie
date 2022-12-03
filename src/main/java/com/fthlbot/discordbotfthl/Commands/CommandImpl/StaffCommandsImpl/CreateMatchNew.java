@@ -25,10 +25,10 @@ import java.util.concurrent.CompletableFuture;
         usage = "/create-match-up-new <division> <div-week (Autocomplete)> <parseable string>",
         description = "Will create match ups with the parsable string used in /parse-string command!"
 )
-public class createMatchNew implements Command {
+public class CreateMatchNew implements Command {
     private final Utils utils;
 
-    public createMatchNew(Utils utils) {
+    public CreateMatchNew(Utils utils) {
         this.utils = utils;
     }
 

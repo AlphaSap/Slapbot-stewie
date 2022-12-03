@@ -1,7 +1,8 @@
-package com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions;
+package com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.autoCompleteSuggestions;
 
 import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.Anotation.AutoCompleteMetaData;
 import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.AutoCompleteHandler.AutoCompleter;
+import com.fthlbot.discordbotfthl.AutoCompleteSlashcommandOptions.AutoCompleteListener;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.Division;
 import com.fthlbot.discordbotfthl.DatabaseModels.Division.DivisionService;
 import com.fthlbot.discordbotfthl.DatabaseModels.Exception.EntityNotFoundException;
