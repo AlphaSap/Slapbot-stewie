@@ -84,6 +84,7 @@ public class CheckLineUpImpl implements CheckLineUpListener {
             GeneralService.leagueSlashErrorMessage(respond, "An error occurred while fetching the line up: " + e.getMessage());
             return;
         } catch (ClashAPIException e) {
+            e.printStackTrace();
             ClashExceptionHandler handler = new ClashExceptionHandler();
             handler.setResponder(respond.join());
             handler.setStatusCode(Integer.valueOf(e.getMessage()));
@@ -99,6 +100,7 @@ public class CheckLineUpImpl implements CheckLineUpListener {
             GeneralService.leagueSlashErrorMessage(respond, "An error occurred while fetching the line up: " + e.getMessage());
             return;
         } catch (ClashAPIException e) {
+            e.printStackTrace();
             ClashExceptionHandler handler = new ClashExceptionHandler();
             handler.setResponder(respond.join());
             handler.setStatusCode(Integer.valueOf(e.getMessage()));
@@ -148,20 +150,17 @@ public class CheckLineUpImpl implements CheckLineUpListener {
                 // event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(builder).send().exceptionally(ExceptionLogger.get());
             }
 
-            try {
-                URL resource = getClass().getResource("/snitch/eww.png");
-                if (resource == null) {
-                    log.warn("Could not find image - /snitch/eww.png [Alex saying be fp]");
-                    return;
-                }
-                BufferedImage read = ImageIO.read(resource);
-
-                event.getSlashCommandInteraction().createFollowupMessageBuilder()
-                        .addAttachment(read, "fp.png")
-                        .send();
-            } catch (IOException e) {
-                e.printStackTrace();
+            URL resource = getClass().getResource("/snitch/eww.png");
+            if (resource == null) {
+                log.warn("Could not find image - /snitch/eww.png [Alex saying be fp]");
+                return;
             }
+            BufferedImage read = ImageIO.read(resource);
+
+            event.getSlashCommandInteraction().createFollowupMessageBuilder()
+                    .addAttachment(read, "fp.png")
+                    .send();
+
 
         } catch (ClashAPIException e) {
             ClashExceptionHandler handler = new ClashExceptionHandler();
@@ -177,8 +176,10 @@ public class CheckLineUpImpl implements CheckLineUpListener {
         } catch (LeagueException e) {
             e.printStackTrace();
             GeneralService.leagueSlashErrorMessage(respond, "An error occurred while fetching the line up: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            GeneralService.leagueSlashErrorMessage(respond, "Uncaught Exception! : " + e.getMessage());
         }
-
     }
 
     private void unrosterAccountMessage(SlashCommandCreateEvent event, List<String> enemyTeam, EmbedBuilder builder) {
