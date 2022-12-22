@@ -23,16 +23,12 @@ public class AutoCompleteListener implements AutocompleteCreateListener {
     private final Logger log = LoggerFactory.getLogger(AutoCompleteListener.class);
 
     public AutoCompleteListener(List<AutoCompleter> autoCompleters) {
-        log.info("hi");
-
         for (AutoCompleter autoCompleter : autoCompleters) {
             Annotation[] annotations = autoCompleter.getClass().getAnnotations();
-            log.info("length= {}", annotations.length);
             for (Annotation annotation : annotations) {
                 log.info(autoCompleter.getClass().getName());
                 log.info(annotation.getClass().getName());
                 if (annotation instanceof AutoCompleteMetaData metaData) {
-                    log.info("hi again!");
                     this.autoCompleteMap.put(metaData.optionName(), autoCompleter);
                 }
             }

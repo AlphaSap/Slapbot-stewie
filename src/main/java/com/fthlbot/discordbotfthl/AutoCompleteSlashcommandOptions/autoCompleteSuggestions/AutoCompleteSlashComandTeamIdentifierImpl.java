@@ -22,13 +22,13 @@ import java.util.stream.Collectors;
 
 @AutoCompleteMetaData(optionName = "team-identifier")
 @Component
-public class AutoCompleteTeamIdentifierImpl implements AutoCompleter {
+public class AutoCompleteSlashComandTeamIdentifierImpl implements AutoCompleter {
 private final TeamService teamService;
     private final DivisionService divisionService;
 
     private final Logger log = LoggerFactory.getLogger(AutoCompleteListener.class);
 
-    public AutoCompleteTeamIdentifierImpl(TeamService teamService, DivisionService divisionService) {
+    public AutoCompleteSlashComandTeamIdentifierImpl(TeamService teamService, DivisionService divisionService) {
         this.teamService = teamService;
         this.divisionService = divisionService;
     }
