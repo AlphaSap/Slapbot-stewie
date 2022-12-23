@@ -19,9 +19,6 @@ repositories {
         url 'https://oss.sonatype.org/content/repositories/snapshots'
     }
     maven { url 'https://jitpack.io' }
-    flatDir {
-        dirs 'lib'
-    }
 }
 
 dependencies {
@@ -36,7 +33,7 @@ dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
     implementation 'com.google.code.gson:gson:2.10'
-    implementation files('lib/clashapi-2.0.15.jar')
+    implementation 'com.github.SaHHiiLL:clash-api:v2.0.15'
     implementation group: 'org.json', name: 'json', version: '20220320'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
