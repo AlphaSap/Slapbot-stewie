@@ -48,7 +48,7 @@ public class RosterRemove implements Command {
     }
 
     @Override
-    public void execute(SlashCommandCreateEvent event) {
+    public void execute(SlashCommandCreateEvent event)  {
         CompletableFuture<InteractionOriginalResponseUpdater> respondLater = event.getSlashCommandInteraction().respondLater();
         String divisionAlias = event.getSlashCommandInteraction().getArguments().get(0).getStringValue().get();
         String teamAlias = event.getSlashCommandInteraction().getArguments().get(1).getStringValue().get();
@@ -67,7 +67,13 @@ public class RosterRemove implements Command {
             res.setContent("Removing " + tags.length + " accounts from " + team.getName() + "...");
             res.update();
         });
+        System.out.println(",jdjbf,df");
         ClashAPI clashAPI = new ClashAPI();
+        try {
+            System.out.println(clashAPI.getPlayer("#2pp").getName());
+        } catch (ClashAPIException | IOException e) {
+            throw new RuntimeException(e);
+        }
         for (String tag : tags) {
             try {
                 Player player = clashAPI.getPlayer(tag);
