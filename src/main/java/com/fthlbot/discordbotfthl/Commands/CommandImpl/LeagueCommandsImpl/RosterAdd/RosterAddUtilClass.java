@@ -35,58 +35,57 @@ public class RosterAddUtilClass {
      */
     public void addPlayers(SlashCommandCreateEvent event, SlashCommandInteraction interaction, Set<String> tags, Team team, RosterService service, BotConfig config, Boolean checks) {
         for (String tag : tags) {
-            CompletableFuture.runAsync(() -> {
-                try {
-                    ClashAPI clash = new ClashAPI();
-                    Player player = clash.getPlayer(tag);
-                    Roster roster = new Roster(player.getName(), player.getTag(), player.getTownHallLevel(), team);
 
-                    if (checks) {
-                        service.addToRoster(roster, event.getInteraction().getUser());
-                    } else {
-                        service.forceAdd(roster);
-                    }
-                    //send a message for each addition
-                    EmbedBuilder embedBuilder = sendMessage(player.getTag(), team.getName(), interaction.getChannel().get(), interaction.getUser());
-                    event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(embedBuilder).send().exceptionally(ExceptionLogger.get());
+            try {
+                ClashAPI clash = new ClashAPI();
+                Player player = clash.getPlayer(tag);
+                Roster roster = new Roster(player.getName(), player.getTag(), player.getTownHallLevel(), team);
 
-                    EmbedBuilder embed = new EmbedBuilder()
-                            .addField("Team Name", team.getName())
-                            .addField("Division", team.getDivision().getAlias())
-                            .addField("Player Tag", roster.getPlayerTag())
-                            .addField("Player Name", roster.getPlayerName())
-                            .setColor(Color.GREEN)
-                            .setTimestampToNow();
-                    event.getApi().getTextChannelById(config.getRegistrationAndRosterLogChannelID()).get().sendMessage(embed);
-                } catch (LeagueException e) {
-                    EmbedBuilder leagueError = GeneralService.getLeagueError(e, event);
-                    interaction.getChannel().get().sendMessage(leagueError);
-                } catch (ClashAPIException e) {
-                    ClashExceptionHandler clashExceptionHandler = new ClashExceptionHandler();
-                    clashExceptionHandler.setStatusCode(Integer.valueOf(e.getMessage()));
-                    EmbedBuilder embedBuilder = clashExceptionHandler.createEmbed(tag).getEmbedBuilder();
-                    interaction.getChannel().get().sendMessage(embedBuilder).exceptionally(ExceptionLogger.get());
-                } catch (IOException e) {
-                    event.getApi().getChannelById(899282429678878801L).ifPresent(ch -> {
-                        String s = "Server probably down IException:  " + e.getMessage();
-                        ch.asServerTextChannel().get().sendMessage(s);
-                    });
-                    Optional<TextChannel> channel = event.getSlashCommandInteraction().getChannel();
-                    channel.ifPresent(textChannel -> textChannel.sendMessage("Server is down please try again Later!"));
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    event.getSlashCommandInteraction().createFollowupMessageBuilder()
-                            .addEmbed(
-                                    new EmbedBuilder()
-                                            .setTitle("Error")
-                                            .addField("Error", e.getMessage(), false)
-                                            .setDescription("Please contact the developer")
-                                            .setColor(Color.RED)
-                                            .setTimestampToNow()
-                            ).send();
-                    e.printStackTrace();
+                if (checks) {
+                    service.addToRoster(roster, event.getInteraction().getUser());
+                } else {
+                    service.forceAdd(roster);
                 }
-            });
+                //send a message for each addition
+                EmbedBuilder embedBuilder = sendMessage(player.getTag(), team.getName(), interaction.getChannel().get(), interaction.getUser());
+                event.getSlashCommandInteraction().createFollowupMessageBuilder().addEmbed(embedBuilder).send().exceptionally(ExceptionLogger.get());
+
+                EmbedBuilder embed = new EmbedBuilder()
+                        .addField("Team Name", team.getName())
+                        .addField("Division", team.getDivision().getAlias())
+                        .addField("Player Tag", roster.getPlayerTag())
+                        .addField("Player Name", roster.getPlayerName())
+                        .setColor(Color.GREEN)
+                        .setTimestampToNow();
+                event.getApi().getTextChannelById(config.getRegistrationAndRosterLogChannelID()).get().sendMessage(embed);
+            } catch (LeagueException e) {
+                EmbedBuilder leagueError = GeneralService.getLeagueError(e, event);
+                interaction.getChannel().get().sendMessage(leagueError);
+            } catch (ClashAPIException e) {
+                ClashExceptionHandler clashExceptionHandler = new ClashExceptionHandler();
+                clashExceptionHandler.setStatusCode(Integer.valueOf(e.getMessage()));
+                EmbedBuilder embedBuilder = clashExceptionHandler.createEmbed(tag).getEmbedBuilder();
+                interaction.getChannel().get().sendMessage(embedBuilder).exceptionally(ExceptionLogger.get());
+            } catch (IOException e) {
+                event.getApi().getChannelById(899282429678878801L).ifPresent(ch -> {
+                    String s = "Server probably down IException:  " + e.getMessage();
+                    ch.asServerTextChannel().get().sendMessage(s);
+                });
+                Optional<TextChannel> channel = event.getSlashCommandInteraction().getChannel();
+                channel.ifPresent(textChannel -> textChannel.sendMessage("Server is down please try again Later!"));
+                e.printStackTrace();
+            } catch (Exception e) {
+                event.getSlashCommandInteraction().createFollowupMessageBuilder()
+                        .addEmbed(
+                                new EmbedBuilder()
+                                        .setTitle("Error")
+                                        .addField("Error", e.getMessage(), false)
+                                        .setDescription("Please contact the developer")
+                                        .setColor(Color.RED)
+                                        .setTimestampToNow()
+                        ).send();
+                e.printStackTrace();
+            }
         }
     }
 
