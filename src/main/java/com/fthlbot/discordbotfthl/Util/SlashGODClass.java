@@ -556,7 +556,7 @@ public class SlashGODClass {
                 .setOptions(
                         List.of(
                                 new SlashCommandTempImpl().getDivisions(),
-                                SlashCommandOption.createStringOption(
+                                SlashCommandOption.createLongOption(
                                         "div-week",
                                         "enter the div week!",
                                         true,
