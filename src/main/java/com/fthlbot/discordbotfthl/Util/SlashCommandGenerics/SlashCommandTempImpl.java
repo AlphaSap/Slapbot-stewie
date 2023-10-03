@@ -20,7 +20,7 @@ public class SlashCommandTempImpl implements SlashCommandTemp {
                         SlashCommandOptionChoice.create("f9", "f9"),
                         SlashCommandOptionChoice.create("f10", "f10"),
                         SlashCommandOptionChoice.create("f11", "f11"),
-                        SlashCommandOptionChoice.create("f12", "f11"),
+                        SlashCommandOptionChoice.create("f12", "f12"),
                         SlashCommandOptionChoice.create("Lite", "Lite"),
                         SlashCommandOptionChoice.create("Elite", "Elite")
                 )

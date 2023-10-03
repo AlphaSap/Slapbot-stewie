@@ -35,10 +35,8 @@ public class ApplicantServerJoinImpl implements ServerMemberJoinListener {
                 .setUser(event.getUser())
                 .setTeams(teamByRep);
 
-        String message = "Welcome! <:%d> \n" +
-                "Please read the rules and then checkout <#%d> to apply for the tournament. \n" +
-                "If you have any questions, please ask in <#%d>.".formatted(
-                        event.getUser().getId(),
+        String message = "Welcome! <@%d> \n Please read the rules and then checkout <#%d> to apply for the tournament. \nIf you have any questions, please ask in <#%d>."
+                .formatted( event.getUser().getId(),
                         984432320511606876L,
                         926324986078175283L);
 //        EmbedBuilder embedBuilder = serverMemberJoinService.getEmbed();

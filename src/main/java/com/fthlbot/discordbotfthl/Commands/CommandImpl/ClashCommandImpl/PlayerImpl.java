@@ -118,20 +118,23 @@ public class PlayerImpl implements PlayerListener {
     private String getLeagueEmote(Player player) {
         String leagueEmote = "Unranked";
         League league = player.getLeague();
-        if (league.getName() == null) {
-            return  "<:Unranked:888847990041763881>";
+
+        try {
+            leagueEmote = switch (league.getName()) {
+                case "Bronze League II", "Bronze League I", "Bronze League III" -> "<:Bronze:888847979556012072>";
+                case "Silver League I", "Silver League II", "Silver league III" -> "<:Silver:888847990121463858>";
+                case "Gold League II", "Gold League I", "Gold League III" -> "<:gold:888847985146986507>";
+                case "Crystal League I", "Crystal League II", "Crystal League III" -> "<:Crystal:888847981384716349>";
+                case "Master League I", "Master League II", "Master League III" -> "<:Master:888847990012403802>";
+                case "Champion League I", "Champion League II", "Champion League III" ->
+                        "<:Champion:888847980122218627>";
+                case "Titan League I", "Titan League II", "Titan League III" -> "<:Titan:888847989400035389>";
+                case "Legend League" -> "<:Legends:888847986610802688>";
+                default -> "<:Unranked:888847990041763881>";
+            };
+        } catch (NullPointerException e) {
+            leagueEmote = "<:Unranked:888847990041763881>";
         }
-        leagueEmote = switch (league.getName()) {
-            case "Bronze League II", "Bronze League I", "Bronze League III" -> "<:Bronze:888847979556012072>";
-            case "Silver League I", "Silver League II", "Silver league III" -> "<:Silver:888847990121463858>";
-            case "Gold League II", "Gold League I", "Gold League III" -> "<:gold:888847985146986507>";
-            case "Crystal League I", "Crystal League II", "Crystal League III" -> "<:Crystal:888847981384716349>";
-            case "Master League I", "Master League II", "Master League III" -> "<:Master:888847990012403802>";
-            case "Champion League I", "Champion League II", "Champion League III" -> "<:Champion:888847980122218627>";
-            case "Titan League I", "Titan League II", "Titan League III" -> "<:Titan:888847989400035389>";
-            case "Legend League" -> "<:Legends:888847986610802688>";
-            default -> "<:Unranked:888847990041763881>";
-        };
 
         return leagueEmote;
     }
