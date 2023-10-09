@@ -92,10 +92,8 @@ public class RegistrationImpl implements RegistrationListener {
         //check if today is between league start date and registration start date from config
         if (!isRegistrationOpen(slashCommandInteraction.getUser())) {
             // Checks if the user is the bot owner, it will let them use the registration command.
-            if (!event.getSlashCommandInteraction().getUser().isBotOwner()) {
                 respond.thenAccept(res -> res.setContent("Registration is closed").update());
                 return;
-            }
         }
         long registrationChannelID = config.getRegistrationChannelID();
         Optional<TextChannel> channel = event.getSlashCommandInteraction().getChannel();
