@@ -54,11 +54,6 @@ public class BotConfig {
     }
 
     //Dates
-    @Value("${f5.startDate}")
-    private String f5StartDate;
-    @Value("${f5.endDate}")
-    private String f5EndDate;
-
     @Value("${f8.startTime}")
     private String f8StartDate;
     @Value("${f8.endTime}")
@@ -85,6 +80,11 @@ public class BotConfig {
 
     @Value("${lite.endTime}")
     private String liteEndDate;
+
+    @Value("${f12.endTime}")
+    private String f12StartDate;
+    @Value("${f12.endTime}")
+    private String f12EndDate;
 
     @Value("${league.RegistrationEndDate}")
     private String leagueRegistrationEndDate;
@@ -135,14 +135,6 @@ public class BotConfig {
 
     public Date getEliteEndDate() throws ParseException {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(eliteEndDate);
-    }
-
-    public Date getF5StartDate() throws ParseException {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(f5StartDate);
-    }
-
-    public Date getF5EndDate() throws ParseException {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(f5EndDate);
     }
 
     public long getRegistrationChannelID() {
@@ -199,10 +191,6 @@ public class BotConfig {
      Date[] dates = {null, null};
      key = key.toLowerCase(Locale.ROOT);
      switch (key){
-         case "f5" -> {
-             dates[0] = this.getF5StartDate();
-             dates[1] = this.getF5EndDate();
-         }
          case "f8" -> {
              dates[0] = this.getF8StartDate();
              dates[1] = this.getF8EndDate();
@@ -214,6 +202,10 @@ public class BotConfig {
          case "f10" -> {
              dates[0] = this.getF10StartDate();
              dates[1] = this.getF10EndDate();
+         }
+         case "f12" -> {
+             dates[0] = this.getF12StartDate();
+             dates[1] = this.getF12EndDate();
          }
          case "f11" -> {
              dates[0] = this.getF11StartDate();
@@ -232,6 +224,14 @@ public class BotConfig {
          }
      }
      return dates;
+    }
+
+    private Date getF12StartDate() throws ParseException {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(f12StartDate);
+    }
+
+    public Date getF12EndDate() throws ParseException {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(f12EndDate);
     }
 
     public Date getLeagueRegistrationEndDate() throws ParseException {

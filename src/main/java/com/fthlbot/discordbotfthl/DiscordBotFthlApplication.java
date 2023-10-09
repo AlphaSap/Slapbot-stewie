@@ -5,6 +5,7 @@ import com.fthlbot.discordbotfthl.Util.GeneralService;
 import com.fthlbot.discordbotfthl.Util.SlashGODClass;
 import com.fthlbot.discordbotfthl.core.Bot;
 import com.sahhiill.clashapi.core.ClashAPI;
+import com.sahhiill.clashapi.core.Credentials;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.activity.ActivityType;
@@ -23,6 +24,7 @@ import org.springframework.core.env.Environment;
 import java.awt.*;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.CompletableFuture;
@@ -57,10 +59,13 @@ public class DiscordBotFthlApplication {
 
         TimeZone.setDefault(TimeZone.getTimeZone(ZoneOffset.UTC));
 
-        clash = new ClashAPI(Objects.requireNonNull(env.getProperty("CLASH_EMAIL")), Objects.requireNonNull(env.getProperty("CLASH_PASS")));
+        clash = new ClashAPI(
+                Objects.requireNonNull(env.getProperty("CLASH_TOKEN"))
+//                List.of(creds)
+        );
         //logging in discord
         DiscordApi api = new DiscordApiBuilder()
-                .setToken(env.getProperty("TOKEN_BOT"))
+                .setToken(env.getProperty("BOT_TOKEN"))
                 .setUserCacheEnabled(true) // enabling user cache so users will be valid on startup, reduces API calls but increases memory usage
                 .setAllIntentsExcept(
                         Intent.GUILD_WEBHOOKS,

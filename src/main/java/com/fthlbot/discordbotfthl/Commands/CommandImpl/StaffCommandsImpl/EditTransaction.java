@@ -51,7 +51,7 @@ public class EditTransaction implements Command {
             team = teamService.getTeamByDivisionAndAlias(teamAlias, div);
 
             int old = team.getAllowRosterChangesLeft();
-            team = teamService.editTransaction(team, longToInt(newValue));
+            team = teamService.editTransaction(team, newValue.intValue());
             Team finalTeam = team;
             respondLater.thenAccept(res -> {
                 EmbedBuilder eb = new EmbedBuilder()
@@ -69,9 +69,5 @@ public class EditTransaction implements Command {
         } catch (LeagueException e) {
             GeneralService.leagueSlashErrorMessage(event, e);
         }
-    }
-
-    private int longToInt(Long x) {
-        return x.intValue();
     }
 }

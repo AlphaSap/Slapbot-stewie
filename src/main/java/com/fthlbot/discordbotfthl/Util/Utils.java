@@ -9,6 +9,8 @@ import org.javacord.api.util.DiscordRegexPattern;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
 import java.nio.charset.StandardCharsets;
@@ -86,6 +88,10 @@ public class Utils {
             return null;
         }
         return s;
+    }
+
+    public static void betterErrorLog(Logger log, Exception e) {
+        log.error("MESSAGE: {} :: CLASS: {}", e.getMessage(), e.getClass().getName());
     }
 
     public JSONObject getJsonObject(SlashCommandCreateEvent event,

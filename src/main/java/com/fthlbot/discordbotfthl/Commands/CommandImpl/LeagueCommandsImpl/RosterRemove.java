@@ -67,13 +67,7 @@ public class RosterRemove implements Command {
             res.setContent("Removing " + tags.length + " accounts from " + team.getName() + "...");
             res.update();
         });
-        System.out.println(",jdjbf,df");
         ClashAPI clashAPI = new ClashAPI();
-        try {
-            System.out.println(clashAPI.getPlayer("#2pp").getName());
-        } catch (ClashAPIException | IOException e) {
-            throw new RuntimeException(e);
-        }
         for (String tag : tags) {
             try {
                 Player player = clashAPI.getPlayer(tag);

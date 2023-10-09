@@ -123,6 +123,10 @@ public class RosterService {
                 Date endDate = botConfig.getF11EndDate();
                 return isTodayBetweenTwoDates(botConfig.getLeagueRegistrationEndDate(), endDate);
             }
+            case "f12" -> {
+                Date endDate = botConfig.getF12EndDate();
+                return isTodayBetweenTwoDates(botConfig.getLeagueRegistrationEndDate(), endDate);
+            }
             case "elite" -> {
                 Date endDate = botConfig.getEliteEndDate();
                 return isTodayBetweenTwoDates(botConfig.getLeagueRegistrationEndDate(), endDate);
@@ -146,7 +150,7 @@ public class RosterService {
             case "f5" -> {
                 return true;
             }
-            case "f8", "f10", "f9", "f11", "elite", "lite" -> {
+            case "f12", "f8", "f10", "f9", "f11", "elite", "lite" -> {
                 Date startDate = botConfig.getLeagueGrepPeriodStartDate();
                 Date endDate = botConfig.getLeagueGrepPeriodEndDate();
                 return isTodayBetweenTwoDates(startDate, endDate);
@@ -178,6 +182,11 @@ public class RosterService {
             case "f11" -> {
                 Date startDate = botConfig.getF11StartDate();
                 Date endDate = botConfig.getF11EndDate();
+                return isTodayBetweenTwoDates(startDate, endDate);
+            }
+            case "f12" -> {
+                Date startDate = botConfig.getF12EndDate();
+                Date endDate = botConfig.getF12EndDate();
                 return isTodayBetweenTwoDates(startDate, endDate);
             }
             case "elite" -> {

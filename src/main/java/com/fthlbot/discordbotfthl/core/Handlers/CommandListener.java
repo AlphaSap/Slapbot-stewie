@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.annotation.Annotation;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class CommandListener implements SlashCommandCreateListener {
@@ -144,6 +145,18 @@ public class CommandListener implements SlashCommandCreateListener {
         SlashCommandInteraction slashCommandInteraction = event.getSlashCommandInteraction();
         long serverID = slashCommandInteraction.getServer().isPresent() ? slashCommandInteraction.getServer().get().getId() : 0L;
         long channelID = slashCommandInteraction.getChannel().isPresent() ? slashCommandInteraction.getChannel().get().getId() : 0L;
+
+//        // create a command string
+//        // "/<comamnd-name> <parm1:<value>> ....
+//
+//        String params = slashCommandInteraction.getArguments().stream().map(x -> {
+//            String param = x.getName() + ":";
+//            if (x.().isPresent()) {
+//               param = param + x.getAttachmentValue().get();
+//            }
+//            return param;
+//        }).toList().toString();
+
         CommandLogger logger = new CommandLogger(
                 slashCommandInteraction.getCommandId(),
                 slashCommandInteraction.getUser().getId(),

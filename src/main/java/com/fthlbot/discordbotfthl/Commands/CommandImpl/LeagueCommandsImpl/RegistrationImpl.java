@@ -8,9 +8,12 @@ import com.fthlbot.discordbotfthl.DatabaseModels.Team.Team;
 import com.fthlbot.discordbotfthl.DatabaseModels.Team.TeamService;
 import com.fthlbot.discordbotfthl.Util.BotConfig;
 import com.fthlbot.discordbotfthl.Util.Exception.ClashExceptionHandler;
+import com.fthlbot.discordbotfthl.Util.GeneralService;
+import com.fthlbot.discordbotfthl.Util.Utils;
 import com.fthlbot.discordbotfthl.core.Annotation.AllowedChannel;
 import com.fthlbot.discordbotfthl.core.Annotation.CommandType;
 import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
+import com.fthlbot.discordbotfthl.core.Bot;
 import com.sahhiill.clashapi.core.exception.ClashAPIException;
 import com.sahhiill.clashapi.models.clan.Clan;
 import org.javacord.api.entity.channel.ChannelCategory;
@@ -88,9 +91,11 @@ public class RegistrationImpl implements RegistrationListener {
 
         //check if today is between league start date and registration start date from config
         if (!isRegistrationOpen(slashCommandInteraction.getUser())) {
-            //TODO: check if the person trying to register is a staff
-            respond.thenAccept(res -> res.setContent("Registration is closed").update());
-            return;
+            // Checks if the user is the bot owner, it will let them use the registration command.
+            if (!event.getSlashCommandInteraction().getUser().isBotOwner()) {
+                respond.thenAccept(res -> res.setContent("Registration is closed").update());
+                return;
+            }
         }
         long registrationChannelID = config.getRegistrationChannelID();
         Optional<TextChannel> channel = event.getSlashCommandInteraction().getChannel();
@@ -178,14 +183,14 @@ public class RegistrationImpl implements RegistrationListener {
 
         } catch (LeagueException e) {
             leagueSlashErrorMessage(respond, e);
-            e.printStackTrace();
+            Utils.betterErrorLog(logger, e);
         } catch (ClashAPIException | IOException e) {
             ClashExceptionHandler handler = new ClashExceptionHandler();
             handler.setResponder(respond.join()).setStatusCode(Integer.valueOf(e.getMessage()));
             handler.respond();
-            e.printStackTrace();
+            Utils.betterErrorLog(logger, e);
         } catch (Exception e) {
-            e.printStackTrace();
+            Utils.betterErrorLog(logger, e);
         }
     }
 
@@ -202,8 +207,7 @@ public class RegistrationImpl implements RegistrationListener {
                 return false;
             return !leagueStartDate.before(new Date());
         } catch (ParseException e) {
-            e.printStackTrace();
-            logger.error("Error parsing registration date");
+            logger.error("Error parsing registration date {} in class {}", e.getMessage(), this.getClass().getName());
         }
         return false;
     }
@@ -241,5 +245,4 @@ public class RegistrationImpl implements RegistrationListener {
         }
         return null;
     }
-
 }

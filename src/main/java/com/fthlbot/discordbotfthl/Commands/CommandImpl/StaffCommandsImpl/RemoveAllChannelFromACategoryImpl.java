@@ -66,7 +66,7 @@ public class RemoveAllChannelFromACategoryImpl implements RemoveAllChannelFromAC
         }
 
         String categoryID = event.getSlashCommandInteraction().getArguments().get(0).getStringValue().get();
-        Boolean isLogs = true;
+        boolean isLogs = true;
         if (event.getSlashCommandInteraction().getArguments().size() > 1) {
             if (event.getSlashCommandInteraction().getArguments().get(1).getBooleanValue().isPresent()) {
                 isLogs = event.getSlashCommandInteraction().getArguments().get(1).getBooleanValue().get();
