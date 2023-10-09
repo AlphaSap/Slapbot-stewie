@@ -16,10 +16,11 @@ public class SlashCommandTempImpl implements SlashCommandTemp {
                 "choose from one of the following division",
                 true,
                 asList(
-                        //SlashCommandOptionChoice.create("f8", "f8"),
+                        SlashCommandOptionChoice.create("f8", "f8"),
                         SlashCommandOptionChoice.create("f9", "f9"),
                         SlashCommandOptionChoice.create("f10", "f10"),
-                        //SlashCommandOptionChoice.create("f11", "f11"),
+                        SlashCommandOptionChoice.create("f11", "f11"),
+                        SlashCommandOptionChoice.create("f12", "f11"),
                         SlashCommandOptionChoice.create("Lite", "Lite"),
                         SlashCommandOptionChoice.create("Elite", "Elite")
                 )
