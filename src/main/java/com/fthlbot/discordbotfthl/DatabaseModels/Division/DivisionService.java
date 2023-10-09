@@ -31,7 +31,7 @@ public class DivisionService {
                 new Division("FORGOTTEN 10", "F10", 30, 10, new Integer[]{10}),
                 new Division("FORGOTTEN 11", "F11", 20, 10, new Integer[]{12}),
                 new Division("FORGOTTEN 12", "F12", 25, 10, new Integer[]{12}),
-                new Division("Lite", "Lite", 30, 10, new Integer[]{5, 6, 7, 8}),
+                new Division("Lite", "Lite", 30, 10, new Integer[]{5, 6, 7, 8, 9}),
                 new Division("Elite", "Elite", 40, 15, new Integer[]{12, 11, 10, 9})
         );
         repo.deleteAll();
