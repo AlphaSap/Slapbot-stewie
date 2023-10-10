@@ -82,10 +82,15 @@ public class SlashGODClass {
                 ));
     }
 
+    public SlashCommandBuilder createResetDivision() {
+        return SlashCommand.with("reset-division", "Resets the division");
+    }
+
     public SlashCommand serverCreateGiveRoleToRep() {
         return SlashCommand
                 .with("give-role-to-rep", "command to give role to rep")
-                .createForServer(api.getServerById(botConfig.getFthlServerID()).get()).join();
+                .createForServer(api.getServerById(botConfig.getFthlServerID()).get())
+                .join();
     }
 
     public SlashCommandBuilder createHelpCommand() {
@@ -377,6 +382,7 @@ public class SlashGODClass {
                     SlashCommandBuilder invoke = (SlashCommandBuilder) method.invoke(this);
                     l.add(invoke);
                 } catch (IllegalAccessException | InvocationTargetException e) {
+                    log.error("Error while creating command: {} ::: MESSAGE : {}" , method.getName(), e.getMessage());
                     e.printStackTrace();
                 }
             }
