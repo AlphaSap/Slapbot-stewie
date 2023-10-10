@@ -59,4 +59,4 @@ jobs:
             docker kill $(docker ps -qf "name=slapbot")
             docker image rm sahil2903/discord-bot-fthl:latest
             docker pull sahil2903/discord-bot-fthl:latest
-            docker run -d --env-file --name slapbot .env sahil2903/discord-bot-fthl:latest .
+            docker run -d --env-file .env --name slapbot sahil2903/discord-bot-fthl:latest .
