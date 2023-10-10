@@ -145,6 +145,8 @@ public class Bot {
 
     private final EditTransaction editTransaction;
 
+    private final ResetDivisionImpl resetDivision;
+
     private final RemoveChannelsFromCategoryExceptOne removeChannelsFromCategoryExceptOne;
 
     private final AutoCompleteSlashComandTeamIdentifierImpl autoCompleteTeamIdentifier;
@@ -199,7 +201,7 @@ public class Bot {
                AddRegistrationChannel addRegistrationChannel,
                ChangeRepWithIDImpl changeRepWithID,
                EditTransaction editTransaction,
-               RemoveChannelsFromCategoryExceptOne removeChannelsFromCategoryExceptOne,
+               ResetDivisionImpl resetDivision, RemoveChannelsFromCategoryExceptOne removeChannelsFromCategoryExceptOne,
                AutoCompleteSlashComandTeamIdentifierImpl autoCompleteTeamIdentifier,
                AutoCompleteDivisionWeek autoCompleteDivisionWeek) {
         this.env = env;
@@ -251,6 +253,7 @@ public class Bot {
         this.addRegistrationChannel = addRegistrationChannel;
         this.changeRepWithID = changeRepWithID;
         this.editTransaction = editTransaction;
+        this.resetDivision = resetDivision;
         this.removeChannelsFromCategoryExceptOne = removeChannelsFromCategoryExceptOne;
         this.autoCompleteTeamIdentifier = autoCompleteTeamIdentifier;
         this.autoCompleteDivisionWeek = autoCompleteDivisionWeek;
@@ -303,7 +306,8 @@ public class Bot {
                 this.addRegistrationChannel,
                 this.changeRepWithID,
                 this.editTransaction,
-                this.removeChannelsFromCategoryExceptOne
+                this.removeChannelsFromCategoryExceptOne,
+                this.resetDivision
         ));
         //Making help command
         HelpImpl help = new HelpImpl(commandList);
