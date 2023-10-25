@@ -145,7 +145,7 @@ public class RegistrationImpl implements RegistrationListener {
 
             EmbedBuilder embedBuilder = new EmbedBuilder()
                     .setTitle("Registration successful")
-                    .setDescription("Hey there, you have successfully registered for FTHL season 7! \nHere are some commands that might be useful to you ")
+                    .setDescription("Hey there, you have successfully registered for FTHL season 9! \nHere are some commands that might be useful to you ")
                     .addField("Team Name", team.getName(), false)
                     .addField("Clan Tag", team.getTag(), false)
                     .addField("Division", team.getDivision().getName(), false)
