@@ -57,6 +57,7 @@ jobs:
           port: 22
           script: |
             docker kill $(docker ps -qf "name=slapbot")
+            docker rm $(docker ps -qf "name=slapbot")
             docker image rm sahil2903/discord-bot-fthl:latest
             docker pull sahil2903/discord-bot-fthl:latest
             docker run -d --env-file .env --name slapbot sahil2903/discord-bot-fthl:latest .
