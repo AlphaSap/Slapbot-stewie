@@ -103,6 +103,7 @@ public class DiscordBotFthlApplication {
         GeneralService.printMemoryUsage();
         //starting the bot
         bot.Start(api);
+
         return api;
     }
 }
