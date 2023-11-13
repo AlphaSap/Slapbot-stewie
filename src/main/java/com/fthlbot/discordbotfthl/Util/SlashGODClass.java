@@ -371,7 +371,7 @@ public class SlashGODClass {
                 );
     }
 
-    public SlashCommandBuilder makeLeaveServerComamnd() {
+    public SlashCommandBuilder createLeaveServerComamnd() {
         return SlashCommand.with("leave-server", "Leaves the server.")
                 .setOptions(List.of(
                         SlashCommandOption.create(
