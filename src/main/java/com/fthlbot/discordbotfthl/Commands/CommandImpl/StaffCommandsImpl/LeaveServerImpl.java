@@ -6,6 +6,7 @@ import com.fthlbot.discordbotfthl.core.CommandCreation.Option;
 import com.fthlbot.discordbotfthl.core.Handlers.Command;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
@@ -15,6 +16,7 @@ import java.util.Optional;
         usage = "leave-server <server id>",
         type = CommandType.DEV
 )
+@Component
 public class LeaveServerImpl implements Command {
     @Override
     public void execute(SlashCommandCreateEvent event) {
