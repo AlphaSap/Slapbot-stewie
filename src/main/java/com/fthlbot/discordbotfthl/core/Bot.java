@@ -151,6 +151,7 @@ public class Bot {
 
     private final AutoCompleteSlashComandTeamIdentifierImpl autoCompleteTeamIdentifier;
 
+    private final LeaveServerImpl leaveServer;
     private final AutoCompleteDivisionWeek autoCompleteDivisionWeek;
     public Bot(Environment env,
                PingImpl pingImpl,
@@ -203,7 +204,7 @@ public class Bot {
                EditTransaction editTransaction,
                ResetDivisionImpl resetDivision, RemoveChannelsFromCategoryExceptOne removeChannelsFromCategoryExceptOne,
                AutoCompleteSlashComandTeamIdentifierImpl autoCompleteTeamIdentifier,
-               AutoCompleteDivisionWeek autoCompleteDivisionWeek) {
+               LeaveServerImpl leaveServer, AutoCompleteDivisionWeek autoCompleteDivisionWeek) {
         this.env = env;
         this.pingImpl = pingImpl;
         this.registration = registration;
@@ -256,6 +257,7 @@ public class Bot {
         this.resetDivision = resetDivision;
         this.removeChannelsFromCategoryExceptOne = removeChannelsFromCategoryExceptOne;
         this.autoCompleteTeamIdentifier = autoCompleteTeamIdentifier;
+        this.leaveServer = leaveServer;
         this.autoCompleteDivisionWeek = autoCompleteDivisionWeek;
         log.info("Bot object created");
     }
@@ -281,6 +283,7 @@ public class Bot {
                 this.createMatchUps,
                 this.negoChannelCreation,
                 this.showDivisionWeek,
+                this.leaveServer,
                 this.player,
                 this.removeAllChannelFromACategory,
                 this.teamInfo,

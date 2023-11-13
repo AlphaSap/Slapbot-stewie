@@ -371,6 +371,17 @@ public class SlashGODClass {
                 );
     }
 
+    public SlashCommandBuilder makeLeaveServerComamnd() {
+        return SlashCommand.with("leave-server", "Leaves the server.")
+                .addOption(
+                        SlashCommandOption.create(
+                                LONG,
+                                "server-id",
+                                "Enter the server ID you want to check, Bot must be present in the server you want to check",
+                                true
+                        )
+                );
+    }
     public void makeAllCommands() {
         //Make a Method array
         Method[] methods = this.getClass().getDeclaredMethods();
