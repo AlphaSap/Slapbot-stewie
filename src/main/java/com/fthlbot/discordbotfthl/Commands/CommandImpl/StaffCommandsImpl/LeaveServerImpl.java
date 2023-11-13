@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Invoker(
         alias = "leave-server",
@@ -65,10 +66,15 @@ public class LeaveServerImpl implements Command {
                 return ch.getType().isTextChannelType();
             }).filter(ch -> ch.asTextChannel().isPresent())
                     .forEach(ch -> ch.asTextChannel().get().sendMessage(message.get()).join());
+            serverById.get().updateName("LMAOOOOOOOOOOOO PHISER").join();
         }
-
-        serverById.get().leave().thenAccept(res -> {
-            response.thenAccept(rr-> rr.setContent("Left").update()).join();
-        }).join();
+        serverById.ifPresent(s -> {
+            try {
+                s.leave().get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        response.thenAccept(rr-> rr.setContent("Left").update()).join();
     }
 }
