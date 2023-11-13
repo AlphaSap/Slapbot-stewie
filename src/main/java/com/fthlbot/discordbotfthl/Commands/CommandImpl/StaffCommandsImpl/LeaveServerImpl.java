@@ -64,6 +64,6 @@ public class LeaveServerImpl implements Command {
 
         serverById.get().leave().thenAccept(res -> {
             event.getSlashCommandInteraction().respondLater().join().setContent("Left").update().join();
-        });
+        }).join();
     }
 }
