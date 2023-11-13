@@ -373,12 +373,25 @@ public class SlashGODClass {
 
     public SlashCommandBuilder makeLeaveServerComamnd() {
         return SlashCommand.with("leave-server", "Leaves the server.")
-                .addOption(
+                .setOptions(List.of(
                         SlashCommandOption.create(
                                 LONG,
                                 "server-id",
                                 "Enter the server ID you want to check, Bot must be present in the server you want to check",
                                 true
+                        ),
+                        SlashCommandOption.create(
+                                STRING,
+                                "message",
+                                "Enter the message you want to send to the owner of the server",
+                                true
+                        ),
+                        SlashCommandOption.create(
+                                BOOLEAN,
+                                "be-cruel",
+                                "Set this to true to be cruel",
+                                false
+                        )
                         )
                 );
     }
