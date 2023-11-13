@@ -20,8 +20,14 @@ public class LeaveServerImpl implements Command {
     @Override
     public void execute(SlashCommandCreateEvent event) {
 
-        Optional<Long> serverId = event.getSlashCommandInteraction().getArguments().get(0)
-                .getLongValue();
+        Optional<String> serverIDString = event.getSlashCommandInteraction().getArguments().get(0)
+                .getStringValue();
+        if (serverIDString.isEmpty()) {
+            event.getSlashCommandInteraction().createImmediateResponder().setContent("Invalid server id.").respond();
+            return;
+        }
+
+        Optional<Long> serverId = serverIDString.map(Long::parseLong);
         if (serverId.isEmpty()) {
             event.getSlashCommandInteraction().createImmediateResponder().setContent("Invalid server id.").respond();
             return;

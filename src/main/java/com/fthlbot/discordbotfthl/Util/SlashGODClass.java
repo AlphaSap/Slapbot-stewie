@@ -375,7 +375,7 @@ public class SlashGODClass {
         return SlashCommand.with("leave-server", "Leaves the server.")
                 .setOptions(List.of(
                         SlashCommandOption.create(
-                                LONG,
+                                STRING,
                                 "server-id",
                                 "Enter the server ID you want to check, Bot must be present in the server you want to check",
                                 true
