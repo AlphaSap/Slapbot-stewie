@@ -56,8 +56,9 @@ jobs:
           password:  ${{ secrets.SERVER_PASSWORD }}
           port: 22
           script: |
-            docker kill $(docker ps -qf "name=slapbot")
-            docker container prune
+            docker kill $(docker ps -qaf "name=slapbot")
+            docker container prune --force
             docker image rm sahil2903/discord-bot-fthl:latest
+            docker rmi $(docker images -q sahil2903/discord-bot-fthl)
             docker pull sahil2903/discord-bot-fthl:latest
             docker run -d --env-file .env --name slapbot sahil2903/discord-bot-fthl:latest .
