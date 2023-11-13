@@ -62,7 +62,8 @@ public class LeaveServerImpl implements Command {
                     .forEach(ch -> ch.asTextChannel().get().sendMessage(message.get()).join());
         }
 
-        serverById.get().leave().join();
-        event.getSlashCommandInteraction().createImmediateResponder().setContent("Left").respond().join();
+        serverById.get().leave().thenAccept(res -> {
+            event.getSlashCommandInteraction().respondLater().join().setContent("Left").update().join();
+        });
     }
 }
