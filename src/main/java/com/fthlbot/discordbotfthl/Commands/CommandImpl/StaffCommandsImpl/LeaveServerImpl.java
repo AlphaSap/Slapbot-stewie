@@ -5,14 +5,16 @@ import com.fthlbot.discordbotfthl.core.Annotation.Invoker;
 import com.fthlbot.discordbotfthl.core.Handlers.Command;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
+import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Invoker(
         alias = "leave-server",
         description = "Leaves the server.",
-        usage = "leave-server <server id>",
+        usage = "leave-server <server id> <message> <cruel>",
         type = CommandType.DEV
 )
 @Component
@@ -20,22 +22,25 @@ public class LeaveServerImpl implements Command {
     @Override
     public void execute(SlashCommandCreateEvent event) {
 
+        CompletableFuture<InteractionOriginalResponseUpdater> response
+                = event.getSlashCommandInteraction().respondLater();
+
         Optional<String> serverIDString = event.getSlashCommandInteraction().getArguments().get(0)
                 .getStringValue();
         if (serverIDString.isEmpty()) {
-            event.getSlashCommandInteraction().createImmediateResponder().setContent("Invalid server id.").respond();
+            response.thenAccept(r -> r.setContent("Invalid server id.").update().join());
             return;
         }
 
         Optional<Long> serverId = serverIDString.map(Long::parseLong);
         if (serverId.isEmpty()) {
-            event.getSlashCommandInteraction().createImmediateResponder().setContent("Invalid server id.").respond();
+            response.thenAccept(r -> r.setContent("Invalid server id.").update().join());
             return;
         }
 
         Optional<Server> serverById = event.getSlashCommandInteraction().getApi().getServerById(serverId.get());
         if (serverById.isEmpty()){
-            event.getSlashCommandInteraction().createImmediateResponder().setContent("Invalid server id.").respond();
+            response.thenAccept(r -> r.setContent("Invalid server id.").update().join());
             return;
         }
         Optional<String> message = event.getSlashCommandInteraction().getArguments().get(1)
@@ -46,7 +51,7 @@ public class LeaveServerImpl implements Command {
                 .orElse(false);
 
         if (message.isEmpty()) {
-            event.getSlashCommandInteraction().createImmediateResponder().setContent("Invalid message.").respond();
+            response.thenAccept(r -> r.setContent("Invalid Message.").update().join());
             return;
         }
 
@@ -63,7 +68,7 @@ public class LeaveServerImpl implements Command {
         }
 
         serverById.get().leave().thenAccept(res -> {
-            event.getSlashCommandInteraction().respondLater().join().setContent("Left").update().join();
+            response.thenAccept(rr-> rr.setContent("Left").update()).join();
         }).join();
     }
 }
