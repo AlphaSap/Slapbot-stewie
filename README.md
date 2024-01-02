@@ -1,4 +1,5 @@
 # SlapBot Stewie
+
 SlapBot stewie is a clash of clans leagues administration bot for [FTHL]().
 Slapbot was introduced at the start of FTHL season 4. This project aims to be the best 
 clash of clans leagues bot.
